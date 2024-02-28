@@ -16,7 +16,6 @@ import {
   ChevronLeft,
   ChevronRightOutlined,
   HomeOutlined,
-  Inventory2Rounded,
   LocalHospital,
   LocalLibrary,
   School,
@@ -105,7 +104,7 @@ const Sidebar = ({
               <FlexBetween color={theme.palette.secondary.main}>
                 <Box display="flex" alignItems="center" gap="0.5rem">
                   <Typography variant="h4" fontWeight="bold">
-                    Derana ESM
+                    Derana HEM
                   </Typography>
                 </Box>
                 {!isNonMobile && (
