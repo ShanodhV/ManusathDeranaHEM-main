@@ -33,6 +33,7 @@ const DeranaDaruwo = () => {
         <Tab label="Tab 1" />
         <Tab label="Tab 2" />
         <Tab label="Tab 3" />
+        <Tab label="Tab 3" />
       </Tabs>
       {activeTab === 0 && (
         <Box>
