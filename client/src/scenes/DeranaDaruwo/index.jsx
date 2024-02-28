@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, useTheme,} from "@mui/material";
+import { Box, TextField, useTheme,} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useGetTransactionsQuery } from "state/api";
 import Header from "components/Header";
@@ -15,7 +15,20 @@ const DeranaDaruwo = () => {
     setActiveTab(newValue);
   };
 
- 
+ const handleChange = (e) => {
+  const {name, value} = e.target;
+ };
+
+ const handleSubmit = (e) => {
+    e.preventDefault();
+  };
+
+  const labelStyle = {
+    fontWeight: " bold",
+    color: "black", 
+    fontSize: "16px"
+  }
+
   return (
     <Box m="1.5rem 2.5rem">
       <Header
@@ -37,15 +50,42 @@ const DeranaDaruwo = () => {
       </Tabs>
       {activeTab === 0 && (
         <Box>
+          <h2>Create Program</h2>
+        <form onSubmit={handleSubmit}>
+          <label 
+          style={labelStyle}
+          htmlFor="Program ID">Program ID</label>
+            <TextField 
+  
+              variant="outlined"
+              name="ProgramID"
+              fullWidth
+              sx={{
+                mt: 1.5,
+                '& .MuiOutlinedInput-root': {
+                  padding: '0px',
+                  '& fieldset': {
+                    borderWidth: '2px',
+                  },
+                },
+              }}
+            />
+        </form>
         </Box>
       )}
       {activeTab === 1 && (
         <Box>
+          <h1>Student Registration</h1>
         </Box>
       )}
       {activeTab === 2 && (
         <Box>
-          
+          <h1>Volunteer Donor Registration</h1>
+        </Box>
+      )}
+      {activeTab === 3 && (
+        <Box>
+          <h1>Next Area Predictor</h1>
         </Box>
       )}
     </Box>
