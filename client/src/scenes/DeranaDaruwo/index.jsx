@@ -19,8 +19,8 @@ const DeranaDaruwo = () => {
   return (
     <Box m="1.5rem 2.5rem">
       <Header
-        title="Health Camps"
-        subtitle="Manage Health Camps"
+        title="Derana Daruwo "
+        subtitle="Manage Derana Daruwo Scholarship Program"
       />
       <Tabs
         value={activeTab}
