@@ -30,10 +30,10 @@ const DeranaDaruwo = () => {
         textColor="secondary"
         aria-label="Sipsal Pubuduwa tabs"
       >
-        <Tab label="Tab 1" />
-        <Tab label="Tab 2" />
-        <Tab label="Tab 3" />
-        <Tab label="Tab 3" />
+        <Tab label="Create a Program" />
+        <Tab label="Student Registration" />
+        <Tab label="Volunteer Donor Registration" />
+        <Tab label="Next Area Predictor" />
       </Tabs>
       {activeTab === 0 && (
         <Box>
