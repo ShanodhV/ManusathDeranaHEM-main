@@ -22,7 +22,7 @@ const SipsalPubuduwa = () => {
       />
       <Tabs
         value={activeTab}
-        onChange={handleTabChange}
+        onChange={handleTabChange}   
         variant="standard"
         indicatorColor="secondary"
         textColor="secondary"
@@ -31,6 +31,8 @@ const SipsalPubuduwa = () => {
         <Tab label="Tab 1" />
         <Tab label="Tab 2" />
         <Tab label="Tab 3" />
+        <Tab label="Tab 4" />
+
       </Tabs>
       {activeTab === 0 && (
         <Box>
