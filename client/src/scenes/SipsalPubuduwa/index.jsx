@@ -54,6 +54,7 @@ const SipsalPubuduwa = () => {
       >
         <Tab label="School Registration" />
         <Tab label="View School Details" />
+        <Tab label="Doner Registeration" />
         <Tab label="Next School PRedictor" />
         
 
@@ -317,11 +318,191 @@ const SipsalPubuduwa = () => {
       )}
       {activeTab === 2 && (
         <Box>
+          <h1>Donor Regsitration</h1>
+          <form onSubmit={handleSubmit}>
+          <Box sx={{mt:6}}>
+          <label 
+          style={labelStyle}
+          htmlFor="Donor NIC">Donor NIC</label>
+            <TextField 
+  
+              variant="outlined"
+              name="DonorNIC"
+              fullWidth
+              sx={{
+                mt: 2,
+                '& .MuiOutlinedInput-root': {
+                  padding: '0px',
+                  '& fieldset': {
+                    borderWidth: '3px',
+                  },
+                },
+              }}
+            />
+            </Box>
+
+            <Box sx={{mt:6}}>
+          <label 
+          style={labelStyle}
+          htmlFor="Donor Name">Donor Name</label>
+            <TextField 
+  
+              variant="outlined"
+              name="DonorName"
+              fullWidth
+              sx={{
+                mt: 2,
+                '& .MuiOutlinedInput-root': {
+                  padding: '0px',
+                  '& fieldset': {
+                    borderWidth: '3px',
+                  },
+                },
+              }}
+            />
+            </Box>
+
+            <Box sx={{mt:6}}>
+          <label 
+          style={labelStyle}
+          htmlFor="Donor Adress">Donor Address</label>
+            <TextField 
+  
+              variant="outlined"
+              name="DonorAddress"
+              fullWidth
+              sx={{
+                mt: 2,
+                '& .MuiOutlinedInput-root': {
+                  padding: '0px',
+                  '& fieldset': {
+                    borderWidth: '3px',
+                  },
+                },
+              }}
+            />
+            </Box>
+
+            <Box sx={{mt:2}}>
+              <label 
+                style={labelStyle}
+                htmlFor="DateOfBirth">Date of Birth</label>
+              <Grid container spacing={2} sx={{mt:0}}> 
+                <Grid item xs={4}> 
+                  <TextField
+                    select
+                    variant="outlined"
+                    fullWidth
+                    label="Month"
+                    sx={{ 
+                      '& fieldset': {
+                        borderWidth: '3px',
+                      },
+                    }}
+                  >
+                    
+                  </TextField>
+                </Grid>
+                <Grid item xs={4}> 
+                  <TextField
+                    select
+                    variant="outlined"
+                    fullWidth
+                    label="Day"
+                    sx={{ 
+                      '& fieldset': {
+                        borderWidth: '3px',
+                      },
+                    }}
+                  >
+              
+                  </TextField>
+                </Grid>
+                <Grid item xs={4}> 
+                  <TextField
+                    select
+                    variant="outlined"
+                    fullWidth
+                    label="Year"
+                    sx={{ 
+                      '& fieldset': {
+                        borderWidth: '3px',
+                      },
+                    }}
+                  >
+                  </TextField>
+                </Grid>
+              </Grid>
+            </Box>
+ 
+            
+
+
+            
+
+        
+          
+
+            <Box sx={{mt:2}}>
+          <label 
+          style={labelStyle}
+          htmlFor="MObile Number">Mobile Number</label>
+            <TextField 
+  
+              variant="outlined"
+              name="PMobileNumber"
+              fullWidth
+              sx={{
+                mt: 2,
+                '& .MuiOutlinedInput-root': {
+                  padding: '0px',
+                  '& fieldset': {
+                    borderWidth: '3px',
+                  },
+                },
+              }}
+            />
+            </Box>
+
+            <Box sx={{mt:5}}>
+          <label 
+          style={labelStyle}
+          htmlFor="Ocupation">Ocupation</label>
+            <TextField 
+  
+              variant="outlined"
+              name="ocupation"
+              fullWidth
+              sx={{
+                mt: 2,
+                '& .MuiOutlinedInput-root': {
+                  padding: '0px',
+                  '& fieldset': {
+                    borderWidth: '3px',
+                  },
+                },
+              }}
+            />
+            </Box>
+
+
+            <Box sx={{mt:3}}>
+              <Buttons onClick={handleClick} label="Register" />
+            </Box>
+         </form>
 
           
           
         </Box>
       )}
+
+      {activeTab === 3 &&(
+        <Box>
+         
+
+        </Box>
+      )}
+
     </Box>
   );
 };
