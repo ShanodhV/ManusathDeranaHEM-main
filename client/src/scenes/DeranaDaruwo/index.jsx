@@ -56,148 +56,149 @@ const DeranaDaruwo = () => {
         <Tab label="Next Area Predictor" />
       </Tabs>
       {activeTab === 0 && (
-        <Box>
-         
-        <form onSubmit={handleSubmit}>
-          <Box sx={{mt:6}}>
-          <label 
-          style={labelStyle}
-          htmlFor="Program ID">Program ID</label>
-            <TextField 
-  
-              variant="outlined"
-              name="ProgramID"
-              fullWidth
-              sx={{
-                mt: 2,
-                '& .MuiOutlinedInput-root': {
-                  padding: '0px',
-                  '& fieldset': {
-                    borderWidth: '3px',
-                  },
-                },
-              }}
-            />
-            </Box>
-
-          <Box sx={{mt:2}}>
-          <label 
-          style={labelStyle}
-          htmlFor="Location">Location</label>
-          <Grid container spacing={2} sx={{mt:0}}> 
-              <Grid item xs={4}> 
-                <TextField
-                  select
-                  variant="outlined"
-                  fullWidth
-                  label="Province"
-                  sx={{ 
-            
-                    '& fieldset': {
-                      borderWidth: '3px',
-                    },
-                  }}
-                 
-                >
-                  
-                </TextField>
-              </Grid>
-              <Grid item xs={4}> 
-                <TextField
-                  select
-                  variant="outlined"
-                  fullWidth
-                  label="District"
-                  sx={{ 
-            
-                    '& fieldset': {
-                      borderWidth: '3px',
-                    },
-                  }}
-                 
-                
-                >
-            
-                </TextField>
-              </Grid>
-              <Grid item xs={4}> 
-                <TextField
-                  select
-                  variant="outlined"
-                  fullWidth
-                  label="Town"
-                  sx={{ 
-            
-                    '& fieldset': {
-                      borderWidth: '3px',
-                    },
-                  }}
-                 
-                >
-                </TextField>
-              </Grid>
-            </Grid>
-            </Box> 
-            <Box sx={{mt:10}}>
-              <label
-              style={labelStyle}
-               htmlFor="Area Officer Details">Area Officer Details</label>
-            </Box>
-
-            <Box sx={{mt:5}}>
-          <label 
-          style={labelStyle}
-          htmlFor="Name">Name</label>
-            <TextField 
-  
-              variant="outlined"
-              name="Name"
-              fullWidth
-              sx={{
-                mt: 2,
-                '& .MuiOutlinedInput-root': {
-                  padding: '0px',
-                  '& fieldset': {
-                    borderWidth: '3px',
-                  },
-                },
-              }}
-            />
-            </Box>
-
-            <Box sx={{mt:2}}>
-          <label 
-          style={labelStyle}
-          htmlFor="MObile Number">Mobile Number</label>
-            <TextField 
-  
-              variant="outlined"
-              name="MobileNumber"
-              fullWidth
-              sx={{
-                mt: 2,
-                '& .MuiOutlinedInput-root': {
-                  padding: '0px',
-                  '& fieldset': {
-                    borderWidth: '3px',
-                  },
-                },
-              }}
-            />
-            </Box>
-            <Box sx={{mt:3}}>
-              <Buttons onClick={handleClick} label="Create Program" />
-            </Box>
-           
-        </form>
-    
+        <><Box sx={{ marginRight: "20px", position: "absolute", top: "20", right: "70px", display: "inline-flex", alignItems: "center", justifyItems: "center" }}>
+          <Buttons label={"Create Program"} />
         </Box>
+        <Box>
+
+            <Box sx={{ mt: 10 }}>
+              <form onSubmit={handleSubmit}>
+                <h2>Create a Program</h2>
+                <Box sx={{ mt: 6 }}>
+
+                  <label
+                    style={labelStyle}
+                    htmlFor="Program ID">Program ID</label>
+                  <TextField
+
+                    variant="outlined"
+                    name="ProgramID"
+                    fullWidth
+                    sx={{
+                      mt: 2,
+                      '& .MuiOutlinedInput-root': {
+                        padding: '0px',
+                        '& fieldset': {
+                          borderWidth: '3px',
+                        },
+                      },
+                    }} />
+                </Box>
+
+                <Box sx={{ mt: 2 }}>
+                  <label
+                    style={labelStyle}
+                    htmlFor="Location">Location</label>
+                  <Grid container spacing={2} sx={{ mt: 0 }}>
+                    <Grid item xs={4}>
+                      <TextField
+                        select
+                        variant="outlined"
+                        fullWidth
+                        label="Province"
+                        sx={{
+                          '& fieldset': {
+                            borderWidth: '3px',
+                          },
+                        }}
+
+                      >
+
+                      </TextField>
+                    </Grid>
+                    <Grid item xs={4}>
+                      <TextField
+                        select
+                        variant="outlined"
+                        fullWidth
+                        label="District"
+                        sx={{
+                          '& fieldset': {
+                            borderWidth: '3px',
+                          },
+                        }}
+
+
+                      >
+
+                      </TextField>
+                    </Grid>
+                    <Grid item xs={4}>
+                      <TextField
+                        select
+                        variant="outlined"
+                        fullWidth
+                        label="Town"
+                        sx={{
+                          '& fieldset': {
+                            borderWidth: '3px',
+                          },
+                        }}
+
+                      >
+                      </TextField>
+                    </Grid>
+                  </Grid>
+                </Box>
+                <Box sx={{ mt: 10 }}>
+                  <label
+                    style={labelStyle}
+                    htmlFor="Area Officer Details">Area Officer Details</label>
+                </Box>
+
+                <Box sx={{ mt: 5 }}>
+                  <label
+                    style={labelStyle}
+                    htmlFor="Name">Name</label>
+                  <TextField
+
+                    variant="outlined"
+                    name="Name"
+                    fullWidth
+                    sx={{
+                      mt: 2,
+                      '& .MuiOutlinedInput-root': {
+                        padding: '0px',
+                        '& fieldset': {
+                          borderWidth: '3px',
+                        },
+                      },
+                    }} />
+                </Box>
+
+                <Box sx={{ mt: 2 }}>
+                  <label
+                    style={labelStyle}
+                    htmlFor="MObile Number">Mobile Number</label>
+                  <TextField
+
+                    variant="outlined"
+                    name="MobileNumber"
+                    fullWidth
+                    sx={{
+                      mt: 2,
+                      '& .MuiOutlinedInput-root': {
+                        padding: '0px',
+                        '& fieldset': {
+                          borderWidth: '3px',
+                        },
+                      },
+                    }} />
+                </Box>
+                <Box sx={{ mt: 3 }}>
+                  <Buttons onClick={handleClick} label="Create Program" />
+                </Box>
+
+              </form>
+            </Box>
+          </Box></>
       )}
       {activeTab === 1 && (
         
-        <Box sx={{mt:2}}>
+        <Box sx={{mt:3}}>
+          <h2>Register Students</h2>
           <form>
-            <Box>
+            <Box sx={{mt:6}}>
             <label 
           style={labelStyle}
           htmlFor="Student Name">Student Name</label>
@@ -387,13 +388,149 @@ const DeranaDaruwo = () => {
         
       )}
       {activeTab === 2 && (
-        <Box>
-          <h1>Volunteer Donor Registration</h1>
+        <Box sx={{mt:3}}>
+          {/* <h1>Volunteer Donor Registration</h1> */}
+          <h2>Register Volunteer Dornors</h2>
+          <form>
+          <Box sx={{mt:6}}>
+            <label 
+          style={labelStyle}
+          htmlFor="Donor Name">Donor Name</label>
+            <TextField 
+  
+              variant="outlined"
+              name="DonorName"
+              fullWidth
+              sx={{
+                mt: 2,
+                '& .MuiOutlinedInput-root': {
+                  padding: '0px',
+                  '& fieldset': {
+                    borderWidth: '3px',
+                  },
+                },
+              }}
+            />
+            </Box>
+
+            <Box sx={{mt:2}}>
+            <label 
+          style={labelStyle}
+          htmlFor="Donor Address">Donor Address</label>
+            <TextField 
+  
+              variant="outlined"
+              name="DonorAddress"
+              fullWidth
+              sx={{
+                mt: 2,
+                '& .MuiOutlinedInput-root': {
+                  padding: '0px',
+                  '& fieldset': {
+                    borderWidth: '3px',
+                  },
+                },
+              }}
+            />
+            </Box>
+
+            <Box sx={{mt:2}}>
+            <label 
+          style={labelStyle}
+          htmlFor="Donor Contact Number">Donor Contact Number</label>
+            <TextField 
+  
+              variant="outlined"
+              name="DonorContactNumber"
+              fullWidth
+              sx={{
+                mt: 2,
+                '& .MuiOutlinedInput-root': {
+                  padding: '0px',
+                  '& fieldset': {
+                    borderWidth: '3px',
+                  },
+                },
+              }}
+            />
+            </Box>
+
+            <Box sx={{mt:2}}>
+            <label 
+          style={labelStyle}
+          htmlFor="Donor ID">Donor ID</label>
+            <TextField 
+  
+              variant="outlined"
+              name="DonorID"
+              fullWidth
+              sx={{
+                mt: 2,
+                '& .MuiOutlinedInput-root': {
+                  padding: '0px',
+                  '& fieldset': {
+                    borderWidth: '3px',
+                  },
+                },
+              }}
+            />
+            </Box>
+
+            <Box sx={{ mt: 2 }}>
+  <Grid container spacing={2}>
+    <Grid item xs={6}>
+      <label style={labelStyle} htmlFor="Assign Student ID">
+      Assign Student ID
+      </label>
+      <TextField
+        select
+        variant="outlined"
+        fullWidth
+        label="Assign Student ID"
+        sx={{
+          "& fieldset": {
+            borderWidth: "3px",
+          },
+        }}
+      >
+        {/* Add dropdown options here */}
+      </TextField>
+    </Grid>
+    <Grid item xs={6}>
+      <label style={labelStyle} htmlFor="Program ID">
+        Program ID
+      </label>
+      <TextField
+        select
+        variant="outlined"
+        fullWidth
+        label="Select Program ID"
+        sx={{
+          "& fieldset": {
+            borderWidth: "3px",
+          },
+        }}
+      >
+        {/* Add dropdown options here */}
+      </TextField>
+    </Grid>
+  </Grid>
+</Box>
+
+        <Box sx={{mt:4,mb:4}}>
+          <Buttons label={"Register Dornor"}/>
+        </Box>
+          </form>
         </Box>
       )}
       {activeTab === 3 && (
         <Box>
           <h1>Next Area Predictor</h1>
+          <form>
+            <Box>
+
+            </Box>
+          </form>
         </Box>
       )}
     </Box>
