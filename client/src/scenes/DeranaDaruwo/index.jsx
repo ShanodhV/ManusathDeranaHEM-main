@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, TextField, useTheme,} from "@mui/material";
+import { Box, TextField, useTheme, Grid} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useGetTransactionsQuery } from "state/api";
 import Header from "components/Header";
@@ -26,16 +26,18 @@ const DeranaDaruwo = () => {
   const labelStyle = {
     fontWeight: " bold",
     color: "black", 
-    fontSize: "16px"
+    fontSize: "16px",
+    margintop: "80px"
+    
   }
 
   return (
-    <Box m="1.5rem 2.5rem">
+    <Box m="1.5rem 2.5rem" sx={{mt:3}}>
       <Header
         title="Derana Daruwo "
         subtitle="Manage Derana Daruwo Scholarship Program"
       />
-      <Tabs
+      <Tabs sx={{mt:2}}
         value={activeTab}
         onChange={handleTabChange}
         variant="standard"
@@ -50,8 +52,9 @@ const DeranaDaruwo = () => {
       </Tabs>
       {activeTab === 0 && (
         <Box>
-          <h2>Create Program</h2>
+         
         <form onSubmit={handleSubmit}>
+          <Box sx={{mt:6}}>
           <label 
           style={labelStyle}
           htmlFor="Program ID">Program ID</label>
@@ -65,12 +68,122 @@ const DeranaDaruwo = () => {
                 '& .MuiOutlinedInput-root': {
                   padding: '0px',
                   '& fieldset': {
-                    borderWidth: '2px',
+                    borderWidth: '3px',
                   },
                 },
               }}
             />
+            </Box>
+
+          <Box sx={{mt:2}}>
+          <label 
+          style={labelStyle}
+          htmlFor="Location">Location</label>
+          <Grid container spacing={2} sx={{mt:0}}> 
+              <Grid item xs={4}> 
+                <TextField
+                  select
+                  variant="outlined"
+                  fullWidth
+                  label="Province"
+                  sx={{ 
+            
+                    '& fieldset': {
+                      borderWidth: '3px',
+                    },
+                  }}
+                 
+                >
+                  
+                </TextField>
+              </Grid>
+              <Grid item xs={4}> 
+                <TextField
+                  select
+                  variant="outlined"
+                  fullWidth
+                  label="District"
+                  sx={{ 
+            
+                    '& fieldset': {
+                      borderWidth: '3px',
+                    },
+                  }}
+                 
+                
+                >
+            
+                </TextField>
+              </Grid>
+              <Grid item xs={4}> 
+                <TextField
+                  select
+                  variant="outlined"
+                  fullWidth
+                  label="Town"
+                  sx={{ 
+            
+                    '& fieldset': {
+                      borderWidth: '3px',
+                    },
+                  }}
+                 
+                >
+                </TextField>
+              </Grid>
+            </Grid>
+            </Box> 
+            <Box sx={{mt:10}}>
+              <label
+              style={labelStyle}
+               htmlFor="Area Officer Details">Area Officer Details</label>
+            </Box>
+
+            <Box sx={{mt:6}}>
+          <label 
+          style={labelStyle}
+          htmlFor="Name">Name</label>
+            <TextField 
+  
+              variant="outlined"
+              name="Name"
+              fullWidth
+              sx={{
+                mt: 1.5,
+                '& .MuiOutlinedInput-root': {
+                  padding: '0px',
+                  '& fieldset': {
+                    borderWidth: '3px',
+                  },
+                },
+              }}
+            />
+            </Box>
+
+            <Box sx={{mt:6}}>
+          <label 
+          style={labelStyle}
+          htmlFor="MObile Number">Mobile Number</label>
+            <TextField 
+  
+              variant="outlined"
+              name="Mobile Number"
+              fullWidth
+              sx={{
+                mt: 1.5,
+                '& .MuiOutlinedInput-root': {
+                  padding: '0px',
+                  '& fieldset': {
+                    borderWidth: '3px',
+                  },
+                },
+              }}
+            />
+            </Box>
+
+           
         </form>
+    
         </Box>
       )}
       {activeTab === 1 && (
