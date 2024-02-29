@@ -29,6 +29,9 @@ const HealthCamps = () => {
         <Tab label="Health Camps" />
         <Tab label="Pateint Registration" />
         <Tab label="Lab Report" />
+        <Tab label="Data Viewer" />
+        <Tab label="Camp Predictor" />
+        <Tab label="Patient Data Analyzer" />
       </Tabs>
       {activeTab === 0 && (
         <Box>
