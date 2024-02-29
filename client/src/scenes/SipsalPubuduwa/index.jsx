@@ -60,7 +60,7 @@ const SipsalPubuduwa = () => {
       </Tabs>
       {activeTab === 0 && (
         <Box>
-          <h1>School Register</h1>
+          <h1>School Registration</h1>
           <form onSubmit={handleSubmit}>
           <Box sx={{mt:6}}>
           <label 
@@ -262,10 +262,63 @@ const SipsalPubuduwa = () => {
       )}
       {activeTab === 1 && (
         <Box>
+          <h1>View School Details</h1>
+          <form onSubmit={handleSubmit}>
+
+          <Box sx={{mt:6}}>
+          <label 
+          style={labelStyle}
+          htmlFor="School ID">School ID</label>
+            <TextField 
+  
+              variant="outlined"
+              name="SchoolID"
+              fullWidth
+              sx={{
+                mt: 2,
+                '& .MuiOutlinedInput-root': {
+                  padding: '0px',
+                  '& fieldset': {
+                    borderWidth: '3px',
+                  },
+                },
+              }}
+            />
+            </Box>
+
+            <Box sx={{mt:6}}>
+          <label 
+          style={labelStyle}
+          htmlFor="School Name">School Name</label>
+            <TextField 
+  
+              variant="outlined"
+              name="SchoolName"
+              fullWidth
+              sx={{
+                mt: 2,
+                '& .MuiOutlinedInput-root': {
+                  padding: '0px',
+                  '& fieldset': {
+                    borderWidth: '3px',
+                  },
+                },
+              }}
+            />
+            </Box>
+
+
+
+          <Box sx={{mt:3}}>
+              <Buttons onClick={handleClick} label="Search" />
+            </Box>
+          </form>
         </Box>
       )}
       {activeTab === 2 && (
         <Box>
+
+          
           
         </Box>
       )}
