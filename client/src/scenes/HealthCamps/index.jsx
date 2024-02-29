@@ -26,9 +26,12 @@ const HealthCamps = () => {
         textColor="secondary"
         aria-label="Sipsal Pubuduwa tabs"
       >
-        <Tab label="Tab 1" />
-        <Tab label="Tab 2" />
-        <Tab label="Tab 3" />
+        <Tab label="Health Camps" />
+        <Tab label="Pateint Registration" />
+        <Tab label="Lab Report" />
+        <Tab label="Data Viewer" />
+        <Tab label="Camp Predictor" />
+        <Tab label="Patient Data Analyzer" />
       </Tabs>
       {activeTab === 0 && (
         <Box>
