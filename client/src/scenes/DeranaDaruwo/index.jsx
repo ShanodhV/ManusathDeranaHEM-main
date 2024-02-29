@@ -7,6 +7,7 @@ import Header from "components/Header";
 import DataGridCustomToolbar from "components/DataGridCustomToolbar";
 import { Avatar, Button, Tab, Tabs, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
+import Buttons from "components/Buttons";
 
 const DeranaDaruwo = () => {
   const theme = useTheme();
@@ -18,6 +19,10 @@ const DeranaDaruwo = () => {
  const handleChange = (e) => {
   const {name, value} = e.target;
  };
+
+ const handleClick = () => {
+  console.log("Button clicked!");
+};
 
  const handleSubmit = (e) => {
     e.preventDefault();
@@ -64,7 +69,7 @@ const DeranaDaruwo = () => {
               name="ProgramID"
               fullWidth
               sx={{
-                mt: 1.5,
+                mt: 2,
                 '& .MuiOutlinedInput-root': {
                   padding: '0px',
                   '& fieldset': {
@@ -139,7 +144,7 @@ const DeranaDaruwo = () => {
                htmlFor="Area Officer Details">Area Officer Details</label>
             </Box>
 
-            <Box sx={{mt:6}}>
+            <Box sx={{mt:5}}>
           <label 
           style={labelStyle}
           htmlFor="Name">Name</label>
@@ -149,7 +154,7 @@ const DeranaDaruwo = () => {
               name="Name"
               fullWidth
               sx={{
-                mt: 1.5,
+                mt: 2,
                 '& .MuiOutlinedInput-root': {
                   padding: '0px',
                   '& fieldset': {
@@ -160,7 +165,7 @@ const DeranaDaruwo = () => {
             />
             </Box>
 
-            <Box sx={{mt:6}}>
+            <Box sx={{mt:2}}>
           <label 
           style={labelStyle}
           htmlFor="MObile Number">Mobile Number</label>
@@ -170,7 +175,7 @@ const DeranaDaruwo = () => {
               name="Mobile Number"
               fullWidth
               sx={{
-                mt: 1.5,
+                mt: 2,
                 '& .MuiOutlinedInput-root': {
                   padding: '0px',
                   '& fieldset': {
@@ -180,7 +185,9 @@ const DeranaDaruwo = () => {
               }}
             />
             </Box>
-
+            <Box sx={{mt:3}}>
+              <Buttons onClick={handleClick} label="Create Programm" />
+            </Box>
            
         </form>
     
