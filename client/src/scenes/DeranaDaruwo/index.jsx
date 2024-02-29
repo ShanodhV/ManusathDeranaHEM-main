@@ -172,7 +172,7 @@ const DeranaDaruwo = () => {
             <TextField 
   
               variant="outlined"
-              name="Mobile Number"
+              name="MobileNumber"
               fullWidth
               sx={{
                 mt: 2,
@@ -186,7 +186,7 @@ const DeranaDaruwo = () => {
             />
             </Box>
             <Box sx={{mt:3}}>
-              <Buttons onClick={handleClick} label="Create Programm" />
+              <Buttons onClick={handleClick} label="Create Program" />
             </Box>
            
         </form>
@@ -194,9 +194,197 @@ const DeranaDaruwo = () => {
         </Box>
       )}
       {activeTab === 1 && (
-        <Box>
-          <h1>Student Registration</h1>
+        
+        <Box sx={{mt:2}}>
+          <form>
+            <Box>
+            <label 
+          style={labelStyle}
+          htmlFor="Student Name">Student Name</label>
+            <TextField 
+  
+              variant="outlined"
+              name="StudentName"
+              fullWidth
+              sx={{
+                mt: 2,
+                '& .MuiOutlinedInput-root': {
+                  padding: '0px',
+                  '& fieldset': {
+                    borderWidth: '3px',
+                  },
+                },
+              }}
+            />
+            </Box>
+
+            <Box sx={{mt:2}}>
+            <label 
+          style={labelStyle}
+          htmlFor="Student Address">Student Address</label>
+            <TextField 
+  
+              variant="outlined"
+              name="StudentAddress"
+              fullWidth
+              sx={{
+                mt: 2,
+                '& .MuiOutlinedInput-root': {
+                  padding: '0px',
+                  '& fieldset': {
+                    borderWidth: '3px',
+                  },
+                },
+              }}
+            />
+            </Box>
+
+            <Box sx={{mt:2}}>
+            <label 
+          style={labelStyle}
+          htmlFor="Student ID">Student ID</label>
+            <TextField 
+  
+              variant="outlined"
+              name="StudentID"
+              fullWidth
+              sx={{
+                mt: 2,
+                '& .MuiOutlinedInput-root': {
+                  padding: '0px',
+                  '& fieldset': {
+                    borderWidth: '3px',
+                  },
+                },
+              }}
+            />
+            </Box>
+
+            <Box sx={{mt:2}}>
+            <label 
+          style={labelStyle}
+          htmlFor="Program ID">Program ID</label>
+            <TextField 
+  
+              variant="outlined"
+              name="ProgramID"
+              fullWidth
+              sx={{
+                mt: 2,
+                '& .MuiOutlinedInput-root': {
+                  padding: '0px',
+                  '& fieldset': {
+                    borderWidth: '3px',
+                  },
+                },
+              }}
+            />
+            </Box>
+
+            <Box sx={{mt:8}}>
+            <label 
+          style={labelStyle}
+          htmlFor="Parent's Details">Parent's Details</label>
+            
+            </Box>
+
+            <Box sx={{mt:4}}>
+            <label 
+          style={labelStyle}
+          htmlFor="Parent Name">Parent Name</label>
+            <TextField 
+  
+              variant="outlined"
+              name="ParentName"
+              fullWidth
+              sx={{
+                mt: 2,
+                '& .MuiOutlinedInput-root': {
+                  padding: '0px',
+                  '& fieldset': {
+                    borderWidth: '3px',
+                  },
+                },
+              }}
+            />
+            </Box> 
+
+            <Box sx={{mt:2}}>
+            <label 
+          style={labelStyle}
+          htmlFor="Parent Contact number">Parent Contact number</label>
+            <TextField 
+  
+              variant="outlined"
+              name="ParentContactNumber"
+              fullWidth
+              sx={{
+                mt: 2,
+                '& .MuiOutlinedInput-root': {
+                  padding: '0px',
+                  '& fieldset': {
+                    borderWidth: '3px',
+                  },
+                },
+              }}
+            />
+            </Box>
+
+            <Box sx={{mt:8}}>
+            <label 
+          style={labelStyle}
+          htmlFor="Bank Account Details">Bank Account Details</label>
+            
+            </Box> 
+            <Box>
+            <Grid container spacing={2} sx={{ mt: 2 }}>
+  <Grid item xs={6}>
+    <label style={labelStyle} htmlFor="Bank Name">
+      Bank Name
+    </label>
+    <TextField
+      variant="outlined"
+      name="BankName"
+      fullWidth
+      sx={{
+        mt: 1,
+        "& .MuiOutlinedInput-root": {
+          padding: "0px",
+          "& fieldset": {
+            borderWidth: "3px",
+          },
+        },
+      }}
+    />
+  </Grid>
+  <Grid item xs={6}>
+    <label style={labelStyle} htmlFor="Account Number">
+      Account Number
+    </label>
+    <TextField
+      variant="outlined"
+      name="AccountNumber"
+      fullWidth
+      sx={{
+        mt: 1,
+        "& .MuiOutlinedInput-root": {
+          padding: "0px",
+          "& fieldset": {
+            borderWidth: "3px",
+          },
+        },
+      }}
+    />
+  </Grid>
+</Grid>
+            </Box>
+
+            <Box sx={{mt:4,mb:4}}>
+              <Buttons label={"Register Student"}/>
+            </Box>
+          </form>
         </Box>
+        
       )}
       {activeTab === 2 && (
         <Box>
