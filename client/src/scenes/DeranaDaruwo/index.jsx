@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, TextField, useTheme, Grid} from "@mui/material";
+import { Box, TextField, useTheme, Grid, Modal} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useGetTransactionsQuery } from "state/api";
 import Header from "components/Header";
@@ -16,6 +16,8 @@ const DeranaDaruwo = () => {
     setActiveTab(newValue);
   };
 
+const[openModal, setOpenModal] = useState(false);
+
  const handleChange = (e) => {
   const {name, value} = e.target;
  };
@@ -27,6 +29,20 @@ const DeranaDaruwo = () => {
  const handleSubmit = (e) => {
     e.preventDefault();
   };
+
+  const handelOpenModal = () => {
+    setOpenModal(true);
+  };
+
+  const handelCloseModal = () => {
+    setOpenModal(false);
+  };
+
+  const [ProgramDetails,setProgramDetails] = useState({});
+  const handelCreateProgram = () => {
+    console.log(ProgramDetails);
+    handelCloseModal();
+  }
 
   const labelStyle = {
     fontWeight: " bold",
@@ -57,14 +73,34 @@ const DeranaDaruwo = () => {
       </Tabs>
       {activeTab === 0 && (
         <><Box sx={{ marginRight: "20px", position: "absolute", top: "20", right: "70px", display: "inline-flex", alignItems: "center", justifyItems: "center" }}>
-          <Buttons label={"Create Program"} />
+          <Buttons label={"Create Program"} onClick={handelOpenModal}/>
         </Box>
         <Box>
+          </Box>
+          <Modal 
+          open = {openModal}
+          onClose={handelCloseModal}
+          arial-labelledby = "modal-modal-titel"
+          aria-describedby = "model-model-description"
+          >
+          <Box 
+          sx={{
+            position:"absolute",
+            top: "50%",
+            left: "50%",
+            transform:"translate(-50%, -50%)",
+            width: 800,
+            height:700,
+            bgcolor:"rgba(255, 255, 255, 0.9)",
+            border:"2px solid #000",
+            boxShadow:24,
+            p: 4,
+            }}>
 
-            <Box sx={{ mt: 10 }}>
-              <form onSubmit={handleSubmit}>
-                <h2>Create a Program</h2>
-                <Box sx={{ mt: 6 }}>
+            <h2 id="modal-modal-titel">Create New Program</h2>
+
+
+           <Box sx={{ mt: 6 }}>
 
                   <label
                     style={labelStyle}
@@ -75,7 +111,7 @@ const DeranaDaruwo = () => {
                     name="ProgramID"
                     fullWidth
                     sx={{
-                      mt: 2,
+                      mt: 1,
                       '& .MuiOutlinedInput-root': {
                         padding: '0px',
                         '& fieldset': {
@@ -85,7 +121,7 @@ const DeranaDaruwo = () => {
                     }} />
                 </Box>
 
-                <Box sx={{ mt: 2 }}>
+                <Box sx={{ mt: 1 }}>
                   <label
                     style={labelStyle}
                     htmlFor="Location">Location</label>
@@ -140,13 +176,13 @@ const DeranaDaruwo = () => {
                     </Grid>
                   </Grid>
                 </Box>
-                <Box sx={{ mt: 10 }}>
+                <Box sx={{ mt: 6 }}>
                   <label
                     style={labelStyle}
                     htmlFor="Area Officer Details">Area Officer Details</label>
                 </Box>
 
-                <Box sx={{ mt: 5 }}>
+                <Box sx={{ mt: 4}}>
                   <label
                     style={labelStyle}
                     htmlFor="Name">Name</label>
@@ -156,7 +192,7 @@ const DeranaDaruwo = () => {
                     name="Name"
                     fullWidth
                     sx={{
-                      mt: 2,
+                      mt: 1,
                       '& .MuiOutlinedInput-root': {
                         padding: '0px',
                         '& fieldset': {
@@ -166,7 +202,7 @@ const DeranaDaruwo = () => {
                     }} />
                 </Box>
 
-                <Box sx={{ mt: 2 }}>
+                <Box sx={{ mt: 1 }}>
                   <label
                     style={labelStyle}
                     htmlFor="MObile Number">Mobile Number</label>
@@ -176,7 +212,7 @@ const DeranaDaruwo = () => {
                     name="MobileNumber"
                     fullWidth
                     sx={{
-                      mt: 2,
+                      mt: 1,
                       '& .MuiOutlinedInput-root': {
                         padding: '0px',
                         '& fieldset': {
@@ -185,13 +221,14 @@ const DeranaDaruwo = () => {
                       },
                     }} />
                 </Box>
-                <Box sx={{ mt: 3 }}>
-                  <Buttons onClick={handleClick} label="Create Program" />
-                </Box>
-
-              </form>
-            </Box>
-          </Box></>
+                <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-end" }}>
+      <Buttons onClick={handleClick} label="Save" sx={{ mr: 6 }} />
+      <Buttons onClick={handleClick} label="Cancel" />
+    </Box>
+                
+          </Box>
+          </Modal>
+          </>
       )}
       {activeTab === 1 && (
         
