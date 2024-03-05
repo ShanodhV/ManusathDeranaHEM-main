@@ -173,7 +173,7 @@ const HealthCamps = () => {
             <Box sx={{mt:2}}>
             <label 
           style={labelStyle}
-          htmlFor="Emergency Contact number">Emergency Contact number</label>
+          htmlFor="Emergency Contact Number">Emergency Contact Number</label>
             <TextField 
   
               variant="outlined"
