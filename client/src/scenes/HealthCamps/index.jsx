@@ -11,7 +11,7 @@ const HealthCamps = () => {
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
   };
-
+  const[openModal, setOpenModal] = useState(false);
     const handleChange = (e) => {
       const {name, value} = e.target;
      };
@@ -31,7 +31,13 @@ const HealthCamps = () => {
       margintop: "80px"
       
     }
+    const handelOpenModal = () => {
+      setOpenModal(true);
+    };
   
+    const handelCloseModal = () => {
+      setOpenModal(false);
+    };
 
  
   return (
@@ -55,6 +61,7 @@ const HealthCamps = () => {
         <Tab label="Camp Predictor" />
         <Tab label="Patient Data Analyzer" />
       </Tabs>
+
       {activeTab === 0 && (
         <Box>
         </Box>
@@ -200,11 +207,147 @@ const HealthCamps = () => {
       )}
       {activeTab === 2 && (
         <Box>
-
-
-          
         </Box>
       )}
+
+    {activeTab === 3 && (
+        <Box>
+        </Box>
+      )}
+
+       {activeTab === 4 && (
+        <Box>
+        </Box>
+      )}
+
+       {activeTab === 5 && (
+        <Box>
+          <h1>Patient Data Analyzer</h1>
+          <h2>Analyze Patients by Health Camp</h2>
+          <Box sx={{mt: 2}}>
+      <label 
+        style={labelStyle}
+        htmlFor="healthCampId">Health Camp ID</label>
+      <TextField
+        select
+        variant="outlined"
+        fullWidth
+        label="Select Health Camp ID"
+        sx={{ 
+          '& fieldset': {
+            borderWidth: '3px',
+          },
+        }}
+      >
+      </TextField>
+    </Box>
+          <Box sx={{mt:2}}>
+          <label 
+          style={labelStyle}
+          htmlFor="Location">Location</label>
+          <Grid container spacing={2} sx={{mt:0}}> 
+              <Grid item xs={4}> 
+                <TextField
+                  select
+                  variant="outlined"
+                  fullWidth
+                  label="Select by Province"
+                  sx={{ 
+            
+                    '& fieldset': {
+                      borderWidth: '3px',
+                    },
+                  }}
+                >
+         
+                </TextField>
+              </Grid>
+              <Grid item xs={4}> 
+                <TextField
+                  select
+                  variant="outlined"
+                  fullWidth
+                  label="Select by District"
+                  sx={{ 
+            
+                    '& fieldset': {
+                      borderWidth: '3px',
+                    },
+                  }}
+                >
+            
+                </TextField>
+              </Grid>
+              <Grid item xs={4}> 
+                <TextField
+                  select
+                  variant="outlined"
+                  fullWidth
+                  label="Select by Town"
+                  sx={{ 
+            
+                    '& fieldset': {
+                      borderWidth: '3px',
+                    },
+                  }}
+                 
+                >
+                </TextField>
+              </Grid>
+            </Grid>
+            </Box> 
+            <Box sx={{mt:3}}>
+              <Buttons onClick={handleClick} label="View" />
+            </Box>
+            
+          <h2>Analyze Patients by NIC</h2>
+      <Box sx={{mt: 2}}>
+        <label 
+        style={labelStyle}
+        htmlFor="healthCampId">Health Camp ID</label>
+        <TextField
+        select
+        variant="outlined"
+        fullWidth
+        label="Select Health Camp ID"
+        sx={{ 
+          '& fieldset': {
+            borderWidth: '3px',
+          },
+        }}
+        >
+       </TextField>
+    </Box>
+
+      <Box sx={{mt: 2}}>
+        <label 
+        style={labelStyle}
+        htmlFor="NIC">NIC</label>
+        <TextField
+        select
+        variant="outlined"
+        fullWidth
+        label="Select by NIC"
+        sx={{ 
+          '& fieldset': {
+            borderWidth: '3px',
+          },
+        }}
+        >
+        </TextField>
+    </Box>
+    
+          <Box sx={{mt:3}}>
+              <Buttons onClick={handleClick} label="View" />
+            </Box>
+
+          <h2>Analyze Patients by Symptoms</h2>
+          <Box sx={{mt:3}}>
+              <Buttons onClick={handleClick} label="View" />
+            </Box>
+        </Box>
+      )}
+
     </Box>
   );
 };
