@@ -222,19 +222,41 @@ const[openModal, setOpenModal] = useState(false);
                     }} />
                 </Box>
                 <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-end" }}>
-      <Buttons onClick={handleClick} label="Save" sx={{ mr: 6 }} />
-      <Buttons onClick={handleClick} label="Cancel" />
-    </Box>
+  <Buttons onClick={handleClick} label="Save" sx={{ mr: 5}} /> {/* Added margin to the right */}
+  <Buttons onClick={handleClick} label="Cancel" />
+</Box>
                 
           </Box>
           </Modal>
           </>
       )}
       {activeTab === 1 && (
-        
-        <Box sx={{mt:3}}>
-          <h2>Register Students</h2>
-          <form>
+        <>
+        <Box sx={{ marginRight: "20px", position: "absolute", top: "20", right: "70px", display: "inline-flex", alignItems: "center", justifyItems: "center" }}>
+          <Buttons label={"Register Student"} onClick={handelOpenModal}/>
+        </Box>
+        <Modal
+        open = {openModal}
+        onClose={handelCloseModal}
+        arial-labelledby = "modal-modal-titel"
+        aria-describedby = "model-model-description"
+        >
+        <Box 
+        sx={{
+          position:"absolute",
+            top: "50%",
+            left: "50%",
+            transform:"translate(-50%, -50%)",
+            width: 800,
+            height:700,
+            bgcolor:"rgba(255, 255, 255, 0.9)",
+            border:"2px solid #000",
+            boxShadow:24,
+            p: 4,
+          }}>
+
+          <h2 id="modal-modal-titel">Register Students</h2>
+          
             <Box sx={{mt:6}}>
             <label 
           style={labelStyle}
@@ -420,10 +442,12 @@ const[openModal, setOpenModal] = useState(false);
             <Box sx={{mt:4,mb:4}}>
               <Buttons label={"Register Student"}/>
             </Box>
-          </form>
+          
         </Box>
-        
+        </Modal>
+        </>
       )}
+
       {activeTab === 2 && (
         <Box sx={{mt:3}}>
           {/* <h1>Volunteer Donor Registration</h1> */}
