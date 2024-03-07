@@ -79,7 +79,7 @@ const SipsalPubuduwa = () => {
       {activeTab === 0 && (
   <>
     <Box sx={{ marginRight: "20px", position: "absolute", top: "20", right: "70px", display: "inline-flex", alignItems: "center", justifyItems: "center" }}>
-      <Buttons label={"Create Program"} onClick={handelOpenModal}/>
+      <Buttons label={"Register School"} onClick={handelOpenModal}/>
     </Box>
     <Box>
     </Box>
@@ -104,9 +104,10 @@ const SipsalPubuduwa = () => {
           overflowY:'auto'
         }}
       >
+        <h1 id="modal-modal-titel">School Registration</h1>
         <Box>
-          <h1 id="modal-modal-titel">School Registration</h1>
-          <form onSubmit={handleSubmit}>
+          
+          {/* <form onSubmit={handleSubmit}> */}
             <Box sx={{mt:6}}>
               <label 
                 style={labelStyle}
@@ -285,7 +286,7 @@ const SipsalPubuduwa = () => {
             <Box sx={{mt:3}}>
               <Buttons onClick={handleClick} label="Register" />
             </Box>
-          </form>
+          {/* </form> */}
         </Box>
       </Box>
     </Modal>
@@ -296,7 +297,7 @@ const SipsalPubuduwa = () => {
 {activeTab === 1 && (
   <>
     <Box sx={{ marginRight: "20px", position: "absolute", top: "20", right: "70px", display: "inline-flex", alignItems: "center", justifyItems: "center" }}>
-      <Buttons label={"Create Program"} onClick={handelOpenModal}/>
+      <Buttons label={"View"} onClick={handelOpenModal}/>
     </Box>
     <Box>
     </Box>
@@ -439,7 +440,7 @@ const SipsalPubuduwa = () => {
 {activeTab === 2 && (
   <>
     <Box sx={{ marginRight: "20px", position: "absolute", top: "20", right: "70px", display: "inline-flex", alignItems: "center", justifyItems: "center" }}>
-      <Buttons label={"Create Program"} onClick={handelOpenModal}/>
+      <Buttons label={"Register Donor"} onClick={handelOpenModal}/>
     </Box>
     <Box>
     </Box>
