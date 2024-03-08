@@ -24,7 +24,7 @@ const HealthCamps = () => {
         variant="standard"
         indicatorColor="secondary"
         textColor="secondary"
-        aria-label="Sipsal Pubuduwa tabs"
+        aria-label="Helath Camps tabs"
       >
         <Tab label="Health Camps" />
         <Tab label="Pateint Registration" />
