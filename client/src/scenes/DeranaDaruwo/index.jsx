@@ -103,23 +103,25 @@ const[openModal, setOpenModal] = useState(false);
 
            <Box sx={{ mt: 6 }}>
 
-                  <label
-                    style={labelStyle}
-                    htmlFor="Program ID">Program ID</label>
-                  <TextField
-
-                    variant="outlined"
-                    name="ProgramID"
-                    fullWidth
-                    sx={{
-                      mt: 1,
-                      '& .MuiOutlinedInput-root': {
-                        padding: '0px',
-                        '& fieldset': {
-                          borderWidth: '3px',
-                        },
-                      },
-                    }} />
+           <Grid item xs={6} >
+      <label style={labelStyle} htmlFor="Program ID">
+        Program ID
+      </label>
+      <TextField
+  
+        select
+        variant="outlined"
+        fullWidth
+        label="Select Program ID"
+        sx={{ mt:2,
+          "& fieldset": {
+            borderWidth: "3px",
+          },
+        }}
+      >
+        {/* Add dropdown options here */}
+      </TextField>
+    </Grid>
                 </Box>
 
                 <Box sx={{ mt: 1 }}>
@@ -222,10 +224,15 @@ const[openModal, setOpenModal] = useState(false);
                       },
                     }} />
                 </Box>
-                <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-end" }}>
-  <Buttons onClick={handleClick} label="Save" sx={{ mr: 5}} /> 
-  <Buttons onClick={handleClick} label="Cancel" />
+                <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-start" }}>
+  <Buttons onClick={handleClick} label="Save" sx={{ mr: 20}} /> 
+  <Buttons onClick={handleClick} label="Cancel" sx={{marginLeft: 20}}/>
 </Box>
+<Box sx={{ mt: 3, display: "flex", justifyContent: "flex-start" }}>
+  
+  </Box>
+
+
                 
           </Box>
           </Modal>
@@ -302,49 +309,47 @@ const[openModal, setOpenModal] = useState(false);
             </Box>
 
             <Box sx={{mt:1}}>
-            <label 
-          style={labelStyle}
-          htmlFor="Student ID">Student ID</label>
-            <TextField 
-  
-              variant="outlined"
-              name="StudentID"
-              fullWidth
-              sx={{
-                mt: 1,
-                '& .MuiOutlinedInput-root': {
-                  padding: '0px',
-                  '& fieldset': {
-                    borderWidth: '3px',
-                  },
-                },
-              }}
-            />
-            </Box>
-
             <Grid item xs={6}>
-            <label 
-          style={labelStyle}
-          htmlFor="Program ID">Program ID</label>
-            <Select
-  
-              variant="outlined"
-              fullWidth
-              label = "Select Program ID"
-              sx={{
-                "& fieldset": {
-                  borderWidth: "3px",
-                },
-              }}
-            >
-              {/* Add dropdown options here */}
-    <MenuItem value="program1">Program 1</MenuItem>
-    <MenuItem value="program2">Program 2</MenuItem>
-    <MenuItem value="program3">Program 3</MenuItem>
-    {/* Add more MenuItem components for additional options */}
-  </Select>
-            </Grid>
+      <label style={labelStyle} htmlFor="Student ID">
+        Student ID
+      </label>
+      <TextField
+        select
+        variant="outlined"
+        fullWidth
+        label="Select Program ID"
+        sx={{ mt:1,
+          "& fieldset": {
+            borderWidth: "3px",
+          },
+        }}
+      >
+        {/* Add dropdown options here */}
+      </TextField>
+    </Grid>
+            </Box>
+        <Box sx={{mt:1}}>
+            <Grid item xs={6}>
 
+      <label style={labelStyle} htmlFor="Program ID">
+        Program ID
+      </label>
+      <TextField
+        select
+        variant="outlined"
+        fullWidth
+        label="Select Program ID"
+        sx={{
+          "& fieldset": {
+            borderWidth: "3px",
+          },
+        }}
+      >
+        {/* Add dropdown options here */}
+      </TextField>
+  
+            </Grid>
+            </Box>
             <Box sx={{mt:5}}>
             <label 
           style={labelStyle}
@@ -455,7 +460,7 @@ const[openModal, setOpenModal] = useState(false);
       {activeTab === 2 && (
         <>
         <Box sx={{ marginRight: "20px", position: "absolute", top: "20", right: "70px", display: "inline-flex", alignItems: "center", justifyItems: "center" }}>
-          <Buttons label={"Register Dornor"} onClick={handelOpenModal}/>
+          <Buttons label={"Register Donor"} onClick={handelOpenModal}/>
         </Box>
         <Modal
         open = {openModal}
@@ -478,7 +483,7 @@ const[openModal, setOpenModal] = useState(false);
             overflowY: 'auto', 
           }}>
           {/* <h1>Volunteer Donor Registration</h1> */}
-          <h2 id="modal-modal-titel">Register Volunteer Dornors</h2>
+          <h2 id="modal-modal-titel">Register Volunteer Donors</h2>
           
           <Box sx={{mt:4}}>
             <label 
@@ -543,26 +548,28 @@ const[openModal, setOpenModal] = useState(false);
             />
             </Box>
 
-            <Box sx={{mt:1}}>
-            <label 
-          style={labelStyle}
-          htmlFor="Donor ID">Donor ID</label>
-            <TextField 
-  
-              variant="outlined"
-              name="DonorID"
-              fullWidth
-              sx={{
-                mt: 1,
-                '& .MuiOutlinedInput-root': {
-                  padding: '0px',
-                  '& fieldset': {
-                    borderWidth: '3px',
-                  },
-                },
-              }}
-            />
-            </Box>
+            <Box sx={{ mt: 1 }}>
+  <Grid item xs={6}>
+    <label style={labelStyle} htmlFor="Donor ID">
+      Donor ID
+    </label>
+    <TextField
+      select
+      variant="outlined"
+      fullWidth
+      label="Select Donor ID"
+      sx={{
+        "& fieldset": {
+          borderWidth: "3px",
+        },
+        marginTop: "8px", // Adding margin top for spacing
+      }}
+    >
+      {/* Add dropdown options here */}
+    </TextField>
+  </Grid>
+</Box>
+
 
             <Box sx={{ mt: 2 }}>
   <Grid container spacing={2}>
@@ -579,6 +586,7 @@ const[openModal, setOpenModal] = useState(false);
           "& fieldset": {
             borderWidth: "3px",
           },
+          marginTop: "8px",
         }}
       >
         {/* Add dropdown options here */}
@@ -597,6 +605,7 @@ const[openModal, setOpenModal] = useState(false);
           "& fieldset": {
             borderWidth: "3px",
           },
+          marginTop: "8px",
         }}
       >
         {/* Add dropdown options here */}
@@ -606,7 +615,7 @@ const[openModal, setOpenModal] = useState(false);
 </Box>
 
         <Box sx={{mt:4,mb:4}}>
-          <Buttons label={"Register Dornor"}/>
+          <Buttons label={"Register Donor"}/>
         </Box>
           
         </Box>
