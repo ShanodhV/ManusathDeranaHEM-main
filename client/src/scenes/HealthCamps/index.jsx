@@ -39,8 +39,11 @@ const HealthCamps = () => {
       setOpenModal(false);
     };
 
- 
+    const HeadingAlignment = () => {
+    };
   return (
+
+
     <Box m="1.5rem 2.5rem">
       <Header
         title="Health Camps"
@@ -405,6 +408,13 @@ const HealthCamps = () => {
 
     {activeTab === 3 && (
         <Box>
+            <h1>View Data</h1>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <h2 style={{ textAlign: 'left' }}>View Patient Data</h2>
+                <h2 style={{ textAlign: 'right' }}>View Health Camp Data</h2>
+            </div>
+            
+
         </Box>
       )}
 
@@ -412,7 +422,7 @@ const HealthCamps = () => {
         <Box>
         </Box>
       )}
-
+      
        {activeTab === 5 && (
         <Box>
           <h1>Patient Data Analyzer</h1>
@@ -490,7 +500,7 @@ const HealthCamps = () => {
             </Grid>
             </Box> 
             <Box sx={{mt:3}}>
-              <Buttons onClick={handleClick} label="View" />
+              <Buttons onClick={handleClick} label="Analyze" />
             </Box>
             
           <h2>Analyze Patients by NIC</h2>
@@ -531,12 +541,12 @@ const HealthCamps = () => {
     </Box>
     
           <Box sx={{mt:3}}>
-              <Buttons onClick={handleClick} label="View" />
+              <Buttons onClick={handleClick} label="Analyze" />
             </Box>
 
           <h2>Analyze Patients by Symptoms</h2>
           <Box sx={{mt:3}}>
-              <Buttons onClick={handleClick} label="View" />
+              <Buttons onClick={handleClick} label="Analyze" />
             </Box>
         </Box>
       )}
