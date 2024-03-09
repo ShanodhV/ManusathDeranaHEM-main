@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, TextField, useTheme, Grid, Modal} from "@mui/material";
+import { Box, TextField, useTheme, Grid, Modal, Select, MenuItem} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useGetTransactionsQuery } from "state/api";
 import Header from "components/Header";
@@ -95,6 +95,7 @@ const[openModal, setOpenModal] = useState(false);
             border:"2px solid #000",
             boxShadow:24,
             p: 4,
+            overflowY: 'auto', 
             }}>
 
             <h2 id="modal-modal-titel">Create New Program</h2>
@@ -102,23 +103,25 @@ const[openModal, setOpenModal] = useState(false);
 
            <Box sx={{ mt: 6 }}>
 
-                  <label
-                    style={labelStyle}
-                    htmlFor="Program ID">Program ID</label>
-                  <TextField
-
-                    variant="outlined"
-                    name="ProgramID"
-                    fullWidth
-                    sx={{
-                      mt: 1,
-                      '& .MuiOutlinedInput-root': {
-                        padding: '0px',
-                        '& fieldset': {
-                          borderWidth: '3px',
-                        },
-                      },
-                    }} />
+           <Grid item xs={6} >
+      <label style={labelStyle} htmlFor="Program ID">
+        Program ID
+      </label>
+      <TextField
+  
+        select
+        variant="outlined"
+        fullWidth
+        label="Select Program ID"
+        sx={{ mt:2,
+          "& fieldset": {
+            borderWidth: "3px",
+          },
+        }}
+      >
+        {/* Add dropdown options here */}
+      </TextField>
+    </Grid>
                 </Box>
 
                 <Box sx={{ mt: 1 }}>
@@ -221,10 +224,15 @@ const[openModal, setOpenModal] = useState(false);
                       },
                     }} />
                 </Box>
-                <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-end" }}>
-  <Buttons onClick={handleClick} label="Save" sx={{ mr: 5}} /> {/* Added margin to the right */}
-  <Buttons onClick={handleClick} label="Cancel" />
+                <Box sx={{ mt: 3, display: "flex", justifyContent: "flex-start" }}>
+  <Buttons onClick={handleClick} label="Save" sx={{ mr: 20}} /> 
+  <Buttons onClick={handleClick} label="Cancel" sx={{marginLeft: 20}}/>
 </Box>
+<Box sx={{ mt: 3, display: "flex", justifyContent: "flex-start" }}>
+  
+  </Box>
+
+
                 
           </Box>
           </Modal>
@@ -253,11 +261,12 @@ const[openModal, setOpenModal] = useState(false);
             border:"2px solid #000",
             boxShadow:24,
             p: 4,
+            overflowY: 'auto', 
           }}>
 
           <h2 id="modal-modal-titel">Register Students</h2>
           
-            <Box sx={{mt:6}}>
+            <Box sx={{mt: 4}}>
             <label 
           style={labelStyle}
           htmlFor="Student Name">Student Name</label>
@@ -267,7 +276,7 @@ const[openModal, setOpenModal] = useState(false);
               name="StudentName"
               fullWidth
               sx={{
-                mt: 2,
+                mt: 1,
                 '& .MuiOutlinedInput-root': {
                   padding: '0px',
                   '& fieldset': {
@@ -278,7 +287,7 @@ const[openModal, setOpenModal] = useState(false);
             />
             </Box>
 
-            <Box sx={{mt:2}}>
+            <Box sx={{mt:1}}>
             <label 
           style={labelStyle}
           htmlFor="Student Address">Student Address</label>
@@ -288,7 +297,7 @@ const[openModal, setOpenModal] = useState(false);
               name="StudentAddress"
               fullWidth
               sx={{
-                mt: 2,
+                mt: 1,
                 '& .MuiOutlinedInput-root': {
                   padding: '0px',
                   '& fieldset': {
@@ -299,49 +308,49 @@ const[openModal, setOpenModal] = useState(false);
             />
             </Box>
 
-            <Box sx={{mt:2}}>
-            <label 
-          style={labelStyle}
-          htmlFor="Student ID">Student ID</label>
-            <TextField 
+            <Box sx={{mt:1}}>
+            <Grid item xs={6}>
+      <label style={labelStyle} htmlFor="Student ID">
+        Student ID
+      </label>
+      <TextField
+        select
+        variant="outlined"
+        fullWidth
+        label="Select Program ID"
+        sx={{ mt:1,
+          "& fieldset": {
+            borderWidth: "3px",
+          },
+        }}
+      >
+        {/* Add dropdown options here */}
+      </TextField>
+    </Grid>
+            </Box>
+        <Box sx={{mt:1}}>
+            <Grid item xs={6}>
+
+      <label style={labelStyle} htmlFor="Program ID">
+        Program ID
+      </label>
+      <TextField
+        select
+        variant="outlined"
+        fullWidth
+        label="Select Program ID"
+        sx={{
+          "& fieldset": {
+            borderWidth: "3px",
+          },
+        }}
+      >
+        {/* Add dropdown options here */}
+      </TextField>
   
-              variant="outlined"
-              name="StudentID"
-              fullWidth
-              sx={{
-                mt: 2,
-                '& .MuiOutlinedInput-root': {
-                  padding: '0px',
-                  '& fieldset': {
-                    borderWidth: '3px',
-                  },
-                },
-              }}
-            />
+            </Grid>
             </Box>
-
-            <Box sx={{mt:2}}>
-            <label 
-          style={labelStyle}
-          htmlFor="Program ID">Program ID</label>
-            <TextField 
-  
-              variant="outlined"
-              name="ProgramID"
-              fullWidth
-              sx={{
-                mt: 2,
-                '& .MuiOutlinedInput-root': {
-                  padding: '0px',
-                  '& fieldset': {
-                    borderWidth: '3px',
-                  },
-                },
-              }}
-            />
-            </Box>
-
-            <Box sx={{mt:8}}>
+            <Box sx={{mt:5}}>
             <label 
           style={labelStyle}
           htmlFor="Parent's Details">Parent's Details</label>
@@ -358,7 +367,7 @@ const[openModal, setOpenModal] = useState(false);
               name="ParentName"
               fullWidth
               sx={{
-                mt: 2,
+                mt: 1,
                 '& .MuiOutlinedInput-root': {
                   padding: '0px',
                   '& fieldset': {
@@ -369,7 +378,7 @@ const[openModal, setOpenModal] = useState(false);
             />
             </Box> 
 
-            <Box sx={{mt:2}}>
+            <Box sx={{mt:1}}>
             <label 
           style={labelStyle}
           htmlFor="Parent Contact number">Parent Contact number</label>
@@ -379,7 +388,7 @@ const[openModal, setOpenModal] = useState(false);
               name="ParentContactNumber"
               fullWidth
               sx={{
-                mt: 2,
+                mt: 1,
                 '& .MuiOutlinedInput-root': {
                   padding: '0px',
                   '& fieldset': {
@@ -390,7 +399,7 @@ const[openModal, setOpenModal] = useState(false);
             />
             </Box>
 
-            <Box sx={{mt:8}}>
+            <Box sx={{mt:6}}>
             <label 
           style={labelStyle}
           htmlFor="Bank Account Details">Bank Account Details</label>
@@ -449,11 +458,34 @@ const[openModal, setOpenModal] = useState(false);
       )}
 
       {activeTab === 2 && (
-        <Box sx={{mt:3}}>
+        <>
+        <Box sx={{ marginRight: "20px", position: "absolute", top: "20", right: "70px", display: "inline-flex", alignItems: "center", justifyItems: "center" }}>
+          <Buttons label={"Register Donor"} onClick={handelOpenModal}/>
+        </Box>
+        <Modal
+        open = {openModal}
+        onClose={handelCloseModal}
+        arial-labelledby = "modal-modal-titel"
+        aria-describedby = "model-model-description"
+        >
+        <Box sx={{
+          
+          position:"absolute",
+            top: "50%",
+            left: "50%",
+            transform:"translate(-50%, -50%)",
+            width: 800,
+            height:700,
+            bgcolor:"rgba(255, 255, 255, 0.9)",
+            border:"2px solid #000",
+            boxShadow:24,
+            p: 4,
+            overflowY: 'auto', 
+          }}>
           {/* <h1>Volunteer Donor Registration</h1> */}
-          <h2>Register Volunteer Dornors</h2>
-          <form>
-          <Box sx={{mt:6}}>
+          <h2 id="modal-modal-titel">Register Volunteer Donors</h2>
+          
+          <Box sx={{mt:4}}>
             <label 
           style={labelStyle}
           htmlFor="Donor Name">Donor Name</label>
@@ -463,7 +495,7 @@ const[openModal, setOpenModal] = useState(false);
               name="DonorName"
               fullWidth
               sx={{
-                mt: 2,
+                mt: 1,
                 '& .MuiOutlinedInput-root': {
                   padding: '0px',
                   '& fieldset': {
@@ -474,7 +506,7 @@ const[openModal, setOpenModal] = useState(false);
             />
             </Box>
 
-            <Box sx={{mt:2}}>
+            <Box sx={{mt:1}}>
             <label 
           style={labelStyle}
           htmlFor="Donor Address">Donor Address</label>
@@ -484,7 +516,7 @@ const[openModal, setOpenModal] = useState(false);
               name="DonorAddress"
               fullWidth
               sx={{
-                mt: 2,
+                mt: 1,
                 '& .MuiOutlinedInput-root': {
                   padding: '0px',
                   '& fieldset': {
@@ -495,7 +527,7 @@ const[openModal, setOpenModal] = useState(false);
             />
             </Box>
 
-            <Box sx={{mt:2}}>
+            <Box sx={{mt:1}}>
             <label 
           style={labelStyle}
           htmlFor="Donor Contact Number">Donor Contact Number</label>
@@ -505,7 +537,7 @@ const[openModal, setOpenModal] = useState(false);
               name="DonorContactNumber"
               fullWidth
               sx={{
-                mt: 2,
+                mt: 1,
                 '& .MuiOutlinedInput-root': {
                   padding: '0px',
                   '& fieldset': {
@@ -516,26 +548,28 @@ const[openModal, setOpenModal] = useState(false);
             />
             </Box>
 
-            <Box sx={{mt:2}}>
-            <label 
-          style={labelStyle}
-          htmlFor="Donor ID">Donor ID</label>
-            <TextField 
-  
-              variant="outlined"
-              name="DonorID"
-              fullWidth
-              sx={{
-                mt: 2,
-                '& .MuiOutlinedInput-root': {
-                  padding: '0px',
-                  '& fieldset': {
-                    borderWidth: '3px',
-                  },
-                },
-              }}
-            />
-            </Box>
+            <Box sx={{ mt: 1 }}>
+  <Grid item xs={6}>
+    <label style={labelStyle} htmlFor="Donor ID">
+      Donor ID
+    </label>
+    <TextField
+      select
+      variant="outlined"
+      fullWidth
+      label="Select Donor ID"
+      sx={{
+        "& fieldset": {
+          borderWidth: "3px",
+        },
+        marginTop: "8px", // Adding margin top for spacing
+      }}
+    >
+      {/* Add dropdown options here */}
+    </TextField>
+  </Grid>
+</Box>
+
 
             <Box sx={{ mt: 2 }}>
   <Grid container spacing={2}>
@@ -552,6 +586,7 @@ const[openModal, setOpenModal] = useState(false);
           "& fieldset": {
             borderWidth: "3px",
           },
+          marginTop: "8px",
         }}
       >
         {/* Add dropdown options here */}
@@ -570,6 +605,7 @@ const[openModal, setOpenModal] = useState(false);
           "& fieldset": {
             borderWidth: "3px",
           },
+          marginTop: "8px",
         }}
       >
         {/* Add dropdown options here */}
@@ -579,10 +615,12 @@ const[openModal, setOpenModal] = useState(false);
 </Box>
 
         <Box sx={{mt:4,mb:4}}>
-          <Buttons label={"Register Dornor"}/>
+          <Buttons label={"Register Donor"}/>
         </Box>
-          </form>
+          
         </Box>
+        </Modal>
+        </>
       )}
       {activeTab === 3 && (
         <Box>

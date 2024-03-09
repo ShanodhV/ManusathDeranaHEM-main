@@ -64,6 +64,199 @@ const HealthCamps = () => {
 
       {activeTab === 0 && (
         <Box>
+          <h1>Create Health Camp</h1>
+          <form>
+          <Box sx={{mt:6}}>
+            <label 
+          style={labelStyle}
+          htmlFor="Camp ID">Camp ID</label>
+            <TextField 
+  
+              variant="outlined"
+              name="CampID"
+              fullWidth
+              sx={{
+                mt: 2,
+                '& .MuiOutlinedInput-root': {
+                  padding: '0px',
+                  '& fieldset': {
+                    borderWidth: '3px',
+                  },
+                },
+              }}
+            />
+            </Box>
+          </form>
+          <Box sx={{mt:2}}>
+          <label 
+          style={labelStyle}
+          htmlFor="Add Location name">Add Location Name</label>
+          <Grid container spacing={2} sx={{mt:0}}> 
+              <Grid item xs={2.5}> 
+                <TextField
+                  select
+                  variant="outlined"
+                  fullWidth
+                  label="Province"
+                  sx={{ 
+            
+                    '& fieldset': {
+                      borderWidth: '3px',
+                    },
+                  }}
+                >
+         
+                </TextField>
+              </Grid>
+              <Grid item xs={2.5}> 
+                <TextField
+                  select
+                  variant="outlined"
+                  fullWidth
+                  label="District"
+                  sx={{ 
+            
+                    '& fieldset': {
+                      borderWidth: '3px',
+                    },
+                  }}
+                >
+            
+                </TextField>
+              </Grid>
+              <Grid item xs={2.5}> 
+                <TextField
+                  select
+                  variant="outlined"
+                  fullWidth
+                  label="Town"
+                  sx={{ 
+            
+                    '& fieldset': {
+                      borderWidth: '3px',
+                    },
+                  }}
+                >
+                </TextField>
+              </Grid>
+              <Grid item xs={2.5}> 
+                <TextField
+                  select
+                  variant="outlined"
+                  fullWidth
+                  label="MOH"
+                  sx={{ 
+                    '& fieldset': {
+                      borderWidth: '3px',
+                    },
+                  }}
+                >
+                </TextField>
+              </Grid>
+              <Box sx={{mt:2}}>
+              <Buttons onClick={handleClick} label="Add another MOH" />
+              </Box>
+            </Grid>
+            </Box> 
+            <Box sx={{mt:3}}>
+            <h2>Camp Contact Person</h2>
+            </Box>
+            <Box sx={{mt:3}}>
+            <label 
+          style={labelStyle}
+          htmlFor="Name">Name</label>
+            <TextField 
+  
+              variant="outlined"
+              name="Name"
+              label="John"
+              fullWidth
+              sx={{
+                mt: 2,
+                '& .MuiOutlinedInput-root': {
+                  padding: '0px',
+                  '& fieldset': {
+                    borderWidth: '3px',
+                  },
+                },
+              }}
+            />
+            </Box>
+            <Box sx={{mt:3}}>
+            <label 
+          style={labelStyle}
+          htmlFor="Mobile Number">Mobile Number</label>
+            <TextField 
+  
+              variant="outlined"
+              label="077xxxxxxx"
+              name="Mobile Number"
+              fullWidth
+              sx={{
+                mt: 2,
+                '& .MuiOutlinedInput-root': {
+                  padding: '0px',
+                  '& fieldset': {
+                    borderWidth: '3px',
+                  },
+                },
+              }}
+            />
+            <Box sx={{mt:2}}>
+              <Buttons onClick={handleClick} label="Add another Mobile Number" />
+              </Box>
+            </Box>
+            <Box sx={{mt:3}}>
+            <h2>Add Camp Activities</h2>
+            </Box>
+            <Box sx={{mt:3}}>
+            <label 
+          style={labelStyle}
+          htmlFor="Addcampactivities">Add Camp Activities</label>
+            <TextField 
+  
+              variant="outlined"
+              name="Addcampactivities"
+              label="Camp Activities"
+              fullWidth
+              sx={{
+                mt: 2,
+                '& .MuiOutlinedInput-root': {
+                  padding: '0px',
+                  '& fieldset': {
+                    borderWidth: '3px',
+                  },
+                },
+              }}
+            />
+            </Box>
+            <Box sx={{mt:3}}>
+            <label 
+          style={labelStyle}
+          htmlFor="Addsponser">Add Sponser/Collaboratives</label>
+            <TextField 
+              variant="outlined"
+              label="Sponser/Collaboratives"
+              name="Addsponser"
+              fullWidth
+              sx={{
+                mt: 2,
+                '& .MuiOutlinedInput-root': {
+                  padding: '0px',
+                  '& fieldset': {
+                    borderWidth: '3px',
+                  },
+                },
+              }}
+            />
+            </Box>
+            <Box sx={{mt:2}}>
+              <Buttons onClick={handleClick} label="Add New Sponser" />
+              </Box>
+
+              <Box sx={{ mt: 6, display: 'flex', justifyContent: 'center' }}>
+                  <Buttons onClick={handleClick} label="Create Health Camp" />
+              </Box>
         </Box>
       )}
 
