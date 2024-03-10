@@ -1,0 +1,13 @@
+.react-datepicker {
+    font-size: 16px; /* Adjust the font size as needed */
+    width: 300px; /* Adjust the width as needed */
+  }
+  
+  .react-datepicker__input-container input {
+    width: 100%;
+    height: 50px; /* Adjust the height as needed */
+    padding: 8px 12px; /* Adjust the padding as needed */
+    border-radius: 4px; /* Adjust the border radius as needed */
+    border: 3px solid #c2bebe; /* Adjust the border color as needed */
+    
+  }
