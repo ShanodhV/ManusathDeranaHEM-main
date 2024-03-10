@@ -422,7 +422,7 @@ const HealthCamps = () => {
         <Box>
         </Box>
       )}
-      
+
        {activeTab === 5 && (
         <Box>
           <h1>Patient Data Analyzer</h1>
@@ -462,7 +462,7 @@ const HealthCamps = () => {
                     },
                   }}
                 >
-         
+
                 </TextField>
               </Grid>
               <Grid item xs={4}> 
@@ -493,7 +493,7 @@ const HealthCamps = () => {
                       borderWidth: '3px',
                     },
                   }}
-                 
+ 
                 >
                 </TextField>
               </Grid>
@@ -544,7 +544,77 @@ const HealthCamps = () => {
               <Buttons onClick={handleClick} label="Analyze" />
             </Box>
 
-          <h2>Analyze Patients by Symptoms</h2>
+          <h2>Analyze Patients by Symptoms and Location</h2>
+          <Box sx={{mt:2}}>
+          <label 
+          style={labelStyle}
+          htmlFor="Location">Location</label>
+          <Grid container spacing={2} sx={{mt:0}}> 
+              <Grid item xs={4}> 
+                <TextField
+                  select
+                  variant="outlined"
+                  fullWidth
+                  label="Select by Province"
+                  sx={{ 
+            
+                    '& fieldset': {
+                      borderWidth: '3px',
+                    },
+                  }}
+                >
+                </TextField>
+              </Grid>
+              <Grid item xs={4}> 
+                <TextField
+                  select
+                  variant="outlined"
+                  fullWidth
+                  label="Select by District"
+                  sx={{ 
+            
+                    '& fieldset': {
+                      borderWidth: '3px',
+                    },
+                  }}
+                >
+                </TextField>
+              </Grid>
+              <Grid item xs={4}> 
+                <TextField
+                  select
+                  variant="outlined"
+                  fullWidth
+                  label="Select by Town"
+                  sx={{ 
+            
+                    '& fieldset': {
+                      borderWidth: '3px',
+                    },
+                  }}
+                >
+                </TextField>
+              </Grid>
+            </Grid>
+            </Box> 
+            <Box sx={{mt: 3}}>
+              <label 
+                style={labelStyle}
+                htmlFor="Symptom">Sympotom</label>
+                <TextField
+                select
+                variant="outlined"
+                fullWidth
+                label="Select Symptom"
+                sx={{ 
+                  '& fieldset': {
+                    borderWidth: '3px',
+                  },
+                }}
+              >
+              </TextField>
+            </Box>
+
           <Box sx={{mt:3}}>
               <Buttons onClick={handleClick} label="Analyze" />
             </Box>
