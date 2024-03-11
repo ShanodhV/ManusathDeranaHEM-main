@@ -403,6 +403,7 @@ const HealthCamps = () => {
       )}
       {activeTab === 2 && (
         <Box>
+          <h1>Lab Report</h1>
         </Box>
       )}
 
@@ -411,7 +412,24 @@ const HealthCamps = () => {
             <h1>View Data</h1>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <h2 style={{ textAlign: 'left' }}>View Patient Data</h2>
-                <h2 style={{ textAlign: 'right' }}>View Health Camp Data</h2>
+                <Box sx={{mt: 2}}>
+                  <label 
+                    style={labelStyle}
+                    htmlFor="Search">Search</label>
+                  <TextField
+                    select
+                    variant="outlined"
+                    fullWidth
+                    label="Search"
+                    sx={{ 
+                      '& fieldset': {
+                        borderWidth: '3px',
+                      },
+                    }}
+                  >
+                  </TextField>
+                </Box>
+                <h2 style={{textAlign: 'right'}}> View Health Camp Data </h2>
             </div>
             
 
@@ -420,30 +438,31 @@ const HealthCamps = () => {
 
        {activeTab === 4 && (
         <Box>
+          <h1>Health Camp Predictor</h1>
         </Box>
       )}
 
        {activeTab === 5 && (
-        <Box>
-          <h1>Patient Data Analyzer</h1>
-          <h2>Analyze Patients by Health Camp</h2>
-          <Box sx={{mt: 2}}>
-      <label 
-        style={labelStyle}
-        htmlFor="healthCampId">Health Camp ID</label>
-      <TextField
-        select
-        variant="outlined"
-        fullWidth
-        label="Select Health Camp ID"
-        sx={{ 
-          '& fieldset': {
-            borderWidth: '3px',
-          },
-        }}
-      >
-      </TextField>
-    </Box>
+          <Box>
+            <h1>Patient Data Analyzer</h1>
+            <h2>Analyze Patients by Health Camp</h2>
+            <Box sx={{mt: 2}}>
+        <label 
+          style={labelStyle}
+          htmlFor="healthCampId">Health Camp ID</label>
+        <TextField
+          select
+          variant="outlined"
+          fullWidth
+          label="Select Health Camp ID"
+          sx={{ 
+            '& fieldset': {
+              borderWidth: '3px',
+            },
+          }}
+        >
+        </TextField>
+      </Box>
           <Box sx={{mt:2}}>
           <label 
           style={labelStyle}
