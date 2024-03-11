@@ -475,7 +475,6 @@ const HealthCamps = () => {
                   fullWidth
                   label="Select by Province"
                   sx={{ 
-            
                     '& fieldset': {
                       borderWidth: '3px',
                     },
