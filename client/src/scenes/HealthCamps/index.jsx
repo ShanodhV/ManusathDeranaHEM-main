@@ -39,8 +39,11 @@ const HealthCamps = () => {
       setOpenModal(false);
     };
 
- 
+    const HeadingAlignment = () => {
+    };
   return (
+
+
     <Box m="1.5rem 2.5rem">
       <Header
         title="Health Camps"
@@ -400,40 +403,66 @@ const HealthCamps = () => {
       )}
       {activeTab === 2 && (
         <Box>
+          <h1>Lab Report</h1>
         </Box>
       )}
 
     {activeTab === 3 && (
         <Box>
+            <h1>View Data</h1>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <h2 style={{ textAlign: 'left' }}>View Patient Data</h2>
+                <Box sx={{mt: 2}}>
+                  <label 
+                    style={labelStyle}
+                    htmlFor="Search">Search</label>
+                  <TextField
+                    select
+                    variant="outlined"
+                    fullWidth
+                    label="Search"
+                    sx={{ 
+                      '& fieldset': {
+                        borderWidth: '3px',
+                      },
+                    }}
+                  >
+                  </TextField>
+                </Box>
+                <h2 style={{textAlign: 'right'}}> View Health Camp Data </h2>
+            </div>
+            
+
         </Box>
       )}
 
        {activeTab === 4 && (
         <Box>
+          <h1>Health Camp Predictor</h1>
         </Box>
       )}
 
        {activeTab === 5 && (
-        <Box>
-          <h1>Patient Data Analyzer</h1>
-          <h2>Analyze Patients by Health Camp</h2>
-          <Box sx={{mt: 2}}>
-      <label 
-        style={labelStyle}
-        htmlFor="healthCampId">Health Camp ID</label>
-      <TextField
-        select
-        variant="outlined"
-        fullWidth
-        label="Select Health Camp ID"
-        sx={{ 
-          '& fieldset': {
-            borderWidth: '3px',
-          },
-        }}
-      >
-      </TextField>
-    </Box>
+          <Box>
+            <h1>Patient Data Analyzer</h1>
+            <h2>Analyze Patients by Health Camp</h2>
+            <Box sx={{mt: 2}}>
+        <label 
+          style={labelStyle}
+          htmlFor="healthCampId">Health Camp ID</label>
+        <TextField
+          select
+          variant="outlined"
+          fullWidth
+          label="Select Health Camp ID"
+          sx={{ 
+            '& fieldset': {
+              borderWidth: '3px',
+            },
+          }}
+        >
+        </TextField>
+      </Box>
           <Box sx={{mt:2}}>
           <label 
           style={labelStyle}
@@ -446,13 +475,12 @@ const HealthCamps = () => {
                   fullWidth
                   label="Select by Province"
                   sx={{ 
-            
                     '& fieldset': {
                       borderWidth: '3px',
                     },
                   }}
                 >
-         
+
                 </TextField>
               </Grid>
               <Grid item xs={4}> 
@@ -483,14 +511,14 @@ const HealthCamps = () => {
                       borderWidth: '3px',
                     },
                   }}
-                 
+ 
                 >
                 </TextField>
               </Grid>
             </Grid>
             </Box> 
             <Box sx={{mt:3}}>
-              <Buttons onClick={handleClick} label="View" />
+              <Buttons onClick={handleClick} label="Analyze" />
             </Box>
             
           <h2>Analyze Patients by NIC</h2>
@@ -531,12 +559,82 @@ const HealthCamps = () => {
     </Box>
     
           <Box sx={{mt:3}}>
-              <Buttons onClick={handleClick} label="View" />
+              <Buttons onClick={handleClick} label="Analyze" />
             </Box>
 
-          <h2>Analyze Patients by Symptoms</h2>
+          <h2>Analyze Patients by Symptoms and Location</h2>
+          <Box sx={{mt:2}}>
+          <label 
+          style={labelStyle}
+          htmlFor="Location">Location</label>
+          <Grid container spacing={2} sx={{mt:0}}> 
+              <Grid item xs={4}> 
+                <TextField
+                  select
+                  variant="outlined"
+                  fullWidth
+                  label="Select by Province"
+                  sx={{ 
+            
+                    '& fieldset': {
+                      borderWidth: '3px',
+                    },
+                  }}
+                >
+                </TextField>
+              </Grid>
+              <Grid item xs={4}> 
+                <TextField
+                  select
+                  variant="outlined"
+                  fullWidth
+                  label="Select by District"
+                  sx={{ 
+            
+                    '& fieldset': {
+                      borderWidth: '3px',
+                    },
+                  }}
+                >
+                </TextField>
+              </Grid>
+              <Grid item xs={4}> 
+                <TextField
+                  select
+                  variant="outlined"
+                  fullWidth
+                  label="Select by Town"
+                  sx={{ 
+            
+                    '& fieldset': {
+                      borderWidth: '3px',
+                    },
+                  }}
+                >
+                </TextField>
+              </Grid>
+            </Grid>
+            </Box> 
+            <Box sx={{mt: 3}}>
+              <label 
+                style={labelStyle}
+                htmlFor="Symptom">Sympotom</label>
+                <TextField
+                select
+                variant="outlined"
+                fullWidth
+                label="Select Symptom"
+                sx={{ 
+                  '& fieldset': {
+                    borderWidth: '3px',
+                  },
+                }}
+              >
+              </TextField>
+            </Box>
+
           <Box sx={{mt:3}}>
-              <Buttons onClick={handleClick} label="View" />
+              <Buttons onClick={handleClick} label="Analyze" />
             </Box>
         </Box>
       )}
