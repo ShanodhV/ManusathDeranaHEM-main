@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, setRows} from "react";
 import { Box, TextField, useTheme, Grid, Modal, Select, MenuItem} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import { useGetTransactionsQuery } from "state/api";
@@ -9,13 +9,17 @@ import { Avatar, Button, Tab, Tabs, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import Buttons from "components/Buttons";
 
+
 const DeranaDaruwo = () => {
   const theme = useTheme();
   const [activeTab, setActiveTab] = useState(0); // State to manage active tab
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
   };
+  const [selectedRow, setSelectedRow] = useState(null);
 
+  
+  
 const[openModal, setOpenModal] = useState(false);
 
  const handleChange = (e) => {
@@ -34,15 +38,15 @@ const[openModal, setOpenModal] = useState(false);
     setOpenModal(true);
   };
 
-  const handelCloseModal = () => {
+  const handleCloseModal = () => {
     setOpenModal(false);
   };
-
   const [ProgramDetails,setProgramDetails] = useState({});
   const handelCreateProgram = () => {
     console.log(ProgramDetails);
-    handelCloseModal();
+    handleCloseModal();
   }
+
 
   const labelStyle = {
     fontWeight: " bold",
@@ -52,8 +56,86 @@ const[openModal, setOpenModal] = useState(false);
     
   }
 
+  const columns1 = [
+    { field: 'Program ID', headerName: 'Program ID', width: 235 },
+    { field: 'Location', headerName: 'Location', width: 250 },
+    { field: 'Area Officer Name', headerName: 'Area Officer Name', type: 'text', width: 250 },
+    { field: 'Area Officer PhoneNo.', headerName: 'Area Officer PhoneNo.', width: 220 },
+    { field: 'Actions', headerName: 'Action', width: 250 },
+  ];
+
+  const columns2 = [
+    { field: 'Student Name', headerName: 'Student Name', width: 235 },
+    { field: 'Student Address', headerName: 'Student Address', width: 250 },
+    { field: 'Program ID', headerName: 'Program Id', type: 'text', width: 250 },
+    { field: 'Student ID', headerName: 'Student ID', width: 220 },
+    { field: 'Actions', headerName: 'Action', width: 250 },
+  ];
+
+  const columns3 = [
+    { field: 'Donor Name', headerName: 'Donor Name', width: 200 },
+    { field: 'Donor Address', headerName: 'Donor Address', width: 160 },
+    { field: 'Donor ContactNo.', headerName: 'Donor ContactNo.', width: 160 },
+    { field: 'Donor ID', headerName: 'Donor ID', width: 160 },
+    { field: 'Program ID', headerName: 'Program Id', type: 'text', width: 160 },
+    { field: 'Student ID', headerName: 'Student ID', width: 160 },
+    { field: 'Actions', headerName: 'Action', width: 205 },
+  ];
+
+  const rows = [];
+  const columns = [];
+
+  const handleCreateProgram = () => {
+    // Generate a random Program ID
+    const programId = Math.floor(1000 + Math.random() * 9000);
+    console.log("Random Program ID:", programId);
+    handleCloseModal(); // Close the modal after creating a program
+  };
+
+  const handleOpenModal = (row) => {
+    setSelectedRow(row);
+    setOpenModal(true);
+  };
+
+  const rows1 = [
+    { id: 1, ProgramID: 123, Location: 'Location A', AreaOfficerName: 'John Doe', AreaOfficerPhoneNo: '123-456-7890', Actions: '' },
+    { id: 2, ProgramID: 456, Location: 'Location B', AreaOfficerName: 'Jane Doe', AreaOfficerPhoneNo: '987-654-3210', Actions: '' },
+    // Add more rows as needed
+  ];
+
+  const rows2 = [
+    { id: 1, ProgramID: 123, Location: 'Location A', AreaOfficerName: 'John Doe', AreaOfficerPhoneNo: '123-456-7890', Actions: '' },
+    { id: 2, ProgramID: 456, Location: 'Location B', AreaOfficerName: 'Jane Doe', AreaOfficerPhoneNo: '987-654-3210', Actions: '' },
+    // Add more rows as needed
+  ];
+
+  const rows3 = [
+    { id: 1, ProgramID: 123, Location: 'Location A', AreaOfficerName: 'John Doe', AreaOfficerPhoneNo: '123-456-7890', Actions: '' },
+    { id: 2, ProgramID: 456, Location: 'Location B', AreaOfficerName: 'Jane Doe', AreaOfficerPhoneNo: '987-654-3210', Actions: '' },
+    // Add more rows as needed
+  ];
+
+  useEffect(() => {
+    // Fetch data from the database using an API call
+    const fetchData = async () => {
+      try {
+        // Make an API call to fetch data
+        const response = await fetch('your_api_endpoint');
+        const data = await response.json();
+        // Update the rows state with the fetched data
+        setRows(data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    // Call the fetchData function when the component mounts
+    fetchData();
+  }, []);
+
   return (
     <Box m="1.5rem 2.5rem" sx={{mt:3}}>
+
       <Header
         title="Derana Daruwo "
         subtitle="Manage Derana Daruwo Scholarship Program"
@@ -72,14 +154,28 @@ const[openModal, setOpenModal] = useState(false);
         <Tab label="Next Area Predictor" />
       </Tabs>
       {activeTab === 0 && (
+        
         <><Box sx={{ marginRight: "20px", position: "absolute", top: "20", right: "70px", display: "inline-flex", alignItems: "center", justifyItems: "center" }}>
           <Buttons label={"Create Program"} onClick={handelOpenModal}/>
         </Box>
+
+        <Box mt={8} height="calc(100vh - 250px)" sx={{ '& .MuiDataGrid-root': { border: 'none' }, '& .MuiDataGrid-columnHeader': { backgroundColor: theme.palette.primary.main }, '& .MuiDataGrid-row': { borderBottom: `1px solid ${theme.palette.primary.light}` } }}>
+  <DataGrid
+    rows={rows}
+    columns={columns1}
+    pageSize={10}
+    rowsPerPageOptions={[10, 20, 50]}
+    autoHeight
+    disableSelectionOnClick
+    onRowClick={(params) => handleOpenModal(params.row)}
+  />
+</Box>
+        
         <Box>
           </Box>
           <Modal 
           open = {openModal}
-          onClose={handelCloseModal}
+          onClose={handleCloseModal}
           arial-labelledby = "modal-modal-titel"
           aria-describedby = "model-model-description"
           >
@@ -108,19 +204,15 @@ const[openModal, setOpenModal] = useState(false);
         Program ID
       </label>
       <TextField
-  
-        select
-        variant="outlined"
-        fullWidth
-        label="Select Program ID"
-        sx={{ mt:2,
-          "& fieldset": {
-            borderWidth: "3px",
-          },
-        }}
-      >
+            name="programId"
+            label="Program ID"
+            variant="outlined"
+            fullWidth
+            onChange={handleChange}
+            sx={{ mt: 2 }}
+          />
         {/* Add dropdown options here */}
-      </TextField>
+      
     </Grid>
                 </Box>
 
@@ -243,12 +335,25 @@ const[openModal, setOpenModal] = useState(false);
         <Box sx={{ marginRight: "20px", position: "absolute", top: "20", right: "70px", display: "inline-flex", alignItems: "center", justifyItems: "center" }}>
           <Buttons label={"Register Student"} onClick={handelOpenModal}/>
         </Box>
-        <Modal
+
+        <Box mt={8} height="calc(100vh - 250px)" sx={{ '& .MuiDataGrid-root': { border: 'none' }, '& .MuiDataGrid-columnHeader': { backgroundColor: theme.palette.primary.main }, '& .MuiDataGrid-row': { borderBottom: `1px solid ${theme.palette.primary.light}` } }}>
+  <DataGrid
+    rows={rows}
+    columns={columns2}
+    pageSize={10}
+    rowsPerPageOptions={[10, 20, 50]}
+    autoHeight
+    disableSelectionOnClick
+    onRowClick={(params) => handleOpenModal(params.row)}
+  />
+</Box>
+        <Modal 
         open = {openModal}
-        onClose={handelCloseModal}
+        onClose={handleCloseModal}
         arial-labelledby = "modal-modal-titel"
         aria-describedby = "model-model-description"
         >
+          
         <Box 
         sx={{
           position:"absolute",
@@ -324,7 +429,7 @@ const[openModal, setOpenModal] = useState(false);
           },
         }}
       >
-        {/* Add dropdown options here */}
+        
       </TextField>
     </Grid>
             </Box>
@@ -335,18 +440,15 @@ const[openModal, setOpenModal] = useState(false);
         Program ID
       </label>
       <TextField
-        select
-        variant="outlined"
-        fullWidth
-        label="Select Program ID"
-        sx={{
-          "& fieldset": {
-            borderWidth: "3px",
-          },
-        }}
-      >
-        {/* Add dropdown options here */}
-      </TextField>
+            name="programId"
+            label="Program ID"
+            variant="outlined"
+            fullWidth
+            onChange={handleChange}
+            sx={{ mt: 2 }}
+          />
+        
+      
   
             </Grid>
             </Box>
@@ -462,9 +564,22 @@ const[openModal, setOpenModal] = useState(false);
         <Box sx={{ marginRight: "20px", position: "absolute", top: "20", right: "70px", display: "inline-flex", alignItems: "center", justifyItems: "center" }}>
           <Buttons label={"Register Donor"} onClick={handelOpenModal}/>
         </Box>
+
+        <Box mt={8} height="calc(100vh - 250px)" sx={{ '& .MuiDataGrid-root': { border: 'none' }, '& .MuiDataGrid-columnHeader': { backgroundColor: theme.palette.primary.main }, '& .MuiDataGrid-row': { borderBottom: `1px solid ${theme.palette.primary.light}` } }}>
+  <DataGrid
+   rows={rows}
+   columns={columns3}
+   pageSize={10}
+   rowsPerPageOptions={[10, 20, 50]}
+   autoHeight
+   disableSelectionOnClick
+   onRowClick={(params) => handleOpenModal(params.row)}
+ />
+</Box>
+
         <Modal
         open = {openModal}
-        onClose={handelCloseModal}
+        onClose={handleCloseModal}
         arial-labelledby = "modal-modal-titel"
         aria-describedby = "model-model-description"
         >
@@ -562,10 +677,10 @@ const[openModal, setOpenModal] = useState(false);
         "& fieldset": {
           borderWidth: "3px",
         },
-        marginTop: "8px", // Adding margin top for spacing
+        marginTop: "8px", 
       }}
     >
-      {/* Add dropdown options here */}
+     
     </TextField>
   </Grid>
 </Box>
@@ -589,7 +704,7 @@ const[openModal, setOpenModal] = useState(false);
           marginTop: "8px",
         }}
       >
-        {/* Add dropdown options here */}
+       
       </TextField>
     </Grid>
     <Grid item xs={6}>
@@ -608,7 +723,7 @@ const[openModal, setOpenModal] = useState(false);
           marginTop: "8px",
         }}
       >
-        {/* Add dropdown options here */}
+       
       </TextField>
     </Grid>
   </Grid>
@@ -624,7 +739,7 @@ const[openModal, setOpenModal] = useState(false);
       )}
       {activeTab === 3 && (
         <Box>
-          <h1>Next Area Predictor</h1>
+          {/* <h1>Next Area Predictor</h1> */}
           <form>
             <Box>
 
