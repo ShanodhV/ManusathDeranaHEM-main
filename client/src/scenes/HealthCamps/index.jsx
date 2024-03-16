@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { Box, useTheme, Avatar, Button, Tab, Tabs, TextField, Grid } from "@mui/material";
+import { Box, useTheme, Avatar, Button, Tab, Tabs, TextField, Grid,Modal} from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
 import Header from "components/Header";
 import { useNavigate } from "react-router-dom"; 
 import GoogleMap from "components/GoogleMap";
 import Buttons from "components/Buttons";
+import { Line } from "react-chartjs-2";
 
 const HealthCamps = () => {
   const theme = useTheme();
@@ -41,6 +43,37 @@ const HealthCamps = () => {
 
     const HeadingAlignment = () => {
     };
+    const rows = [];
+    const columns = [];
+
+    const columns1 = [
+      { field: 'Program ID', headerName: 'Program ID', width: 235 },
+      { field: 'Location', headerName: 'Location', width: 250 },
+      { field: 'Area Officer Name', headerName: 'Area Officer Name', type: 'text', width: 250 },
+      { field: 'Area Officer PhoneNo.', headerName: 'Area Officer PhoneNo.', width: 220 },
+      { field: 'Actions', headerName: 'Action', width: 250 },
+    ];
+    const columns2 = [
+      { field: 'Program ID', headerName: 'Program ID', width: 235 },
+      { field: 'Location', headerName: 'Location', width: 250 },
+      { field: 'Area Officer Name', headerName: 'Area Officer Name', type: 'text', width: 250 },
+      { field: 'Area Officer PhoneNo.', headerName: 'Area Officer PhoneNo.', width: 220 },
+      { field: 'Actions', headerName: 'Action', width: 250 },
+    ];
+    
+    const chartData = {
+      labels: ["January", "February", "March", "April", "May", "June", "July"],
+      datasets: [
+        {
+          label: "Patients Analyzed",
+          data: [65, 59, 80, 81, 56, 55, 40],
+          fill: false,
+          borderColor: "rgb(75, 192, 192)",
+          tension: 0.1,
+        },
+      ],
+    };
+
   return (
 
 
@@ -66,9 +99,44 @@ const HealthCamps = () => {
       </Tabs>
 
       {activeTab === 0 && (
-        <Box>
-          <h1>Create Health Camp</h1>
-          <form>
+         <Box><Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+         <Buttons label={"Create Program"} onClick={handelOpenModal}/>
+       </Box>
+       <Box mt={4}>
+  <DataGrid
+    rows={rows}
+    columns={columns1}
+    pageSize={10}
+    rowsPerPageOptions={[10, 20, 50]}
+    autoHeight
+    disableSelectionOnClick
+    onRowClick={(params) => handelOpenModal(params.row)}
+    sx={{ marginTop: "4" }}
+  />
+    </Box>
+      <Modal 
+          open = {openModal}
+          onClose={handelCloseModal}
+          arial-labelledby = "modal-modal-titel"
+          aria-describedby = "model-model-description"
+          >
+          <Box 
+          sx={{
+            position:"absolute",
+            top: "50%",
+            left: "50%",
+            transform:"translate(-50%, -50%)",
+            width: 800,
+            height:700,
+            bgcolor:"rgba(255, 255, 255, 0.9)",
+            border:"2px solid #000",
+            boxShadow:24,
+            p: 4,
+            overflowY: 'auto', 
+            }}>
+
+            <h2 id="modal-modal-titel">Create Health Camp</h2>
+
           <Box sx={{mt:6}}>
             <label 
           style={labelStyle}
@@ -89,7 +157,7 @@ const HealthCamps = () => {
               }}
             />
             </Box>
-          </form>
+      
           <Box sx={{mt:2}}>
           <label 
           style={labelStyle}
@@ -261,13 +329,55 @@ const HealthCamps = () => {
                   <Buttons onClick={handleClick} label="Create Health Camp" />
               </Box>
         </Box>
+        </Modal>
+        </Box>
       )}
 
 
       {activeTab === 1 && (
-        <Box>
-        <h1>Patient Registration</h1>
-        <form>
+        <Box><Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+        <Buttons label={"Create Program"} onClick={handelOpenModal}/>
+      </Box>
+         
+      {/* <Box mt={8} height="calc(100vh - 250px)" sx={{ '& .MuiDataGrid-root': { border: 'none' }, '& .MuiDataGrid-columnHeader': { backgroundColor: theme.palette.primary.main }, '& .MuiDataGrid-row': { borderBottom: 1px solid ${theme.palette.primary.light} } }}>
+
+  </Box> */}
+
+<Box mt={4}>
+  <DataGrid
+    rows={rows}
+    columns={columns2}
+    pageSize={10}
+    rowsPerPageOptions={[10, 20, 50]}
+    autoHeight
+    disableSelectionOnClick
+    onRowClick={(params) => handelOpenModal(params.row)}
+    sx={{ marginTop: "4" }}
+  />
+    </Box>
+      <Modal 
+          open = {openModal}
+          onClose={handelCloseModal}
+          arial-labelledby = "modal-modal-titel"
+          aria-describedby = "model-model-description"
+          >
+          <Box 
+          sx={{
+            position:"absolute",
+            top: "50%",
+            left: "50%",
+            transform:"translate(-50%, -50%)",
+            width: 800,
+            height:700,
+            bgcolor:"rgba(255, 255, 255, 0.9)",
+            border:"2px solid #000",
+            boxShadow:24,
+            p: 4,
+            overflowY: 'auto', 
+            }}>
+
+            <h2 id="modal-modal-titel">Create New Program</h2>
+
             <Box sx={{mt:6}}>
             <label 
           style={labelStyle}
@@ -397,10 +507,15 @@ const HealthCamps = () => {
             <Box sx={{mt:4,mb:4}}>
               <Buttons label={"Register Patient"}/>
             </Box>
-          </form>
+        
         
           </Box>
+          </Modal>
+          </Box>
+          
       )}
+
+  
       {activeTab === 2 && (
         <Box>
           <h1>Lab Report</h1>
@@ -408,6 +523,7 @@ const HealthCamps = () => {
       )}
 
     {activeTab === 3 && (
+      
         <Box>
             <h1>View Data</h1>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -443,9 +559,15 @@ const HealthCamps = () => {
       )}
 
        {activeTab === 5 && (
+
           <Box>
             <h1>Patient Data Analyzer</h1>
+            <div>
+              <h2>Patients Analyzed Over Time</h2>
+              <Line data={chartData} />
+            </div>
             <h2>Analyze Patients by Health Camp</h2>
+           
             <Box sx={{mt: 2}}>
         <label 
           style={labelStyle}
