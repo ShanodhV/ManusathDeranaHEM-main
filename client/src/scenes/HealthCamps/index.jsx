@@ -451,7 +451,7 @@ const HealthCamps = () => {
           style={labelStyle}
           htmlFor="healthCampId">Health Camp ID</label>
         <TextField
-          select
+          selec
           variant="outlined"
           fullWidth
           label="Select Health Camp ID"
