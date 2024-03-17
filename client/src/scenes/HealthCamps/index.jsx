@@ -5,7 +5,6 @@ import Header from "components/Header";
 import { useNavigate } from "react-router-dom"; 
 import GoogleMap from "components/GoogleMap";
 import Buttons from "components/Buttons";
-import { Line } from "react-chartjs-2";
 
 const HealthCamps = () => {
   const theme = useTheme();
@@ -54,26 +53,13 @@ const HealthCamps = () => {
       { field: 'Actions', headerName: 'Action', width: 250 },
     ];
     const columns2 = [
-      { field: 'Program ID', headerName: 'Program ID', width: 235 },
-      { field: 'Location', headerName: 'Location', width: 250 },
-      { field: 'Area Officer Name', headerName: 'Area Officer Name', type: 'text', width: 250 },
-      { field: 'Area Officer PhoneNo.', headerName: 'Area Officer PhoneNo.', width: 220 },
+      { field: 'Camp ID', headerName: 'Camp ID', width: 235 },
+      { field: 'Full Name', headerName: 'Full Name', width: 250 },
+      { field: 'NIC', headerName: 'NIC', type: 'text', width: 250 },
+      { field: 'Address', headerName: 'Address', width: 220 },
+      { field: 'Contact No', headerName: 'Contact No', width: 250 },
       { field: 'Actions', headerName: 'Action', width: 250 },
     ];
-    
-    const chartData = {
-      labels: ["January", "February", "March", "April", "May", "June", "July"],
-      datasets: [
-        {
-          label: "Patients Analyzed",
-          data: [65, 59, 80, 81, 56, 55, 40],
-          fill: false,
-          borderColor: "rgb(75, 192, 192)",
-          tension: 0.1,
-        },
-      ],
-    };
-
   return (
 
 
@@ -336,12 +322,12 @@ const HealthCamps = () => {
 
       {activeTab === 1 && (
         <Box><Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
-        <Buttons label={"Create Program"} onClick={handelOpenModal}/>
+        <Buttons label={"Add Patient"} onClick={handelOpenModal}/>
       </Box>
          
       {/* <Box mt={8} height="calc(100vh - 250px)" sx={{ '& .MuiDataGrid-root': { border: 'none' }, '& .MuiDataGrid-columnHeader': { backgroundColor: theme.palette.primary.main }, '& .MuiDataGrid-row': { borderBottom: 1px solid ${theme.palette.primary.light} } }}>
 
-  </Box> */}
+     </Box> */}
 
 <Box mt={4}>
   <DataGrid
@@ -376,7 +362,7 @@ const HealthCamps = () => {
             overflowY: 'auto', 
             }}>
 
-            <h2 id="modal-modal-titel">Create New Program</h2>
+            <h2 id="modal-modal-titel">Register Patient</h2>
 
             <Box sx={{mt:6}}>
             <label 
@@ -559,132 +545,11 @@ const HealthCamps = () => {
       )}
 
        {activeTab === 5 && (
-
           <Box>
             <h1>Patient Data Analyzer</h1>
-            <div>
-              <h2>Patients Analyzed Over Time</h2>
-              <Line data={chartData} />
-            </div>
-            <h2>Analyze Patients by Health Camp</h2>
-           
-            <Box sx={{mt: 2}}>
-        <label 
-          style={labelStyle}
-          htmlFor="healthCampId">Health Camp ID</label>
-        <TextField
-          selec
-          variant="outlined"
-          fullWidth
-          label="Select Health Camp ID"
-          sx={{ 
-            '& fieldset': {
-              borderWidth: '3px',
-            },
-          }}
-        >
-        </TextField>
-      </Box>
-          <Box sx={{mt:2}}>
-          <label 
-          style={labelStyle}
-          htmlFor="Location">Location</label>
-          <Grid container spacing={2} sx={{mt:0}}> 
-              <Grid item xs={4}> 
-                <TextField
-                  select
-                  variant="outlined"
-                  fullWidth
-                  label="Select by Province"
-                  sx={{ 
-                    '& fieldset': {
-                      borderWidth: '3px',
-                    },
-                  }}
-                >
 
-                </TextField>
-              </Grid>
-              <Grid item xs={4}> 
-                <TextField
-                  select
-                  variant="outlined"
-                  fullWidth
-                  label="Select by District"
-                  sx={{ 
             
-                    '& fieldset': {
-                      borderWidth: '3px',
-                    },
-                  }}
-                >
-            
-                </TextField>
-              </Grid>
-              <Grid item xs={4}> 
-                <TextField
-                  select
-                  variant="outlined"
-                  fullWidth
-                  label="Select by Town"
-                  sx={{ 
-            
-                    '& fieldset': {
-                      borderWidth: '3px',
-                    },
-                  }}
- 
-                >
-                </TextField>
-              </Grid>
-            </Grid>
-            </Box> 
-            <Box sx={{mt:3}}>
-              <Buttons onClick={handleClick} label="Analyze" />
-            </Box>
-            
-          <h2>Analyze Patients by NIC</h2>
-      <Box sx={{mt: 2}}>
-        <label 
-        style={labelStyle}
-        htmlFor="healthCampId">Health Camp ID</label>
-        <TextField
-        select
-        variant="outlined"
-        fullWidth
-        label="Select Health Camp ID"
-        sx={{ 
-          '& fieldset': {
-            borderWidth: '3px',
-          },
-        }}
-        >
-       </TextField>
-    </Box>
-
-      <Box sx={{mt: 2}}>
-        <label 
-        style={labelStyle}
-        htmlFor="NIC">NIC</label>
-        <TextField
-        select
-        variant="outlined"
-        fullWidth
-        label="Select by NIC"
-        sx={{ 
-          '& fieldset': {
-            borderWidth: '3px',
-          },
-        }}
-        >
-        </TextField>
-    </Box>
-    
-          <Box sx={{mt:3}}>
-              <Buttons onClick={handleClick} label="Analyze" />
-            </Box>
-
-          <h2>Analyze Patients by Symptoms and Location</h2>
+          <h2>Analyze Patients by Affected Area</h2>
           <Box sx={{mt:2}}>
           <label 
           style={labelStyle}
@@ -746,6 +611,83 @@ const HealthCamps = () => {
                 variant="outlined"
                 fullWidth
                 label="Select Symptom"
+                sx={{ 
+                  '& fieldset': {
+                    borderWidth: '3px',
+                  },
+                }}
+              >
+              </TextField>
+            </Box>
+            <h2>Analyze Patients by NIC</h2>
+      <Box sx={{mt: 2}}>
+        <label 
+        style={labelStyle}
+        htmlFor="healthCampId">Health Camp ID</label>
+        <TextField
+        select
+        variant="outlined"
+        fullWidth
+        label="Select Health Camp ID"
+        sx={{ 
+          '& fieldset': {
+            borderWidth: '3px',
+          },
+        }}
+        >
+       </TextField>
+    </Box>
+
+      <Box sx={{mt: 2}}>
+        <label 
+        style={labelStyle}
+        htmlFor="NIC">NIC</label>
+        <TextField
+        select
+        variant="outlined"
+        fullWidth
+        label="Select by NIC"
+        sx={{ 
+          '& fieldset': {
+            borderWidth: '3px',
+          },
+        }}
+        >
+        </TextField>
+    </Box>
+    
+          <Box sx={{mt:3}}>
+              <Buttons onClick={handleClick} label="Analyze" />
+            </Box>
+
+            <h2 >Analyze Patients by the Status of the Risk</h2>
+        
+            <Box sx={{mt: 3}}>
+              <label 
+                style={labelStyle}
+                htmlFor="Symptom">Sympotom</label>
+                <TextField
+                select
+                variant="outlined"
+                fullWidth
+                label="Select Symptom"
+                sx={{ 
+                  '& fieldset': {
+                    borderWidth: '3px',
+                  },
+                }}
+              >
+              </TextField>
+            </Box>
+            <Box sx={{mt: 3}}>
+              <label 
+                style={labelStyle}
+                htmlFor="Risk">Risk</label>
+                <TextField
+                select
+                variant="outlined"
+                fullWidth
+                label="Risk"
                 sx={{ 
                   '& fieldset': {
                     borderWidth: '3px',
