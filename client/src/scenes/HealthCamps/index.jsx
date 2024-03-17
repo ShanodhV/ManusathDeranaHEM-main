@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, useTheme, Avatar, Button, Tab, Tabs, TextField, Grid,Modal} from "@mui/material";
+import { Box, useTheme, Avatar, Button, Tab, Tabs, TextField, Grid,Modal,Typography} from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import Header from "components/Header";
 import { useNavigate } from "react-router-dom"; 
@@ -32,6 +32,8 @@ const HealthCamps = () => {
       margintop: "80px"
       
     }
+    const navigate = useNavigate();
+
     const handelOpenModal = () => {
       setOpenModal(true);
     };
@@ -46,10 +48,12 @@ const HealthCamps = () => {
     const columns = [];
 
     const columns1 = [
-      { field: 'Program ID', headerName: 'Program ID', width: 235 },
+      { field: 'Camp ID', headerName: 'Camp ID', width: 235 },
       { field: 'Location', headerName: 'Location', width: 250 },
-      { field: 'Area Officer Name', headerName: 'Area Officer Name', type: 'text', width: 250 },
-      { field: 'Area Officer PhoneNo.', headerName: 'Area Officer PhoneNo.', width: 220 },
+      { field: 'Name', headerName: ' Name', type: 'text', width: 250 },
+      { field: 'Mobile No.', headerName: 'Mobile No.', width: 220 },
+      { field: 'Camp activity', headerName: ' Camp activity', type: 'text', width: 250 },
+      { field: 'Sponser', headerName: 'Sponser', width: 220 },
       { field: 'Actions', headerName: 'Action', width: 250 },
     ];
     const columns2 = [
@@ -60,8 +64,41 @@ const HealthCamps = () => {
       { field: 'Contact No', headerName: 'Contact No', width: 250 },
       { field: 'Actions', headerName: 'Action', width: 250 },
     ];
-  return (
+    const columns3 = [
+      { field: 'Camp ID', headerName: 'Camp ID', width: 235 },
+      { field: 'Full Name', headerName: 'Full Name', width: 250 },
+      { field: 'NIC', headerName: 'NIC', type: 'text', width: 250 },
+      { field: 'Report', headerName: 'Report', width: 250 },
+      { field: 'Actions', headerName: 'Action', width: 250 },
+    ];
+    
+    // Dummy data for patients and health camps
+  const patients = []; // Replace with actual patient data
+  const healthCamps = []; // Replace with actual health camp data
 
+  // Function to handle search
+  const handleSearch = (value) => {
+    // Implement search logic here
+  };
+   // Function to render health camps and their locations
+   const renderHealthCamps = () => {
+    // Replace with actual health camp data
+    const healthCamps = []; // Health camp data
+
+  
+    return (
+      <Box>
+        {healthCamps.map((camp) => (
+          <Box key={camp.id}>
+            <Typography variant="h6">Health Camp ID: {camp.id}</Typography>
+            <Typography variant="body1">Location: {camp.location}</Typography>
+          </Box>
+        ))}
+      </Box>
+    );
+  };
+
+  return (
 
     <Box m="1.5rem 2.5rem">
       <Header
@@ -98,6 +135,7 @@ const HealthCamps = () => {
     disableSelectionOnClick
     onRowClick={(params) => handelOpenModal(params.row)}
     sx={{ marginTop: "4" }}
+    
   />
     </Box>
       <Modal 
@@ -319,7 +357,6 @@ const HealthCamps = () => {
         </Box>
       )}
 
-
       {activeTab === 1 && (
         <Box><Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
         <Buttons label={"Add Patient"} onClick={handelOpenModal}/>
@@ -503,39 +540,195 @@ const HealthCamps = () => {
 
   
       {activeTab === 2 && (
-        <Box>
-          <h1>Lab Report</h1>
-        </Box>
+        <Box><Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+        <Buttons label={"Add Report"} onClick={handelOpenModal}/>
+      </Box>
+      <Box mt={4}>
+  <DataGrid
+    rows={rows}
+    columns={columns3}
+    pageSize={10}
+    rowsPerPageOptions={[10, 20, 50]}
+    autoHeight
+    disableSelectionOnClick
+    onRowClick={(params) => handelOpenModal(params.row)}
+    sx={{ marginTop: "4" }}
+  />
+  </Box>
+      <Modal 
+          open = {openModal}
+          onClose={handelCloseModal}
+          arial-labelledby = "modal-modal-titel"
+          aria-describedby = "model-model-description"
+          >
+          <Box 
+          sx={{
+            position:"absolute",
+            top: "50%",
+            left: "50%",
+            transform:"translate(-50%, -50%)",
+            width: 800,
+            height:700,
+            bgcolor:"rgba(255, 255, 255, 0.9)",
+            border:"2px solid #000",
+            boxShadow:24,
+            p: 4,
+            overflowY: 'auto', 
+            }}>
+
+            <h2 id="modal-modal-titel">Add Lab Report</h2>
+            <Box sx={{mt:6}}>
+            <label 
+          style={labelStyle}
+          htmlFor="Camp ID">Camp ID</label>
+            <TextField 
+  
+              variant="outlined"
+              name="CampID"
+              fullWidth
+              sx={{
+                mt: 2,
+                '& .MuiOutlinedInput-root': {
+                  padding: '0px',
+                  '& fieldset': {
+                    borderWidth: '3px',
+                  },
+                },
+              }}
+            />
+            </Box>
+            <Box sx={{mt:2}}>
+            <label 
+          style={labelStyle}
+          htmlFor="NIC">NIC</label>
+            <TextField 
+  
+              variant="outlined"
+              name="NIC"
+              fullWidth
+              sx={{
+                mt: 2,
+                '& .MuiOutlinedInput-root': {
+                  padding: '0px',
+                  '& fieldset': {
+                    borderWidth: '3px',
+                  },
+                },
+              }}
+            />
+            </Box>
+
+            <Box sx={{mt:2}}>
+            <label 
+          style={labelStyle}
+          htmlFor="Full Name">Full Name</label>
+            <TextField 
+  
+              variant="outlined"
+              name="FullName"
+              fullWidth
+              sx={{
+                mt: 2,
+                '& .MuiOutlinedInput-root': {
+                  padding: '0px',
+                  '& fieldset': {
+                    borderWidth: '3px',
+                  },
+                },
+              }}
+            />
+            </Box>
+            <Box sx={{mt:2}}>
+            <label 
+          style={labelStyle}
+          htmlFor="Report">Report</label>
+            <TextField 
+  
+              variant="outlined"
+              name="Report"
+              fullWidth
+              sx={{
+                mt: 2,
+                '& .MuiOutlinedInput-root': {
+                  padding: '0px',
+                  '& fieldset': {
+                    borderWidth: '3px',
+                  },
+                },
+              }}
+            />
+            </Box>
+            <Box sx={{mt:4,mb:4}}>
+              <Buttons label={"Submit Report"}/>
+            </Box>
+            </Box>
+            
+      </Modal>
+      </Box>
+
       )}
 
     {activeTab === 3 && (
-      
-        <Box>
-            <h1>View Data</h1>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <h2 style={{ textAlign: 'left' }}>View Patient Data</h2>
-                <Box sx={{mt: 2}}>
-                  <label 
-                    style={labelStyle}
-                    htmlFor="Search">Search</label>
-                  <TextField
-                    select
-                    variant="outlined"
-                    fullWidth
-                    label="Search"
-                    sx={{ 
-                      '& fieldset': {
-                        borderWidth: '3px',
-                      },
-                    }}
-                  >
-                  </TextField>
-                </Box>
-                <h2 style={{textAlign: 'right'}}> View Health Camp Data </h2>
-            </div>
-            
+      <Box>
+      <Typography variant="h5" gutterBottom>
+       <h1> Health Camps & Patients Data Overview</h1>
+      </Typography>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+        <Typography variant="body1"><h2>Total Health Camps: {healthCamps.length}</h2></Typography>
+        <Buttons label="Create Health Camp" onClick={handelOpenModal} />
+      </Box>
+      <Box mt={4}>
+      <Typography variant="h6">Health Camps & Locations:</Typography>
+      <ul>
+        {healthCamps.map((camp) => (
+          <li key={camp.id}>
+            <Typography variant="body1">
+              Health Camp ID: {camp.id}, Location: {camp.location}
+            </Typography>
+          </li>
+        ))}
+      </ul>
+    </Box>
+      <Box mb={4}>
+        {/* Display a summary of health camps here */}
+      </Box>
 
+      <Box display="flex" justifyContent="space-between" alignItems="center">
+            <Typography variant="body1"><h2>Total Patients Registered: {patients.length}</h2></Typography>
+            <Buttons label="Add Patient" onClick={() => navigate("/add-patient")} />
+          </Box>
+
+          <Typography variant="h5" gutterBottom>
+            Patients Overview
+          </Typography>
+          <TextField
+            variant="outlined"
+            label="Search"
+            fullWidth
+            onChange={(e) => handleSearch(e.target.value)}
+            mb={2}
+          />
+         
+          <Box mt={2}>
+            {/* Display patient data in a DataGrid or any other preferred format */}
+            <DataGrid rows={patients} columns={[]} pageSize={5} />
+          </Box>
+          <Box mt={4}>
+      <Typography variant="h6">Patient Data:</Typography>
+      <DataGrid
+        rows={patients}
+        columns={[
+          { field: 'id', headerName: 'ID', width: 100 },
+          { field: 'name', headerName: 'Name', width: 200 },
+          { field: 'age', headerName: 'Age', width: 100 },
+          // Add more columns as needed
+        ]}
+        pageSize={5}
+      />
+    </Box>
         </Box>
+        
+        
       )}
 
        {activeTab === 4 && (
@@ -546,9 +739,7 @@ const HealthCamps = () => {
 
        {activeTab === 5 && (
           <Box>
-            <h1>Patient Data Analyzer</h1>
-
-            
+            <h1>Patient Data Analyzer</h1>        
           <h2>Analyze Patients by Affected Area</h2>
           <Box sx={{mt:2}}>
           <label 
@@ -619,6 +810,10 @@ const HealthCamps = () => {
               >
               </TextField>
             </Box>
+            <Box sx={{mt:3}}>
+              <Buttons onClick={handleClick} label="Analyze" />
+            </Box>
+
             <h2>Analyze Patients by NIC</h2>
       <Box sx={{mt: 2}}>
         <label 
