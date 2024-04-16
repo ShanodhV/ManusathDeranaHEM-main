@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const DonorSchema = new mongoose.Schema(
+const PatientSchema = new mongoose.Schema(
   {
     avatar: {
       type: String,
@@ -12,29 +12,30 @@ const DonorSchema = new mongoose.Schema(
       min: 2,
       max: 100,
     },
-    email: {
+    NIC: {
       type: String,
       required: true,
-      max: 50,
+      max: 12,
       unique: true,
     },
     phone: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    password: {
-      type: String,
-      required: true,
-      min: 8,
-    },
-    score: {
       type: Number,
-      default: 0,
+    },
+    address: {
+      type: String,
+    },
+    city: {
+      type: String,
+      required: true,
+      min: 2,
+      max: 100,
+    },
+    emergencyPhone: {
+      type: Number,
     },
   },
   { timestamps: true }
 );
 
-const Donors = mongoose.model("Donors", DonorSchema);
-export default Donors;
+const Patients = mongoose.model("Patients", PatientSchema);
+export default Patients;

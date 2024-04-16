@@ -22977,19 +22977,23 @@ export const dataUser = [
   },
 ];
 
-export const dataDonor = [
+export const dataPatient = [
   {
     avatar: "NULL",
-    name: "Konstantine",
-    email: "diluk@narod.ru",
-    phone: "0772684541",
-    password: "omMDCh",
-    score: 12,
+    name: "Shanodh Vithanage",
+    NIC: "123456789012",
+    phone: 1123456789,
+    address: "123 Main Street",
+    city: "Colombo", 
+    emergencyPhone: 1198765432
   },
   {
-    name: "Diluk",
-    email: "diluk1@narod.ru",
-    phone: "0772685541",
-    password: "omMDCh",
+    avatar: "NULL",
+    name: "Diluk Udayakantha",
+    NIC: "234567890123",
+    phone: 1198765432, 
+    address: "456 Elm Street",
+    city: "Kandy",
+    emergencyPhone: 1123456789 
   },
 ];

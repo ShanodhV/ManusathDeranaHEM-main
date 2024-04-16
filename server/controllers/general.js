@@ -1,7 +1,7 @@
 import User from "../models/User.js";
 import OverallStat from "../models/OverallStat.js";
 import Transaction from "../models/Transaction.js";
-import Donors from "../models/Donor.js";
+import Patients from "../models/Patient.js";
 
 export const getUser = async (req, res) => {
   try {
@@ -13,57 +13,57 @@ export const getUser = async (req, res) => {
   }
 };
 
-export const addDonor = async (req, res) => {
+export const addPatient = async (req, res) => {
   try {
-    const { name, phone, email, password } = req.body;
+    const { name, NIC, phone, address, city, emergencyPhone } = req.body;
 
-    // Create a new donor instance
-    const newDonor = new Donors({
+    // Create a new patient instance
+    const newPatient = new Patients({
       name,
+      NIC,
       phone,
-      email,
-      password,
+      address,
+      city,
+      emergencyPhone,
     });
 
-    // Save the donor to the database
-    const savedDonor = await newDonor.save();
+    // Save the patient to the database
+    const savedPatient = await newPatient.save();
 
-    res.status(201).json(savedDonor); // Respond with the saved donor
+    res.status(201).json(savedPatient); // Respond with the saved patient
   } catch (error) {
-    console.error("Error adding new donor:", error);
-    res.status(500).json({ error: "Failed to add new donor" });
+    console.error("Error adding new patient:", error);
+    res.status(500).json({ error: "Failed to add new patient" });
   }
 };
-
-export const getDonors = async (req, res) => {
+export const getPatients = async (req, res) => {
   try {
-    const donors = await Donors.find();
-    res.status(200).json(donors);
+    const patients = await Patients.find(); // Fetching all patients using the Patient model
+    res.status(200).json(patients);
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
 };
-
-export const getDonor = async (req, res) => {
+export const getPatient = async (req, res) => {
   try {
     const { id } = req.params;
-    const donors = await Donors.findById(id);
-    res.status(200).json(donors);
+    const patients = await Patients.findById(id);
+    res.status(200).json(patients);
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
 };
 
-export const deleteDonors = async (req, res) => {
+export const deletePatient = async (req, res) => {
   const { id } = req.params;
   try {
-    const deletedDonor = await Donors.findByIdAndDelete(id);
-    if (!deletedDonor) {
-      return res.status(404).json({ error: "Donor not found" });
+    const deletedPatient = await Patients.findByIdAndDelete(id); // Deleting patient by ID using the Patient model
+    if (!deletedPatient) {
+      return res.status(404).json({ error: "Patient not found" });
     }
-    res.json({ message: "Donor deleted successfully" });
+    res.json({ message: "Patient deleted successfully" });
   } catch (error) {
-    console.error("Error deleting donor:", error);
+    console.error("Error deleting patient:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
