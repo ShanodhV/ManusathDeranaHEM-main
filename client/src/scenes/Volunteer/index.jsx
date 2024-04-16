@@ -1,4 +1,5 @@
-import { Box, Grid, Tab, Tabs, TextField, useTheme } from "@mui/material";
+import { Box, Grid, Modal, Tab, Tabs, TextField, useTheme, } from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
 import Buttons from "components/Buttons";
 import Header from "components/Header";
 import { useState } from "react";
@@ -15,9 +16,27 @@ const Volunteer = () => {
     setActiveTab(newValue);
   };
 
+  const[openModal, setOpenModal] = useState(false);
+
+
   const handleDateChange = (date) => {
     setDateOfBirth(date);
   };
+
+  const handelOpenModal = () => {
+    setOpenModal(true);
+  };
+
+  const handelCloseModal = () => {
+    setOpenModal(false);
+  };
+
+  const [ProgramDetails,setProgramDetails] = useState({});
+  const handelCreateProgram = () => {
+    console.log(ProgramDetails);
+    handelCloseModal();
+  }
+
 
   const labelStyle = {
     fontWeight: " bold",
@@ -39,6 +58,28 @@ const Volunteer = () => {
     console.log("Button clicked!");
   };
 
+  const columns1 = [
+    { field: 'Volunteer NIC', headerName: 'Volunteer’s NIC', width: 235 },
+    { field: 'Volunteer Name', headerName: 'Volunteer’s Name', width: 250 },
+    { field: 'Date of Birth', headerName: 'Date of Birth', width: 250 },
+    { field: 'Contact Number', headerName: 'Contact Number', width: 220 },
+    { field: 'Volunteer’s Address', headerName: 'Volunteer’s Address', width: 250 },
+    { field: 'Status', headerName: 'Status', width: 250 },
+  ];
+
+  const columns2 = [
+    { field: 'Event Name', headerName: 'Event Name', width: 235 },
+    { field: 'Event Category', headerName: 'Event Category', width: 250 },
+    { field: 'Event Date', headerName: 'Event Date', width: 250 },
+    { field: 'Venue', headerName: 'Venue', width: 220 },
+    { field: 'Related Occupations', headerName: 'Related Occupations', width: 250 },
+    { field: 'Description', headerName: 'Description', width: 250 },
+  ];
+
+  const rows = [];
+  const columns = [];
+
+  
   return (
     <Box m="1.5rem 2.5rem">
       <Header
@@ -55,13 +96,49 @@ const Volunteer = () => {
       >
         <Tab label="Volunteer  Registration" />
         <Tab label="Add Volunteer Events" />
-        <Tab label="Volunteer Events Details" />
-        <Tab label="Volunteer Profile Details" />
+
       </Tabs>
       {activeTab === 0 && (
-        <Box>
-        <h1>Volunteer Registration</h1>
-        <form>
+        <><Box sx={{ marginRight: "20px", position: "absolute", top: "20", right: "70px", display: "inline-flex", alignItems: "center", justifyItems: "center" }}>
+          <Buttons label={"Register Volunteer"} onClick={handelOpenModal}/>
+        </Box>
+
+        
+        <Box mt={8}>
+          <DataGrid
+            rows={rows}
+            columns={columns1}
+            pageSize={10}
+            rowsPerPageOptions={[10, 20, 50]}
+            autoHeight
+            disableSelectionOnClick
+            onRowClick={(params) => handelOpenModal(params.row)}
+            sx={{ marginTop: "4" }}
+          />
+        </Box>
+       
+       
+          <Modal 
+          open = {openModal}
+          onClose={handelCloseModal}
+          arial-labelledby = "modal-modal-titel"
+          aria-describedby = "model-model-description"
+          >
+             <Box 
+        sx={{
+          position:"absolute",
+          top: "50%",
+          left: "50%",
+          transform:"translate(-50%, -50%)",
+          width: 800,
+          height:700,
+          bgcolor:"rgba(255, 255, 255, 0.9)",
+          border:"2px solid #000",
+          boxShadow:24,
+          p: 4,
+          overflowY: 'auto', 
+          }}>
+          <h1 id="modal-modal-title">Volunteer Registration</h1>
 
         <Box sx={{mt:6}}>
             <label 
@@ -308,9 +385,10 @@ const Volunteer = () => {
             <Box sx={{mt:4,mb:4}}>
               <Buttons label={"Register"}/>
             </Box>
-
-          </form>
-        </Box>
+            </Box>
+            </Modal>
+           
+            </>
       )}
 
 
@@ -319,9 +397,45 @@ const Volunteer = () => {
 
 
       {activeTab === 1 && (
-        <Box>
-          <h1>Add Volunteer Event Details</h1>
-          <form>
+        <><Box sx={{ marginRight: "20px", position: "absolute", top: "20", right: "70px", display: "inline-flex", alignItems: "center", justifyItems: "center" }}>
+        <Buttons label={"Register Volunteer"} onClick={handelOpenModal}/>
+        </Box>
+
+        <Box mt={8}>
+          <DataGrid
+            rows={rows}
+            columns={columns2}
+            pageSize={10}
+            rowsPerPageOptions={[10, 20, 50]}
+            autoHeight
+            disableSelectionOnClick
+            onRowClick={(params) => handelOpenModal(params.row)}
+            sx={{ marginTop: "4" }}
+          />
+        </Box>
+
+        <Modal 
+        open = {openModal}
+        onClose={handelCloseModal}
+        arial-labelledby = "modal-modal-titel"
+        aria-describedby = "model-model-description"
+        >
+        <Box 
+          sx={{
+            position:"absolute",
+            top: "50%",
+            left: "50%",
+            transform:"translate(-50%, -50%)",
+            width: 800,
+            height:700,
+            bgcolor:"rgba(255, 255, 255, 0.9)",
+            border:"2px solid #000",
+            boxShadow:24,
+            p: 4,
+            overflowY: 'auto', 
+            }}>
+            <h1 id="modal-modal-title">Add Volunteer Events</h1>
+
 
           <Box sx={{mt:6}}>
             <label style={labelStyle} htmlFor="Event Name">Event Name</label>
@@ -545,10 +659,9 @@ const Volunteer = () => {
               <Buttons onClick={handleClick} label="Cancel" /> {/* Positioned to the right */}
             </Box>
 
-          </form>
-
-
-        </Box>
+          </Box>
+          </Modal>
+          </>
       )}
       {activeTab === 2 && (
         <Box>
