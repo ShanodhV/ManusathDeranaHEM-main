@@ -4,7 +4,7 @@ export const api = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_BASE_URL }),
   reducerPath: "adminApi",
   tagTypes: [
-    "Donors",
+    "Patients",
     "User",
     "Products",
     "Customers",
@@ -20,13 +20,13 @@ export const api = createApi({
       query: (id) => `general/user/${id}`,
       providesTags: ["User"],
     }),
-    getDonors: build.query({
-      query: () => `general/donors`,
-      providesTags: ["Donors"],
+    getPatients: build.query({
+      query: () => `patient/gets`,
+      providesTags: ["Patients"],
     }),
-    getDonor: build.query({
-      query: (id) => `general/donors/${id}`,
-      providesTags: ["Donors"],
+    getPatient: build.query({
+      query: (id) => `patient/get/${id}`,
+      providesTags: ["Patients"],
     }),
     getProducts: build.query({
       query: () => "client/products",
@@ -64,25 +64,26 @@ export const api = createApi({
       query: () => "general/dashboard",
       providesTags: ["Dashboard"],
     }),
-    deleteDonor: build.mutation({
-      query: (donorId) => ({
-        url: `general/donors/${donorId}`,
+    deletePatient: build.mutation({
+      query: (patientId) => ({
+        url: `patient/delete/${patientId}`,
         method: "Delete",
       }),
-      invalidatesTags: ["Donors"], // Invalidate the cache for "Donors" after deletion
+      invalidatesTags: ["Patients"], // Invalidate the cache for "Donors" after deletion
     }),
-    addDonor: build.mutation({
-      query: () => ({
-        url: `general/donors`,
+    addPatient: build.mutation({
+      query: ({ name, NIC, phone, address, city }) => ({
+        url: `patient/add`,
         method: "post",
+        body: { name, NIC, phone, address, city },
       }),
-      providesTags: ["Donors"],
+      providesTags: ["Patients"],
     }),
   }),
 });
 
 export const {
-  useGetDonorsQuery,
+  useGetPatientsQuery,
   useGetUserQuery,
   useGetProductsQuery,
   useGetCustomersQuery,
@@ -92,7 +93,7 @@ export const {
   useGetAdminsQuery,
   useGetUserPerformanceQuery,
   useGetDashboardQuery,
-  useDeleteDonorMutation,
-  useGetDonorQuery,
-  useAddDonorMutation,
+  useDeletePatientMutation,
+  useGetPatientQuery,
+  useAddPatientMutation,
 } = api;
