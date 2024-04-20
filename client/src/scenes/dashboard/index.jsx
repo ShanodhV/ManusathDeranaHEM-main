@@ -62,7 +62,7 @@ const Dashboard = () => {
       <FlexBetween>
         <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
 
-        {/* <Box>
+        <Box>
           <Button
             sx={{
               backgroundColor: theme.palette.secondary.light,
@@ -75,9 +75,9 @@ const Dashboard = () => {
             <DownloadOutlined sx={{ mr: "10px" }} />
             Download Reports
           </Button>
-          </Box>*/}
+          </Box>
       </FlexBetween>
-      {/*
+      
 
       <Box
         mt="20px"
@@ -91,10 +91,10 @@ const Dashboard = () => {
       >
   
         <StatBox
-          title="Total Customers"
+          title="Total Health Camps"
           value={data && data.totalCustomers}
-          increase="+14%"
-          description="Since last month"
+          // increase="+14%"
+          // description="Since last month"
           icon={
             <Email
               sx={{ color: theme.palette.secondary[300], fontSize: "26px" }}
@@ -102,10 +102,10 @@ const Dashboard = () => {
           }
         />
         <StatBox
-          title="Sales Today"
+          title="Total Scolarships"
           value={data && data.todayStats.totalSales}
-          increase="+21%"
-          description="Since last month"
+          // increase="+21%"
+          // description="Since last month"
           icon={
             <PointOfSale
               sx={{ color: theme.palette.secondary[300], fontSize: "26px" }}
@@ -122,7 +122,7 @@ const Dashboard = () => {
           <OverviewChart view="sales" isDashboard={true} />
         </Box>
         <StatBox
-          title="Monthly Sales"
+          title="Monthly Donations"
           value={data && data.thisMonthStats.totalSales}
           increase="+5%"
           description="Since last month"
@@ -133,10 +133,10 @@ const Dashboard = () => {
           }
         />
         <StatBox
-          title="Yearly Sales"
+          title="Total Volunteers"
           value={data && data.yearlySalesTotal}
-          increase="+43%"
-          description="Since last month"
+          // increase="+43%"
+          // description="Since last month"
           icon={
             <Traffic
               sx={{ color: theme.palette.secondary[300], fontSize: "26px" }}
@@ -189,7 +189,7 @@ const Dashboard = () => {
           borderRadius="0.55rem"
         >
           <Typography variant="h6" sx={{ color: theme.palette.secondary[100] }}>
-            Sales By Category
+            Projects By catogory
           </Typography>
           <BreakdownChart isDashboard={true} />
           <Typography
@@ -197,11 +197,9 @@ const Dashboard = () => {
             fontSize="0.8rem"
             sx={{ color: theme.palette.secondary[200] }}
           >
-            Breakdown of real states and information via category for revenue
-            made for this year and total sales.
           </Typography>
         </Box>
-      </Box> */}
+      </Box>
     </Box>
   );
 };
