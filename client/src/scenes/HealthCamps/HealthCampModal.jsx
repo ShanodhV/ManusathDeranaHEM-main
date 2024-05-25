@@ -47,7 +47,6 @@ const HealthCampModal = ({ openModal, handleCloseModal }) => {
           width: 700,
           height: 600,
           bgcolor: "#fff",
-          borderRadius: "20px",
           boxShadow: 24,
           p: 4,
           overflowY: "auto",
