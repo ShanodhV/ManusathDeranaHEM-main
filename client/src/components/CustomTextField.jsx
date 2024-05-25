@@ -11,7 +11,7 @@ const CustomTextField = ({
   children,
 }) => {
   return (
-    <CustomTextField
+    <TextField
       label={label}
       variant={variant}
       onChange={Function}
@@ -28,7 +28,7 @@ const CustomTextField = ({
       }}
     >
       {children}
-    </CustomTextField>
+    </TextField>
   );
 };
 

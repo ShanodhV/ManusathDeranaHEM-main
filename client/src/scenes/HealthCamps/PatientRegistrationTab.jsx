@@ -17,7 +17,7 @@ const PatientRegistrationTab = () => {
   return (
     <Box>
       <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
-        <Buttons label={"Create Program"} onClick={handleOpenModal} />
+        <Buttons label={"Register Patient"} onClick={handleOpenModal} />
       </Box>
       <PatientRegistrationModal open={openModal} onClose={handleCloseModal} />
     </Box>

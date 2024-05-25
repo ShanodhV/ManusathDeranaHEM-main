@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Modal, Box } from "@mui/material";
 import Buttons from "components/Buttons"; // Assuming this is a custom Buttons component
 import CustomTextField from "components/CustomTextField"; // Path to your CustomTextField component
-import { useAddPatientMutation } from "state/api";
+import { useAddPatientMutation } from "state/api";//1
 
 const PatientRegistrationModal = ({ open, onClose }) => {
   const [name, setName] = useState("");
@@ -11,7 +11,7 @@ const PatientRegistrationModal = ({ open, onClose }) => {
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
 
-  const [addPatient] = useAddPatientMutation();
+  const [addPatient] = useAddPatientMutation();//2
   const labelStyle = {
     fontWeight: "bold",
     color: "black",
@@ -33,7 +33,7 @@ const PatientRegistrationModal = ({ open, onClose }) => {
       .catch((error) => {
         console.error("Error adding patient:", error);
       });
-  };
+  };//3
 
   return (
     <Modal
@@ -98,7 +98,7 @@ const PatientRegistrationModal = ({ open, onClose }) => {
           />
         </Box>
 
-        <Box sx={{ mt: 2 }}>
+        <Box sx={{ mt: 2 }}> 
           <CustomTextField
             label="City"
             variant="outlined"

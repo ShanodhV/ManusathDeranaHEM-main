@@ -20,6 +20,7 @@ const PatientSchema = new mongoose.Schema(
     },
     phone: {
       type: Number,
+      max:10,
     },
     address: {
       type: String,
