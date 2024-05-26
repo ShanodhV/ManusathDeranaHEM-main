@@ -2,39 +2,43 @@ import mongoose from "mongoose";
 
 const CampSchema = new mongoose.Schema(
   {
-    campId: {
+    CampId: {
       type: String,
+      required: true,
       unique: true,
+      min: 2,
+      max: 100,
     },
-    province: {
+    Province: {
       type: String,
+      required: true,
     },
-    district: {
+    District: {
       type: String,
-
+      required: true,
     },
-    town: {
+    Town: {
       type: String,
-
+      required: true,
     },
-    mohFields: {
+    MOH: {
       type: [String],
-
+      required: true,
     },
-    contactPersons: [
+    ContactPersons: [
       {
-        name: {
+        cname: {
           type: String,
-
+          required: true,
         },
-        mobileNumber: {
+        cnumber: {
           type: Number,
-
+          required: true,
         },
       },
     ],
-    sponsors: {
-      type: [String],
+    Sponsor: {
+      type: String,
     },
   },
   { timestamps: true }
