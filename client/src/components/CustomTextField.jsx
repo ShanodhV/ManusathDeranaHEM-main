@@ -7,14 +7,14 @@ const CustomTextField = ({
   fullWidth,
   value,
   select,
-  Function,
+  onChange, // Changed from Function to onChange
   children,
 }) => {
   return (
     <TextField
       label={label}
       variant={variant}
-      onChange={Function}
+      onChange={onChange} // Updated here
       fullWidth={fullWidth}
       value={value}
       select={select}

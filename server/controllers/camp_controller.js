@@ -1,4 +1,4 @@
-import Camps from "../models/Camp.js";
+import Camps from "../models/HealthCamp.js";
 
 // Add a new camp
 export const addCamp = async (req, res) => {

@@ -1,4 +1,4 @@
-import Donor from "../models/Donor.js";
+import Donor from "../models/Doner.js";
 
 // Add a new donor
 export const addDonor = async (req, res) => {

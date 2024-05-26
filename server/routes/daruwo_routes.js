@@ -5,7 +5,7 @@ import {
   addDeranaDaruwo,
   deleteDeranaDaruwoProgram,
   updateDeranaDaruwoProgram,
-} from "../controllers/derana_daruwo_controller.js";
+} from "../controllers/daruwo_controller.js";
 
 const router = express.Router();
 

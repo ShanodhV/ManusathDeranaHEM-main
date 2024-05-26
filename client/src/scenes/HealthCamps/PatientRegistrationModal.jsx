@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Modal, Box } from "@mui/material";
 import Buttons from "components/Buttons"; // Assuming this is a custom Buttons component
 import CustomTextField from "components/CustomTextField"; // Path to your CustomTextField component
-import { useAddPatientMutation } from "state/api";//1
+import { useAddPatientMutation } from "state/api";
 
 const PatientRegistrationModal = ({ open, onClose }) => {
   const [name, setName] = useState("");
@@ -11,15 +11,9 @@ const PatientRegistrationModal = ({ open, onClose }) => {
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
 
-  const [addPatient] = useAddPatientMutation();//2
-  const labelStyle = {
-    fontWeight: "bold",
-    color: "black",
-    fontSize: "16px",
-    marginTop: "16px",
-  };
+  const [addPatient] = useAddPatientMutation();
 
-  const _handleAddPatient = () => {
+  const handleAddPatient = () => {
     addPatient({ name, NIC, phone, address, city })
       .then((response) => {
         console.log("Patient added successfully from frontend:", response);
@@ -33,14 +27,14 @@ const PatientRegistrationModal = ({ open, onClose }) => {
       .catch((error) => {
         console.error("Error adding patient:", error);
       });
-  };//3
+  };
 
   return (
     <Modal
       open={open}
       onClose={onClose}
-      aria-labelledby="modal-modal-titel"
-      aria-describedby="model-model-description"
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
     >
       <Box
         sx={{
@@ -56,14 +50,14 @@ const PatientRegistrationModal = ({ open, onClose }) => {
           overflowY: "auto",
         }}
       >
-        <h2 id="modal-modal-titel">Create New Program</h2>
+        <h2 id="modal-modal-title">Create New Program</h2>
 
         <Box sx={{ mt: 6 }}>
           <CustomTextField
             label="Name"
             variant="outlined"
             value={name}
-            Function={(e) => setName(e.target.value)}
+            onChange={(e) => setName(e.target.value)} // Updated here
             fullWidth
           />
         </Box>
@@ -74,7 +68,7 @@ const PatientRegistrationModal = ({ open, onClose }) => {
             variant="outlined"
             fullWidth
             value={phone}
-            Function={(e) => setPhone(e.target.value)}
+            onChange={(e) => setPhone(e.target.value)} // Updated here
           />
         </Box>
 
@@ -84,7 +78,7 @@ const PatientRegistrationModal = ({ open, onClose }) => {
             variant="outlined"
             fullWidth
             value={NIC}
-            Function={(e) => setNIC(e.target.value)}
+            onChange={(e) => setNIC(e.target.value)} // Updated here
           />
         </Box>
 
@@ -94,30 +88,22 @@ const PatientRegistrationModal = ({ open, onClose }) => {
             variant="outlined"
             fullWidth
             value={address}
-            Function={(e) => setAddress(e.target.value)}
+            onChange={(e) => setAddress(e.target.value)} // Updated here
           />
         </Box>
 
-        <Box sx={{ mt: 2 }}> 
+        <Box sx={{ mt: 2 }}>
           <CustomTextField
             label="City"
             variant="outlined"
             fullWidth
             value={city}
-            Function={(e) => setCity(e.target.value)}
+            onChange={(e) => setCity(e.target.value)} // Updated here
           />
         </Box>
 
-        {/* <Box sx={{ mt: 2 }}>
-          <CustomTextField
-            label="Emergency Contact Number"
-            variant="outlined"
-            fullWidth
-          />
-        </Box> */}
-
         <Box sx={{ mt: 4, mb: 4 }}>
-          <Buttons label="Register Patient" onClick={_handleAddPatient} />
+          <Buttons label="Register Patient" onClick={handleAddPatient} />
         </Box>
       </Box>
     </Modal>

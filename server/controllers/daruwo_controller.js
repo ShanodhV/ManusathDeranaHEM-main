@@ -1,4 +1,4 @@
-import DeranaDaruwo from "../models/DeranaDaruwo.js";
+import DeranaDaruwo from "../models/DeranaDarwo.js";
 
 // Add a new Derana Daruwo program
 export const addDeranaDaruwo = async (req, res) => {

@@ -10,6 +10,7 @@ import HealthCamps from "scenes/HealthCamps/index";
 import SipsalPubuduwa from "scenes/SipsalPubuduwa/index";
 import DeranaDaruwo from "scenes/DeranaDaruwo/index";
 import Volunteer from "scenes/Volunteer/index";
+import { ToastContainer } from "react-toastify";
 
 
 
@@ -20,9 +21,12 @@ function App() {
     <div className="app">
       <BrowserRouter>
         <ThemeProvider theme={theme}>
+        
           <CssBaseline />
           <Routes>
+         
             <Route element={<Layout />}>
+              
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/Health Camps" element={<HealthCamps />} />

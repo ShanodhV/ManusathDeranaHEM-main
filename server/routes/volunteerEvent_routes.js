@@ -5,7 +5,7 @@ import {
   addVolunteerEvent,
   deleteVolunteerEvent,
   updateVolunteerEvent,
-} from "../controllers/volunteer_event_controller.js";
+} from "../controllers/volunteerEvent_controller.js";
 
 const router = express.Router();
 
