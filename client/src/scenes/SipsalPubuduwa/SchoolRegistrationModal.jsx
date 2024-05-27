@@ -53,17 +53,40 @@ const SchoolRegistrationModal = ({ openModal, handleCloseModal }) => {
           overflowY: "auto",
         }}
       >
-        <h2 id="modal-modal-titel">Create Health Camp</h2>
+        <h2 id="modal-modal-titel">Register School</h2>
 
         <Box sx={{ mt: 6 }}>
           <CustomTextField
-            label="Camp ID"
+            label="School ID"
+            variant="outlined"
+            fullWidth
+          />
+        </Box>
+        <Box sx={{ mt: 6 }}>
+          <CustomTextField
+            label="School Name"
+            variant="outlined"
+            fullWidth
+          />
+        </Box>
+        <Box sx={{ mt: 6 }}>
+          <CustomTextField
+            label="School Address"
+            variant="outlined"
+            fullWidth
+          />
+        </Box>
+        <Box sx={{ mt: 6 }}>
+          <CustomTextField
+            label="School Mobile Number"
             variant="outlined"
             fullWidth
           />
         </Box>
 
-        <Box sx={{ mt: 2 }}>
+        <Box sx={{ mt: 4
+
+         }}>
           <label style={labelStyle} htmlFor="Add Location name">
             Add Location Name
           </label>
@@ -98,7 +121,7 @@ const SchoolRegistrationModal = ({ openModal, handleCloseModal }) => {
                 {/* Town options */}
               </CustomTextField>
             </Grid>
-            {[...Array(mohCount)].map((_, index) => (
+            {/* {[...Array(mohCount)].map((_, index) => (
               <Grid item xs={2.5} key={index}>
                 <CustomTextField
                   select
@@ -106,23 +129,38 @@ const SchoolRegistrationModal = ({ openModal, handleCloseModal }) => {
                   variant="outlined"
                   fullWidth
                 >
-                  {/* MOH options */}
+                  
                 </CustomTextField>
               </Grid>
             ))}
             <Box sx={{ mt: 2 }}>
               <Buttons onClick={handleClickAddMoh} label="Add another MOH" />
-            </Box>
+            </Box> */}
           </Grid>
         </Box>
+       
 
-        <Box sx={{ mt: 3 }}>
+        <Box sx={{ mt: 4 }}>
           
-          <label style={labelStyle} htmlFor="Add Location name">
-          Camp Contact Persons
+          <label style={labelStyle} htmlFor="Prnciple Info">
+          Pinciple's Infomation
           </label>
         </Box>
-        {[...Array(personCount)].map((_, index) => (
+        <Box sx={{ mt: 3 }}>
+          <CustomTextField
+            label="Name"
+            variant="outlined"
+            fullWidth
+          />
+        </Box>
+        <Box sx={{ mt: 3 }}>
+          <CustomTextField
+            label="Mobile Number"
+            variant="outlined"
+            fullWidth
+          />
+        </Box>
+        {/* {[...Array(personCount)].map((_, index) => (
           <Box key={index} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={6}>
@@ -144,9 +182,9 @@ const SchoolRegistrationModal = ({ openModal, handleCloseModal }) => {
         ))}
         <Box sx={{ mt: 2 }}>
           <Buttons onClick={handleClickAddPerson} label="Add another Person" />
-        </Box>
+        </Box> */}
 
-        <Box sx={{ mt: 3 }}>
+        {/* <Box sx={{ mt: 3 }}>
     
           <label style={labelStyle} htmlFor="Add Location name">
             Add Camp Activities
@@ -163,8 +201,8 @@ const SchoolRegistrationModal = ({ openModal, handleCloseModal }) => {
         <label style={labelStyle} htmlFor="Add Location name">
             Add Sponser 
           </label>
-        </Box>
-        {[...Array(sponsorCount)].map((_, index) => (
+        </Box> */}
+        {/* {[...Array(sponsorCount)].map((_, index) => (
           <Box key={index} sx={{ mt: 2 }}>
             <CustomTextField
               label={`Sponsor ${index + 1}`}
@@ -172,13 +210,13 @@ const SchoolRegistrationModal = ({ openModal, handleCloseModal }) => {
               fullWidth
             />
           </Box>
-        ))}
-        <Box sx={{ mt: 2 }}>
+        ))} */}
+        {/* <Box sx={{ mt: 2 }}>
           <Buttons onClick={handleClickAddSponsor} label="Add Another Sponsor" />
-        </Box>
+        </Box> */}
 
         <Box sx={{ mt: 6, display: "flex", justifyContent: "center" }}>
-          <Buttons onClick={handleClick} label="Create Health Camp" />
+          <Buttons onClick={handleClick} label="Register School" />
         </Box>
       </Box>
     </Modal>

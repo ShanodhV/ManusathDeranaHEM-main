@@ -1,9 +1,9 @@
-import React, {useState} from "react";
-import {Modal, Box, Grid } from "@mui/material";
+import React, { useState } from "react";
+import { Modal, Box, Grid } from "@mui/material";
 import Buttons from "components/Buttons";
-import CustomTextField from "components/CustomTextField";
+import CustomTextField from "components/CustomTextField"; // Import your custom TextField component
 
-const DonerRegistrationTab = ({ openModal, handleCloseModal }) => {
+const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
   const [mohCount, setMohCount] = useState(1);
   const [personCount, setPersonCount] = useState(1);
   const [sponsorCount, setSponsorCount] = useState(1);
@@ -53,25 +53,48 @@ const DonerRegistrationTab = ({ openModal, handleCloseModal }) => {
           overflowY: "auto",
         }}
       >
-        <h2 id="modal-modal-titel">Create Health Camp</h2>
+        <h2 id="modal-modal-titel">Register Donor</h2>
 
         <Box sx={{ mt: 6 }}>
           <CustomTextField
-            label="Camp ID"
+            label="Donor NIC"
+            variant="outlined"
+            fullWidth
+          />
+        </Box>
+        <Box sx={{ mt: 6 }}>
+          <CustomTextField
+            label="Donor Name"
+            variant="outlined"
+            fullWidth
+          />
+        </Box>
+        <Box sx={{ mt: 6 }}>
+          <CustomTextField
+            label="Address"
+            variant="outlined"
+            fullWidth
+          />
+        </Box>
+        <Box sx={{ mt: 6 }}>
+          <CustomTextField
+            label="Mobile Number"
             variant="outlined"
             fullWidth
           />
         </Box>
 
-        <Box sx={{ mt: 2 }}>
-          <label style={labelStyle} htmlFor="Add Location name">
-            Add Location Name
+        <Box sx={{ mt: 4
+
+         }}>
+          <label style={labelStyle} htmlFor="Date Of Birth">
+            Date of Birth
           </label>
           <Grid container spacing={2} sx={{ mt: 0 }}>
             <Grid item xs={2.5}>
               <CustomTextField
                 select
-                label="Province"
+                label="Month"
                 variant="outlined"
                 fullWidth
               >
@@ -81,7 +104,7 @@ const DonerRegistrationTab = ({ openModal, handleCloseModal }) => {
             <Grid item xs={2.5}>
               <CustomTextField
                 select
-                label="District"
+                label="Day"
                 variant="outlined"
                 fullWidth
               >
@@ -91,14 +114,14 @@ const DonerRegistrationTab = ({ openModal, handleCloseModal }) => {
             <Grid item xs={2.5}>
               <CustomTextField
                 select
-                label="Town"
+                label="Year"
                 variant="outlined"
                 fullWidth
               >
                 {/* Town options */}
               </CustomTextField>
             </Grid>
-            {[...Array(mohCount)].map((_, index) => (
+            {/* {[...Array(mohCount)].map((_, index) => (
               <Grid item xs={2.5} key={index}>
                 <CustomTextField
                   select
@@ -106,23 +129,45 @@ const DonerRegistrationTab = ({ openModal, handleCloseModal }) => {
                   variant="outlined"
                   fullWidth
                 >
-                  {/* MOH options */}
+                  
                 </CustomTextField>
               </Grid>
             ))}
             <Box sx={{ mt: 2 }}>
               <Buttons onClick={handleClickAddMoh} label="Add another MOH" />
-            </Box>
+            </Box> */}
           </Grid>
         </Box>
+        <Box sx={{ mt: 6 }}>
+          <CustomTextField
+            label="Ocupation"
+            variant="outlined"
+            fullWidth
+          />
+        </Box>
+       
 
-        <Box sx={{ mt: 3 }}>
+        {/* <Box sx={{ mt: 4 }}>
           
-          <label style={labelStyle} htmlFor="Add Location name">
-          Camp Contact Persons
+          <label style={labelStyle} htmlFor="Prnciple Info">
+          Pinciple's Infomation
           </label>
         </Box>
-        {[...Array(personCount)].map((_, index) => (
+        <Box sx={{ mt: 3 }}>
+          <CustomTextField
+            label="Name"
+            variant="outlined"
+            fullWidth
+          />
+        </Box>
+        <Box sx={{ mt: 3 }}>
+          <CustomTextField
+            label="Mobile Number"
+            variant="outlined"
+            fullWidth
+          />
+        </Box> */}
+        {/* {[...Array(personCount)].map((_, index) => (
           <Box key={index} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={6}>
@@ -144,9 +189,9 @@ const DonerRegistrationTab = ({ openModal, handleCloseModal }) => {
         ))}
         <Box sx={{ mt: 2 }}>
           <Buttons onClick={handleClickAddPerson} label="Add another Person" />
-        </Box>
+        </Box> */}
 
-        <Box sx={{ mt: 3 }}>
+        {/* <Box sx={{ mt: 3 }}>
     
           <label style={labelStyle} htmlFor="Add Location name">
             Add Camp Activities
@@ -163,8 +208,8 @@ const DonerRegistrationTab = ({ openModal, handleCloseModal }) => {
         <label style={labelStyle} htmlFor="Add Location name">
             Add Sponser 
           </label>
-        </Box>
-        {[...Array(sponsorCount)].map((_, index) => (
+        </Box> */}
+        {/* {[...Array(sponsorCount)].map((_, index) => (
           <Box key={index} sx={{ mt: 2 }}>
             <CustomTextField
               label={`Sponsor ${index + 1}`}
@@ -172,17 +217,17 @@ const DonerRegistrationTab = ({ openModal, handleCloseModal }) => {
               fullWidth
             />
           </Box>
-        ))}
-        <Box sx={{ mt: 2 }}>
+        ))} */}
+        {/* <Box sx={{ mt: 2 }}>
           <Buttons onClick={handleClickAddSponsor} label="Add Another Sponsor" />
-        </Box>
+        </Box> */}
 
         <Box sx={{ mt: 6, display: "flex", justifyContent: "center" }}>
-          <Buttons onClick={handleClick} label="Create Health Camp" />
+          <Buttons onClick={handleClick} label="Register Donor" />
         </Box>
       </Box>
     </Modal>
   );
 };
 
-export default DonerRegistrationTab;
+export default DonorRegistrationModal;
