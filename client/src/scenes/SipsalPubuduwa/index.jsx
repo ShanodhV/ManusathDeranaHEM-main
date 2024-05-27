@@ -4,9 +4,9 @@ import Buttons from "components/Buttons";
 import SchoolPredictorTab from "./SchoolPredictorTab";
 import SchoolRegistrationTab from "./SchoolRegistrationTab";
 import ViewSchoolDetailsTab from "./ViewSchoolDetailsTab";
-import DonerRegistrationTab from "./DonerRegistrationTab";
+import DonorRegistrationTab from "./DonorRegistrationTab";
 import SchoolRegistrationModel from "./SchoolRegistrationModal";
-import DonerRegistrationModal from "./DonerRegistraionModal";
+import DonorRegistrationModal from "./DonorRegistraionModal";
 
 
 
@@ -51,13 +51,13 @@ const SipsalPubuduwa = () => {
       {/* Render tab content based on active tab */}
       {activeTab === 0 && <SchoolRegistrationTab handleOpenModal={handleOpenModal} />}
       {activeTab === 1 && <ViewSchoolDetailsTab />}
-      {activeTab === 2 && <DonerRegistrationTab handleOpenModal={handleOpenModal}/>}
+      {activeTab === 2 && <DonorRegistrationTab handleOpenModal={handleOpenModal}/>}
       {activeTab === 3 && <SchoolPredictorTab />}
       
 
       {/* Modal */}
       <SchoolRegistrationModel open={openModal} handleClose={handleCloseModal} />
-      <DonerRegistrationModal open={openModal} handleClose={handleCloseModal}/>
+      <DonorRegistrationModal open={openModal} handleClose={handleCloseModal}/>
     </Box>
   );
 };
