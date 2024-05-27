@@ -3,7 +3,7 @@ import { Modal, Box, Grid } from "@mui/material";
 import Buttons from "components/Buttons";
 import CustomTextField from "components/CustomTextField"; // Import your custom TextField component
 
-const DonerRegistrationModal = ({ openModal, handleCloseModal }) => {
+const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
   const [mohCount, setMohCount] = useState(1);
   const [personCount, setPersonCount] = useState(1);
   const [sponsorCount, setSponsorCount] = useState(1);
@@ -230,4 +230,4 @@ const DonerRegistrationModal = ({ openModal, handleCloseModal }) => {
   );
 };
 
-export default DonerRegistrationModal;
+export default DonorRegistrationModal;
