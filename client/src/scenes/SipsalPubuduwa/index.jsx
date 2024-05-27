@@ -44,7 +44,7 @@ const SipsalPubuduwa = () => {
 
         <Tab label="School Registration" />
         <Tab label="View School Details" />
-        <Tab label="Doner Registeration" />
+        <Tab label="Donor Registeration" />
         <Tab label="Next School Predictor" />
       </Tabs>
 
