@@ -1,7 +1,6 @@
 import { Box, Grid, Modal, Tab, Tabs, TextField, useTheme, } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 import Buttons from "components/Buttons";
-import Header from "components/Header";
 import { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -82,10 +81,10 @@ const Volunteer = () => {
   
   return (
     <Box m="1.5rem 2.5rem">
-      <Header
+      {/*<Header
         title="Volunteers Managment"
         subtitle="Manage Volunteery Programs"
-      />
+  />*/}
       <Tabs
         value={activeTab}
         onChange={handleTabChange}
@@ -130,10 +129,10 @@ const Volunteer = () => {
           top: "50%",
           left: "50%",
           transform:"translate(-50%, -50%)",
-          width: 800,
-          height:700,
-          bgcolor:"rgba(255, 255, 255, 0.9)",
-          border:"2px solid #000",
+          width: 700,
+          height:600,
+          bgcolor:"#fff",
+          borderRadius:"20px",
           boxShadow:24,
           p: 4,
           overflowY: 'auto', 
@@ -426,10 +425,10 @@ const Volunteer = () => {
             top: "50%",
             left: "50%",
             transform:"translate(-50%, -50%)",
-            width: 800,
-            height:700,
-            bgcolor:"rgba(255, 255, 255, 0.9)",
-            border:"2px solid #000",
+            width: 700,
+            height:600,
+            bgcolor:"#fff",
+            borderRadius:"20px",
             boxShadow:24,
             p: 4,
             overflowY: 'auto', 
