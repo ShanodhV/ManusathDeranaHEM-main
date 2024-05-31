@@ -10,7 +10,7 @@ const HealthCampModal = ({ openModal, handleCloseModal }) => {
   const [district, setDistrict] = useState("");
   const [town, setTown] = useState("");
   const [mohFields, setMohFields] = useState([""]);
-  const [contactPersons, setContactPersons] = useState([{ name: "", mobileNumber: "" }]);
+  const [contactPersons, setContactPersons] = useState([{ cname: "", cnumber: "" }]);
   const [sponsors, setSponsors] = useState([""]);
   const [addCamp] = useAddCampMutation();
 
@@ -26,7 +26,7 @@ const HealthCampModal = ({ openModal, handleCloseModal }) => {
   };
 
   const handleClickAddPerson = () => {
-    setContactPersons([...contactPersons, { name: "", mobileNumber: "" }]);
+    setContactPersons([...contactPersons, { cname: "", cnumber: "" }]);
   };
 
   const handleClickAddSponsor = () => {
@@ -59,7 +59,7 @@ const HealthCampModal = ({ openModal, handleCloseModal }) => {
       Town: town,
       MOH: mohFields,
       ContactPersons: contactPersons,
-      Sponsor: sponsors
+      Sponsors: sponsors, // Update to plural to match schema
     };
 
     addCamp(newCamp)
@@ -71,7 +71,7 @@ const HealthCampModal = ({ openModal, handleCloseModal }) => {
         setDistrict("");
         setTown("");
         setMohFields([""]);
-        setContactPersons([{ name: "", mobileNumber: "" }]);
+        setContactPersons([{ cname: "", cnumber: "" }]);
         setSponsors([""]);
         handleCloseModal();
       })
@@ -176,8 +176,8 @@ const HealthCampModal = ({ openModal, handleCloseModal }) => {
                 <CustomTextField
                   label="Name"
                   variant="outlined"
-                  value={person.name}
-                  onChange={(e) => handleChangeContactPerson(index, "name", e.target.value)}
+                  value={person.cname}
+                  onChange={(e) => handleChangeContactPerson(index, "cname", e.target.value)}
                   fullWidth
                 />
               </Grid>
@@ -185,8 +185,8 @@ const HealthCampModal = ({ openModal, handleCloseModal }) => {
                 <CustomTextField
                   label="Mobile Number"
                   variant="outlined"
-                  value={person.mobileNumber}
-                  onChange={(e) => handleChangeContactPerson(index, "mobileNumber", e.target.value)}
+                  value={person.cnumber}
+                  onChange={(e) => handleChangeContactPerson(index, "cnumber", e.target.value)}
                   fullWidth
                 />
               </Grid>
@@ -212,7 +212,7 @@ const HealthCampModal = ({ openModal, handleCloseModal }) => {
 
         <Box sx={{ mt: 3 }}>
           <label style={labelStyle} htmlFor="Add Location name">
-            Add Sponsor
+            Add Sponsors
           </label>
         </Box>
         {sponsors.map((sponsor, index) => (

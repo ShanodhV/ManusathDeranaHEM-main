@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Box } from "@mui/material";
 import Buttons from "components/Buttons";
-import PatientRegistrationModal from "./PatientRegistrationModal";
+import LabReportModal from "./LabReportModal";
 
 const LabReportTab = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -19,7 +19,7 @@ const LabReportTab = () => {
       <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
         <Buttons label={"Add Report data"} onClick={handleOpenModal} />
       </Box>
-      <PatientRegistrationModal open={openModal} onClose={handleCloseModal} />
+      <LabReportModal open={openModal} onClose={handleCloseModal} />
     </Box>
   );
 };

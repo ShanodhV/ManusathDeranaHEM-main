@@ -32,13 +32,13 @@ const CampSchema = new mongoose.Schema(
           required: true,
         },
         cnumber: {
-          type: Number,
+          type: String, // Changed from Number to String to match the input type
           required: true,
         },
       },
     ],
-    Sponsor: {
-      type: String,
+    Sponsors: { // Changed from Sponsor to Sponsors to accept an array of strings
+      type: [String],
     },
   },
   { timestamps: true }
