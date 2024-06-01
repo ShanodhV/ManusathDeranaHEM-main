@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Box } from "@mui/material";
 import Buttons from "components/Buttons";
-import DonorRegistrationModal from "./DonorRegistraionModal"; // Import the DonerRegistrationModal component
+import DonorRegistrationModal from "./DonorRegistrationModal"; // Import the DonerRegistrationModal component
 
 const DonorRegistrationTab = () => {
   const [openModal, setOpenModal] = useState(false);

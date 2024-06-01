@@ -1,28 +1,28 @@
-// import React, { useState } from "react";
-// import { Box } from "@mui/material";
-// import Buttons from "components/Buttons";
-// import SchoolRegistrationModal from "./SchoolRegistrationModal"; // Import the SchoolRegistrationModal component
+import React, { useState } from "react";
+import { Box } from "@mui/material";
+import Buttons from "components/Buttons";
+import VolunteerRegistrationModal from "./VolunteerRegistrationModal"; // Import the VolunteerRegistrationModal component
 
-// const SchoolRegistrationTab = () => {
-//   const [openModal, setOpenModal] = useState(false);
+const VolunteerRegistrationTab = () => {
+  const [openModal, setOpenModal] = useState(false);
 
-//   const handleOpenModal = () => {
-//     setOpenModal(true);
-//   };
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
 
-//   const handleCloseModal = () => {
-//     setOpenModal(false);
-//   };
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
 
-//   return (
-//     <Box>
-//       <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
-//         <Buttons label={"Register School"} onClick={handleOpenModal} />
-//       </Box>
-//       {/* Render the SchoolRegistrationModal component and pass necessary props */}
-//       <SchoolRegistrationModal openModal={openModal} handleCloseModal={handleCloseModal} />
-//     </Box>
-//   );
-// };
+  return (
+    <Box>
+      <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
+        <Buttons label={"Register School"} onClick={handleOpenModal} />
+      </Box>
+      {/* Render the VolunteerRegistrationModal component and pass necessary props */}
+      <VolunteerRegistrationModal openModal={openModal} handleCloseModal={handleCloseModal} />
+    </Box>
+  );
+};
 
-// export default SchoolRegistrationTab;
+export default VolunteerRegistrationTab;
