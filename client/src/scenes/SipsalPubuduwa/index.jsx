@@ -6,7 +6,7 @@ import SchoolRegistrationTab from "./SchoolRegistrationTab";
 import ViewSchoolDetailsTab from "./ViewSchoolDetailsTab";
 import DonorRegistrationTab from "./DonorRegistrationTab";
 import SchoolRegistrationModel from "./SchoolRegistrationModal";
-import DonorRegistrationModal from "./DonorRegistraionModal";
+import DonorRegistrationModal from "./DonorRegistrationModal";
 
 
 
