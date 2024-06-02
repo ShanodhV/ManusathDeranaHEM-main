@@ -2,11 +2,51 @@ import React, { useState } from "react";
 import { Modal, Box, Grid } from "@mui/material";
 import Buttons from "components/Buttons";
 import CustomTextField from "components/CustomTextField"; // Import your custom TextField component
+import { useAddDonorMutation } from "state/api"; // Adjust the import according to your file structure
 
 const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
-  const [mohCount, setMohCount] = useState(1);
-  const [personCount, setPersonCount] = useState(1);
-  const [sponsorCount, setSponsorCount] = useState(1);
+  const [donorNIC, setDonorNIC] = useState("");
+  const [donorName, setDonorName] = useState("");
+  const [donorAddress, setDonorAddress] = useState("");
+  const [mobileNumber, setMobileNumber] = useState("");
+  const [month, setMonth] = useState("");
+  const [day, setDay] = useState("");
+  const [year, setYear] = useState("");
+  const [occupation, setOccupation] = useState("");
+
+  const [addDonor] = useAddDonorMutation();
+
+  const handleAddDonor = () => {
+    const donorData = {
+      donorNIC,
+      donorName,
+      donorAddress,
+      dateOfBirth: {
+        month,
+        day,
+        year,
+      },
+      mobileNumber,
+      occupation,
+    };
+
+    addDonor(donorData)
+      .then((response) => {
+        console.log("Donor added successfully:", response);
+        // Clear form fields
+        setDonorNIC("");
+        setDonorName("");
+        setDonorAddress("");
+        setMobileNumber("");
+        setMonth("");
+        setDay("");
+        setYear("");
+        setOccupation("");
+      })
+      .catch((error) => {
+        console.error("Error adding donor:", error);
+      });
+  };
 
   const labelStyle = {
     fontWeight: "bold",
@@ -15,28 +55,12 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
     marginTop: "16px",
   };
 
-  const handleClickAddMoh = () => {
-    setMohCount((prevCount) => prevCount + 1);
-  };
-
-  const handleClickAddPerson = () => {
-    setPersonCount((prevCount) => prevCount + 1);
-  };
-
-  const handleClickAddSponsor = () => {
-    setSponsorCount((prevCount) => prevCount + 1);
-  };
-
-  const handleClick = () => {
-    console.log("Button clicked!");
-  };
-
   return (
     <Modal
       open={openModal}
       onClose={handleCloseModal}
-      aria-labelledby="modal-modal-titel"
-      aria-describedby="model-model-description"
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
     >
       <Box
         sx={{
@@ -53,13 +77,15 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
           overflowY: "auto",
         }}
       >
-        <h2 id="modal-modal-titel">Register Donor</h2>
+        <h2 id="modal-modal-title">Register Donor</h2>
 
         <Box sx={{ mt: 6 }}>
           <CustomTextField
             label="Donor NIC"
             variant="outlined"
             fullWidth
+            value={donorNIC}
+            onChange={(e) => setDonorNIC(e.target.value)}
           />
         </Box>
         <Box sx={{ mt: 6 }}>
@@ -67,6 +93,8 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
             label="Donor Name"
             variant="outlined"
             fullWidth
+            value={donorName}
+            onChange={(e) => setDonorName(e.target.value)}
           />
         </Box>
         <Box sx={{ mt: 6 }}>
@@ -74,6 +102,8 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
             label="Address"
             variant="outlined"
             fullWidth
+            value={donorAddress}
+            onChange={(e) => setDonorAddress(e.target.value)}
           />
         </Box>
         <Box sx={{ mt: 6 }}>
@@ -81,149 +111,66 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
             label="Mobile Number"
             variant="outlined"
             fullWidth
+            value={mobileNumber}
+            onChange={(e) => setMobileNumber(e.target.value)}
           />
         </Box>
 
-        <Box sx={{ mt: 4
-
-         }}>
+        <Box sx={{ mt: 4 }}>
           <label style={labelStyle} htmlFor="Date Of Birth">
             Date of Birth
           </label>
           <Grid container spacing={2} sx={{ mt: 0 }}>
-            <Grid item xs={2.5}>
+            <Grid item xs={4}>
               <CustomTextField
                 select
                 label="Month"
                 variant="outlined"
                 fullWidth
+                value={month}
+                onChange={(e) => setMonth(e.target.value)}
               >
-                {/* Province options */}
+                {/* Month options */}
               </CustomTextField>
             </Grid>
-            <Grid item xs={2.5}>
+            <Grid item xs={4}>
               <CustomTextField
                 select
                 label="Day"
                 variant="outlined"
                 fullWidth
+                value={day}
+                onChange={(e) => setDay(e.target.value)}
               >
-                {/* District options */}
+                {/* Day options */}
               </CustomTextField>
             </Grid>
-            <Grid item xs={2.5}>
+            <Grid item xs={4}>
               <CustomTextField
                 select
                 label="Year"
                 variant="outlined"
                 fullWidth
+                value={year}
+                onChange={(e) => setYear(e.target.value)}
               >
-                {/* Town options */}
+                {/* Year options */}
               </CustomTextField>
             </Grid>
-            {/* {[...Array(mohCount)].map((_, index) => (
-              <Grid item xs={2.5} key={index}>
-                <CustomTextField
-                  select
-                  label={`MOH ${index + 1}`}
-                  variant="outlined"
-                  fullWidth
-                >
-                  
-                </CustomTextField>
-              </Grid>
-            ))}
-            <Box sx={{ mt: 2 }}>
-              <Buttons onClick={handleClickAddMoh} label="Add another MOH" />
-            </Box> */}
           </Grid>
         </Box>
         <Box sx={{ mt: 6 }}>
           <CustomTextField
-            label="Ocupation"
+            label="Occupation"
             variant="outlined"
             fullWidth
+            value={occupation}
+            onChange={(e) => setOccupation(e.target.value)}
           />
         </Box>
-       
-
-        {/* <Box sx={{ mt: 4 }}>
-          
-          <label style={labelStyle} htmlFor="Prnciple Info">
-          Pinciple's Infomation
-          </label>
-        </Box>
-        <Box sx={{ mt: 3 }}>
-          <CustomTextField
-            label="Name"
-            variant="outlined"
-            fullWidth
-          />
-        </Box>
-        <Box sx={{ mt: 3 }}>
-          <CustomTextField
-            label="Mobile Number"
-            variant="outlined"
-            fullWidth
-          />
-        </Box> */}
-        {/* {[...Array(personCount)].map((_, index) => (
-          <Box key={index} sx={{ mt: 3 }}>
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <CustomTextField
-                  label="Name"
-                  variant="outlined"
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <CustomTextField
-                  label="Mobile Number"
-                  variant="outlined"
-                  fullWidth
-                />
-              </Grid>
-            </Grid>
-          </Box>
-        ))}
-        <Box sx={{ mt: 2 }}>
-          <Buttons onClick={handleClickAddPerson} label="Add another Person" />
-        </Box> */}
-
-        {/* <Box sx={{ mt: 3 }}>
-    
-          <label style={labelStyle} htmlFor="Add Location name">
-            Add Camp Activities
-          </label>
-        </Box>
-        <Box sx={{ mt: 3 }}>
-          <CustomTextField
-            label="Add Camp Activities"
-            variant="outlined"
-            fullWidth
-          />
-        </Box>
-        <Box sx={{ mt: 3 }}>
-        <label style={labelStyle} htmlFor="Add Location name">
-            Add Sponser 
-          </label>
-        </Box> */}
-        {/* {[...Array(sponsorCount)].map((_, index) => (
-          <Box key={index} sx={{ mt: 2 }}>
-            <CustomTextField
-              label={`Sponsor ${index + 1}`}
-              variant="outlined"
-              fullWidth
-            />
-          </Box>
-        ))} */}
-        {/* <Box sx={{ mt: 2 }}>
-          <Buttons onClick={handleClickAddSponsor} label="Add Another Sponsor" />
-        </Box> */}
 
         <Box sx={{ mt: 6, display: "flex", justifyContent: "center" }}>
-          <Buttons onClick={handleClick} label="Register Donor" />
+          <Buttons onClick={handleAddDonor} label="Register Donor" />
         </Box>
       </Box>
     </Modal>

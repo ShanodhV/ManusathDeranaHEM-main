@@ -5,7 +5,7 @@ const VolunteerSchema = new mongoose.Schema(
     volunteerNIC: {
       type: String,
       required: true,
-      unique: true,
+      unique: true, 
     },
     volunteerName: {
       type: String,

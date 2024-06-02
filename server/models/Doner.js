@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const DonorSchema = new mongoose.Schema(
   {
@@ -43,5 +43,5 @@ const DonorSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Donor = mongoose.model("Donor", DonorSchema);
+const Donor = mongoose.model('Donor', DonorSchema);
 export default Donor;

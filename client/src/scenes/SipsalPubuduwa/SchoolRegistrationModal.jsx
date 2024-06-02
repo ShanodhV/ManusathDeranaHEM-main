@@ -2,41 +2,63 @@ import React, { useState } from "react";
 import { Modal, Box, Grid } from "@mui/material";
 import Buttons from "components/Buttons";
 import CustomTextField from "components/CustomTextField"; // Import your custom TextField component
+import { useAddSchoolMutation } from "state/api"; // Adjust the import according to your file structure
 
 const SchoolRegistrationModal = ({ openModal, handleCloseModal }) => {
-  const [mohCount, setMohCount] = useState(1);
-  const [personCount, setPersonCount] = useState(1);
-  const [sponsorCount, setSponsorCount] = useState(1);
+  const [schoolID, setSchoolID] = useState("");
+  const [schoolName, setSchoolName] = useState("");
+  const [schoolAddress, setSchoolAddress] = useState("");
+  const [schoolMobileNumber, setSchoolMobileNumber] = useState("");
+  const [province, setProvince] = useState("");
+  const [district, setDistrict] = useState("");
+  const [town, setTown] = useState("");
+  const [principalName, setPrincipalName] = useState("");
+  const [principalMobileNumber, setPrincipalMobileNumber] = useState("");
 
-  const labelStyle = {
-    fontWeight: "bold",
-    color: "black",
-    fontSize: "16px",
-    marginTop: "16px",
-  };
+  const [addSchool] = useAddSchoolMutation();
 
-  const handleClickAddMoh = () => {
-    setMohCount((prevCount) => prevCount + 1);
-  };
+  const handleAddSchool = () => {
+    const schoolData = {
+      schoolID,
+      schoolName,
+      schoolAddress,
+      location: {
+        province,
+        district,
+        town,
+      },
+      schoolMobileNumber,
+      principalContact: {
+        name: principalName,
+        mobileNumber: principalMobileNumber,
+      },
+    };
 
-  const handleClickAddPerson = () => {
-    setPersonCount((prevCount) => prevCount + 1);
-  };
-
-  const handleClickAddSponsor = () => {
-    setSponsorCount((prevCount) => prevCount + 1);
-  };
-
-  const handleClick = () => {
-    console.log("Button clicked!");
+    addSchool(schoolData)
+      .then((response) => {
+        console.log("School added successfully:", response);
+        // Clear form fields
+        setSchoolID("");
+        setSchoolName("");
+        setSchoolAddress("");
+        setSchoolMobileNumber("");
+        setProvince("");
+        setDistrict("");
+        setTown("");
+        setPrincipalName("");
+        setPrincipalMobileNumber("");
+      })
+      .catch((error) => {
+        console.error("Error adding school:", error);
+      });
   };
 
   return (
     <Modal
       open={openModal}
       onClose={handleCloseModal}
-      aria-labelledby="modal-modal-titel"
-      aria-describedby="model-model-description"
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
     >
       <Box
         sx={{
@@ -53,13 +75,15 @@ const SchoolRegistrationModal = ({ openModal, handleCloseModal }) => {
           overflowY: "auto",
         }}
       >
-        <h2 id="modal-modal-titel">Register School</h2>
+        <h2 id="modal-modal-title">Register School</h2>
 
         <Box sx={{ mt: 6 }}>
           <CustomTextField
             label="School ID"
             variant="outlined"
             fullWidth
+            value={schoolID}
+            onChange={(e) => setSchoolID(e.target.value)}
           />
         </Box>
         <Box sx={{ mt: 6 }}>
@@ -67,6 +91,8 @@ const SchoolRegistrationModal = ({ openModal, handleCloseModal }) => {
             label="School Name"
             variant="outlined"
             fullWidth
+            value={schoolName}
+            onChange={(e) => setSchoolName(e.target.value)}
           />
         </Box>
         <Box sx={{ mt: 6 }}>
@@ -74,6 +100,8 @@ const SchoolRegistrationModal = ({ openModal, handleCloseModal }) => {
             label="School Address"
             variant="outlined"
             fullWidth
+            value={schoolAddress}
+            onChange={(e) => setSchoolAddress(e.target.value)}
           />
         </Box>
         <Box sx={{ mt: 6 }}>
@@ -81,69 +109,58 @@ const SchoolRegistrationModal = ({ openModal, handleCloseModal }) => {
             label="School Mobile Number"
             variant="outlined"
             fullWidth
+            value={schoolMobileNumber}
+            onChange={(e) => setSchoolMobileNumber(e.target.value)}
           />
         </Box>
 
-        <Box sx={{ mt: 4
-
-         }}>
-          <label style={labelStyle} htmlFor="Add Location name">
+        <Box sx={{ mt: 4 }}>
+          <label style={{ fontWeight: "bold", color: "black", fontSize: "16px", marginTop: "16px" }} htmlFor="Add Location name">
             Add Location Name
           </label>
           <Grid container spacing={2} sx={{ mt: 0 }}>
-            <Grid item xs={2.5}>
+            <Grid item xs={4}>
               <CustomTextField
                 select
                 label="Province"
                 variant="outlined"
                 fullWidth
+                value={province}
+                onChange={(e) => setProvince(e.target.value)}
               >
                 {/* Province options */}
               </CustomTextField>
             </Grid>
-            <Grid item xs={2.5}>
+            <Grid item xs={4}>
               <CustomTextField
                 select
                 label="District"
                 variant="outlined"
                 fullWidth
+                value={district}
+                onChange={(e) => setDistrict(e.target.value)}
               >
                 {/* District options */}
               </CustomTextField>
             </Grid>
-            <Grid item xs={2.5}>
+            <Grid item xs={4}>
               <CustomTextField
                 select
                 label="Town"
                 variant="outlined"
                 fullWidth
+                value={town}
+                onChange={(e) => setTown(e.target.value)}
               >
                 {/* Town options */}
               </CustomTextField>
             </Grid>
-            {/* {[...Array(mohCount)].map((_, index) => (
-              <Grid item xs={2.5} key={index}>
-                <CustomTextField
-                  select
-                  label={`MOH ${index + 1}`}
-                  variant="outlined"
-                  fullWidth
-                >
-                  
-                </CustomTextField>
-              </Grid>
-            ))}
-            <Box sx={{ mt: 2 }}>
-              <Buttons onClick={handleClickAddMoh} label="Add another MOH" />
-            </Box> */}
           </Grid>
         </Box>
-       
 
         <Box sx={{ mt: 4 }}>
-          
-          <label style={labelStyle} htmlFor="Prnciple Info">
-          Pinciple's Infomation
+          <label style={{ fontWeight: "bold", color: "black", fontSize: "16px", marginTop: "16px" }} htmlFor="Principal Info">
+            Principal's Information
           </label>
         </Box>
         <Box sx={{ mt: 3 }}>
@@ -151,6 +168,8 @@ const SchoolRegistrationModal = ({ openModal, handleCloseModal }) => {
             label="Name"
             variant="outlined"
             fullWidth
+            value={principalName}
+            onChange={(e) => setPrincipalName(e.target.value)}
           />
         </Box>
         <Box sx={{ mt: 3 }}>
@@ -158,65 +177,13 @@ const SchoolRegistrationModal = ({ openModal, handleCloseModal }) => {
             label="Mobile Number"
             variant="outlined"
             fullWidth
+            value={principalMobileNumber}
+            onChange={(e) => setPrincipalMobileNumber(e.target.value)}
           />
         </Box>
-        {/* {[...Array(personCount)].map((_, index) => (
-          <Box key={index} sx={{ mt: 3 }}>
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <CustomTextField
-                  label="Name"
-                  variant="outlined"
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <CustomTextField
-                  label="Mobile Number"
-                  variant="outlined"
-                  fullWidth
-                />
-              </Grid>
-            </Grid>
-          </Box>
-        ))}
-        <Box sx={{ mt: 2 }}>
-          <Buttons onClick={handleClickAddPerson} label="Add another Person" />
-        </Box> */}
-
-        {/* <Box sx={{ mt: 3 }}>
-    
-          <label style={labelStyle} htmlFor="Add Location name">
-            Add Camp Activities
-          </label>
-        </Box>
-        <Box sx={{ mt: 3 }}>
-          <CustomTextField
-            label="Add Camp Activities"
-            variant="outlined"
-            fullWidth
-          />
-        </Box>
-        <Box sx={{ mt: 3 }}>
-        <label style={labelStyle} htmlFor="Add Location name">
-            Add Sponser 
-          </label>
-        </Box> */}
-        {/* {[...Array(sponsorCount)].map((_, index) => (
-          <Box key={index} sx={{ mt: 2 }}>
-            <CustomTextField
-              label={`Sponsor ${index + 1}`}
-              variant="outlined"
-              fullWidth
-            />
-          </Box>
-        ))} */}
-        {/* <Box sx={{ mt: 2 }}>
-          <Buttons onClick={handleClickAddSponsor} label="Add Another Sponsor" />
-        </Box> */}
 
         <Box sx={{ mt: 6, display: "flex", justifyContent: "center" }}>
-          <Buttons onClick={handleClick} label="Register School" />
+          <Buttons onClick={handleAddSchool} label="Register School" />
         </Box>
       </Box>
     </Modal>

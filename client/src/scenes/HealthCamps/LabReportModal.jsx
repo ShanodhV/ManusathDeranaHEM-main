@@ -10,30 +10,22 @@ const LabReportModal = ({ open, onClose }) => {
   const [sugarLevel, setSugarLevel] = useState("");
   const [cholesterolLevel, setCholesterolLevel] = useState("");
   const [bloodPressure, setBloodPressure] = useState("");
+
   const [addLabReport] = useAddLabReportMutation();
 
-  const handleClick = () => {
-    const newLabReport = {
-      patientNIC,
-      kidneySerum: Number(kidneySerum),
-      sugarLevel: Number(sugarLevel),
-      cholesterolLevel: Number(cholesterolLevel),
-      bloodPressure,
-    };
-
-    addLabReport(newLabReport)
-      .then(response => {
-        console.log("Lab report added successfully:", response);
-        // Reset fields
+  const handleAddReport = () => {
+    addLabReport({ patientNIC, kidneySerum, sugarLevel, cholesterolLevel, bloodPressure })
+      .then((response) => {
+        console.log("Lab Report added successfully from frontend:", response);
+        // Clear form fields
         setPatientNIC("");
         setKidneySerum("");
         setSugarLevel("");
         setCholesterolLevel("");
         setBloodPressure("");
-        onClose();
       })
-      .catch(error => {
-        console.error("Error adding lab report:", error);
+      .catch((error) => {
+        console.error("Error adding Report:", error);
       });
   };
 
@@ -110,7 +102,7 @@ const LabReportModal = ({ open, onClose }) => {
         </Box>
 
         <Box sx={{ mt: 6, display: "flex", justifyContent: "center" }}>
-          <Buttons onClick={handleClick} label="Add Lab Report" />
+          <Buttons onClick={handleAddReport} label="Add Lab Report" />
         </Box>
       </Box>
     </Modal>
