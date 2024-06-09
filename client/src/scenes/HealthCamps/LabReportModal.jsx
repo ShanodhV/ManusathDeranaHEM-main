@@ -14,7 +14,13 @@ const LabReportModal = ({ open, onClose }) => {
   const [addLabReport] = useAddLabReportMutation();
 
   const handleAddReport = () => {
-    addLabReport({ patientNIC, kidneySerum, sugarLevel, cholesterolLevel, bloodPressure })
+    addLabReport({
+      patientNIC,
+      kidneySerum,
+      sugarLevel,
+      cholesterolLevel,
+      bloodPressure,
+    })
       .then((response) => {
         console.log("Lab Report added successfully from frontend:", response);
         // Clear form fields
@@ -53,6 +59,7 @@ const LabReportModal = ({ open, onClose }) => {
 
         <Box sx={{ mt: 3 }}>
           <CustomTextField
+            inputType="numeric"
             label="Patient NIC"
             variant="outlined"
             value={patientNIC}

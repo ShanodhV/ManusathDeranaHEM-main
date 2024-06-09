@@ -98,10 +98,26 @@ export const api = createApi({
       invalidatesTags: ["Camps"],
     }),
     addCamp: build.mutation({
-      query: ({ CampId, Province, District, Town, MOH, ContactPersons, Sponsor }) => ({
+      query: ({
+        CampId,
+        Province,
+        District,
+        Town,
+        MOH,
+        ContactPersons,
+        Sponsor,
+      }) => ({
         url: `camp/add`,
         method: "POST",
-        body: { CampId, Province, District, Town, MOH, ContactPersons, Sponsor },
+        body: {
+          CampId,
+          Province,
+          District,
+          Town,
+          MOH,
+          ContactPersons,
+          Sponsor,
+        },
       }),
       providesTags: ["Camps"],
     }),
@@ -116,76 +132,116 @@ export const api = createApi({
     // Lab Reports
     deleteLabReport: build.mutation({
       query: (labReportId) => ({
-        url: `lab_report/delete/${labReportId}`,
+        url: `labreport/delete/${labReportId}`,
         method: "DELETE",
       }),
       invalidatesTags: ["LabReports"],
     }),
     addLabReport: build.mutation({
-      query: ({ patientNIC, kidneySerum, sugarLevel, cholesterolLevel, bloodPressure }) => ({
-        url: `lab_report/add`,
+      query: ({
+        patientNIC,
+        kidneySerum,
+        sugarLevel,
+        cholesterolLevel,
+        bloodPressure,
+      }) => ({
+        url: `labreport/add`,
         method: "POST",
-        body: { patientNIC, kidneySerum, sugarLevel, cholesterolLevel, bloodPressure },
+        body: {
+          patientNIC,
+          kidneySerum,
+          sugarLevel,
+          cholesterolLevel,
+          bloodPressure,
+        },
       }),
       providesTags: ["LabReports"],
     }),
     getLabReports: build.query({
-      query: () => `lab_report/gets`,
+      query: () => `labreport/gets`,
       providesTags: ["LabReports"],
     }),
     getLabReport: build.query({
-      query: (id) => `lab_report/get/${id}`,
+      query: (id) => `labreport/get/${id}`,
       providesTags: ["LabReports"],
     }),
-        // Schools
-        deleteSchool: build.mutation({
-          query: (schoolId) => ({
-            url: `school/delete/${schoolId}`,
-            method: "DELETE",
-          }),
-          invalidatesTags: ["Schools"],
-        }),
-        addSchool: build.mutation({
-          query: ({ schoolID, schoolName, schoolAddress, location, schoolMobileNumber, principalContact }) => ({
-            url: `school/add`,
-            method: "POST",
-            body: { schoolID, schoolName, schoolAddress, location, schoolMobileNumber, principalContact },
-          }),
-          providesTags: ["Schools"],
-        }),
-        getSchools: build.query({
-          query: () => `school/gets`,
-          providesTags: ["Schools"],
-        }),
-        getSchool: build.query({
-          query: (id) => `school/get/${id}`,
-          providesTags: ["Schools"],
-        }),
-        // Donors
-        deleteDonor: build.mutation({
-          query: (donorId) => ({
-            url: `donor/delete/${donorId}`,
-            method: "DELETE",
-          }),
-          invalidatesTags: ["Donors"],
-        }),
-        addDonor: build.mutation({
-          query: ({ donorNIC, donorName, donorAddress, dateOfBirth, mobileNumber, occupation }) => ({
-            url: `donor/add`,
-            method: "POST",
-            body: { donorNIC, donorName, donorAddress, dateOfBirth, mobileNumber, occupation },
-          }),
-          providesTags: ["Donors"],
-        }),
-        getDonors: build.query({
-          query: () => `donor/gets`,
-          providesTags: ["Donors"],
-        }),
-        getDonor: build.query({
-          query: (id) => `donor/get/${id}`,
-          providesTags: ["Donors"],
-        }),
-      // Derana Daruwo Programs
+    // Schools
+    deleteSchool: build.mutation({
+      query: (schoolId) => ({
+        url: `school/delete/${schoolId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Schools"],
+    }),
+    addSchool: build.mutation({
+      query: ({
+        schoolID,
+        schoolName,
+        schoolAddress,
+        location,
+        schoolMobileNumber,
+        principalContact,
+      }) => ({
+        url: `school/add`,
+        method: "POST",
+        body: {
+          schoolID,
+          schoolName,
+          schoolAddress,
+          location,
+          schoolMobileNumber,
+          principalContact,
+        },
+      }),
+      providesTags: ["Schools"],
+    }),
+    getSchools: build.query({
+      query: () => `school/gets`,
+      providesTags: ["Schools"],
+    }),
+    getSchool: build.query({
+      query: (id) => `school/get/${id}`,
+      providesTags: ["Schools"],
+    }),
+    // Donors
+    deleteDonor: build.mutation({
+      query: (donorId) => ({
+        url: `donor/delete/${donorId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Donors"],
+    }),
+    addDonor: build.mutation({
+      query: ({
+        donorNIC,
+        donorName,
+        donorAddress,
+        dateOfBirth,
+        mobileNumber,
+        occupation,
+      }) => ({
+        url: `donor/add`,
+        method: "POST",
+        body: {
+          donorNIC,
+          donorName,
+          donorAddress,
+          dateOfBirth,
+          mobileNumber,
+          occupation,
+        },
+      }),
+      providesTags: ["Donors"],
+    }),
+    getDonors: build.query({
+      query: () => `donor/gets`,
+      providesTags: ["Donors"],
+    }),
+    getDonor: build.query({
+      query: (id) => `donor/get/${id}`,
+      providesTags: ["Donors"],
+    }),
+    // Derana Daruwo Programs
     deleteDeranaDaruwoProgram: build.mutation({
       query: (programId) => ({
         url: `derana-daruwo/delete/${programId}`,
@@ -209,103 +265,164 @@ export const api = createApi({
       query: (id) => `derana-daruwo/get/${id}`,
       providesTags: ["DeranaDaruwoPrograms"],
     }),
-        // Students
-        deleteStudent: build.mutation({
-          query: (studentId) => ({
-            url: `student/delete/${studentId}`,
-            method: "DELETE",
-          }),
-          invalidatesTags: ["Students"],
-        }),
-        addStudent: build.mutation({
-          query: ({ studentName, studentAddress, studentID, programID, parentDetails, bankAccountDetails }) => ({
-            url: `student/add`,
-            method: "POST",
-            body: { studentName, studentAddress, studentID, programID, parentDetails, bankAccountDetails },
-          }),
-          providesTags: ["Students"],
-        }),
-        getStudents: build.query({
-          query: () => `student/gets`,
-          providesTags: ["Students"],
-        }),
-        getStudent: build.query({
-          query: (id) => `student/get/${id}`,
-          providesTags: ["Students"],
-        }),
-        // Donor Volunteers
-        deleteDonorVolunteer: build.mutation({
-          query: (donorVolunteerId) => ({
-            url: `donor-volunteer/delete/${donorVolunteerId}`,
-            method: "DELETE",
-          }),
-          invalidatesTags: ["DonorVolunteers"],
-        }),
-        addDonorVolunteer: build.mutation({
-          query: ({ donorName, donorAddress, donorContactNumber, donorID, assignedStudentID, programID }) => ({
-            url: `donor-volunteer/add`,
-            method: "POST",
-            body: { donorName, donorAddress, donorContactNumber, donorID, assignedStudentID, programID },
-          }),
-          providesTags: ["DonorVolunteers"],
-        }),
-        getDonorVolunteers: build.query({
-          query: () => `donor-volunteer/gets`,
-          providesTags: ["DonorVolunteers"],
-        }),
-        getDonorVolunteer: build.query({
-          query: (id) => `donor-volunteer/get/${id}`,
-          providesTags: ["DonorVolunteers"],
-        }),
-        // Volunteers
-        deleteVolunteer: build.mutation({
-          query: (volunteerId) => ({
-            url: `volunteer/delete/${volunteerId}`,
-            method: "DELETE",
-          }),
-          invalidatesTags: ["Volunteers"],
-        }),
-        addVolunteer: build.mutation({
-          query: ({ volunteerNIC, volunteerName, dateOfBirth, contactNumber, volunteerAddress, location, occupation, status }) => ({
-            url: `volunteer/add`,
-            method: "POST",
-            body: { volunteerNIC, volunteerName, dateOfBirth, contactNumber, volunteerAddress, location, occupation, status },
-          }),
-          providesTags: ["Volunteers"],
-        }),
-        getVolunteers: build.query({
-          query: () => `volunteer/gets`,
-          providesTags: ["Volunteers"],
-        }),
-        getVolunteer: build.query({
-          query: (id) => `volunteer/get/${id}`,
-          providesTags: ["Volunteers"],
-        }),
-      // Volunteer Events
-      deleteVolunteerEvent: build.mutation({
-        query: (volunteerEventId) => ({
-          url: `volunteer-event/delete/${volunteerEventId}`,
-          method: "DELETE",
-        }),
-        invalidatesTags: ["VolunteerEvents"],
+    // Students
+    deleteStudent: build.mutation({
+      query: (studentId) => ({
+        url: `student/delete/${studentId}`,
+        method: "DELETE",
       }),
-      addVolunteerEvent: build.mutation({
-        query: ({ eventName, eventCategory, eventDate, venue, location, relatedOccupations, description }) => ({
-          url: `volunteer-event/add`,
-          method: "POST",
-          body: { eventName, eventCategory, eventDate, venue, location, relatedOccupations, description },
-        }),
-        providesTags: ["VolunteerEvents"],
+      invalidatesTags: ["Students"],
+    }),
+    addStudent: build.mutation({
+      query: ({
+        studentName,
+        studentAddress,
+        studentID,
+        programID,
+        parentDetails,
+        bankAccountDetails,
+      }) => ({
+        url: `student/add`,
+        method: "POST",
+        body: {
+          studentName,
+          studentAddress,
+          studentID,
+          programID,
+          parentDetails,
+          bankAccountDetails,
+        },
       }),
-      getVolunteerEvents: build.query({
-        query: () => `volunteer-event/gets`,
-        providesTags: ["VolunteerEvents"],
+      providesTags: ["Students"],
+    }),
+    getStudents: build.query({
+      query: () => `student/gets`,
+      providesTags: ["Students"],
+    }),
+    getStudent: build.query({
+      query: (id) => `student/get/${id}`,
+      providesTags: ["Students"],
+    }),
+    // Donor Volunteers
+    deleteDonorVolunteer: build.mutation({
+      query: (donorVolunteerId) => ({
+        url: `donor-volunteer/delete/${donorVolunteerId}`,
+        method: "DELETE",
       }),
-      getVolunteerEvent: build.query({
-        query: (id) => `volunteer-event/get/${id}`,
-        providesTags: ["VolunteerEvents"],
+      invalidatesTags: ["DonorVolunteers"],
+    }),
+    addDonorVolunteer: build.mutation({
+      query: ({
+        donorName,
+        donorAddress,
+        donorContactNumber,
+        donorID,
+        assignedStudentID,
+        programID,
+      }) => ({
+        url: `donor-volunteer/add`,
+        method: "POST",
+        body: {
+          donorName,
+          donorAddress,
+          donorContactNumber,
+          donorID,
+          assignedStudentID,
+          programID,
+        },
       }),
-    
+      providesTags: ["DonorVolunteers"],
+    }),
+    getDonorVolunteers: build.query({
+      query: () => `donor-volunteer/gets`,
+      providesTags: ["DonorVolunteers"],
+    }),
+    getDonorVolunteer: build.query({
+      query: (id) => `donor-volunteer/get/${id}`,
+      providesTags: ["DonorVolunteers"],
+    }),
+    // Volunteers
+    deleteVolunteer: build.mutation({
+      query: (volunteerId) => ({
+        url: `volunteer/delete/${volunteerId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Volunteers"],
+    }),
+    addVolunteer: build.mutation({
+      query: ({
+        volunteerNIC,
+        volunteerName,
+        dateOfBirth,
+        contactNumber,
+        volunteerAddress,
+        location,
+        occupation,
+        status,
+      }) => ({
+        url: `volunteer/add`,
+        method: "POST",
+        body: {
+          volunteerNIC,
+          volunteerName,
+          dateOfBirth,
+          contactNumber,
+          volunteerAddress,
+          location,
+          occupation,
+          status,
+        },
+      }),
+      providesTags: ["Volunteers"],
+    }),
+    getVolunteers: build.query({
+      query: () => `volunteer/gets`,
+      providesTags: ["Volunteers"],
+    }),
+    getVolunteer: build.query({
+      query: (id) => `volunteer/get/${id}`,
+      providesTags: ["Volunteers"],
+    }),
+    // Volunteer Events
+    deleteVolunteerEvent: build.mutation({
+      query: (volunteerEventId) => ({
+        url: `volunteer-event/delete/${volunteerEventId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["VolunteerEvents"],
+    }),
+    addVolunteerEvent: build.mutation({
+      query: ({
+        eventName,
+        eventCategory,
+        eventDate,
+        venue,
+        location,
+        relatedOccupations,
+        description,
+      }) => ({
+        url: `volunteer-event/add`,
+        method: "POST",
+        body: {
+          eventName,
+          eventCategory,
+          eventDate,
+          venue,
+          location,
+          relatedOccupations,
+          description,
+        },
+      }),
+      providesTags: ["VolunteerEvents"],
+    }),
+    getVolunteerEvents: build.query({
+      query: () => `volunteer-event/gets`,
+      providesTags: ["VolunteerEvents"],
+    }),
+    getVolunteerEvent: build.query({
+      query: (id) => `volunteer-event/get/${id}`,
+      providesTags: ["VolunteerEvents"],
+    }),
   }),
 });
 
@@ -334,7 +451,7 @@ export const {
   useGetLabReportQuery,
   useGetLabReportsQuery,
   useAddLabReportMutation,
-  
+
   useDeleteSchoolMutation,
   useAddSchoolMutation,
   useGetSchoolsQuery,
@@ -344,7 +461,7 @@ export const {
   useAddDonorMutation,
   useGetDonorsQuery,
   useGetDonorQuery,
-  
+
   useDeleteDeranaDaruwoProgramMutation,
   useAddDeranaDaruwoProgramMutation,
   useGetDeranaDaruwoProgramsQuery,
@@ -364,7 +481,7 @@ export const {
   useAddVolunteerMutation,
   useGetVolunteersQuery,
   useGetVolunteerQuery,
-  
+
   useDeleteVolunteerEventMutation,
   useAddVolunteerEventMutation,
   useGetVolunteerEventsQuery,

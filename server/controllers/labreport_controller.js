@@ -3,7 +3,13 @@ import LabReport from "../models/LabReport.js";
 // Add a new lab report
 export const addLabReport = async (req, res) => {
   try {
-    const { patientNIC, kidneySerum, sugarLevel, cholesterolLevel, bloodPressure } = req.body;
+    const {
+      patientNIC,
+      kidneySerum,
+      sugarLevel,
+      cholesterolLevel,
+      bloodPressure,
+    } = req.body;
 
     // Create a new lab report instance
     const newLabReport = new LabReport({
@@ -20,7 +26,7 @@ export const addLabReport = async (req, res) => {
     res.status(201).json(savedLabReport); // Respond with the saved lab report
   } catch (error) {
     console.error("Error adding new lab report:", error);
-    res.status(500).json({ error: "Failed to add new lab report" });
+    res.status(500).json({ error: "Failed to add new lab report", error });
   }
 };
 
@@ -70,7 +76,11 @@ export const updateLabReport = async (req, res) => {
     const updatedLabReportData = req.body; // Updated lab report data from the request body
 
     // Find the lab report by ID and update its information
-    const updatedLabReport = await LabReport.findByIdAndUpdate(labReportId, updatedLabReportData, { new: true });
+    const updatedLabReport = await LabReport.findByIdAndUpdate(
+      labReportId,
+      updatedLabReportData,
+      { new: true }
+    );
 
     if (!updatedLabReport) {
       return res.status(404).json({ message: "Lab report not found" });

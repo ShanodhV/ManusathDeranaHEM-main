@@ -9,9 +9,11 @@ const CustomTextField = ({
   select,
   onChange, // Changed from Function to onChange
   children,
+  inputType,
 }) => {
   return (
     <TextField
+      inputMode={inputType}
       label={label}
       variant={variant}
       onChange={onChange} // Updated here
