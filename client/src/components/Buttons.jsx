@@ -5,14 +5,14 @@ const Buttons = ({ onClick, label, variant, color, disabled }) => {
     <button
       onClick={onClick}
       style={{ 
-        padding: '10px 20px', // Example styling
-        borderRadius: '5px', // Example styling
-        backgroundColor: color || "#DD7070" , // Use provided color or default to blue
-        color: 'white', // Example styling
-        border: 'none', // Example styling
-        cursor: 'pointer', // Example styling
-        fontWeight: 'bold', // Example styling
-        fontSize: '16px', // Example styling
+        padding: '10px 20px', 
+        borderRadius: '5px', 
+        backgroundColor: color || "#DD7070" , 
+        color: 'white', 
+        border: 'none', 
+        cursor: 'pointer', 
+        fontWeight: 'bold', 
+        fontSize: '16px', 
       }}
       disabled={disabled}
     >
