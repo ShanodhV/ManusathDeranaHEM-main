@@ -3,7 +3,15 @@ import VolunteerEvent from "../models/VolunteerEvent.js";
 // Add a new volunteer event
 export const addVolunteerEvent = async (req, res) => {
   try {
-    const { eventName, eventCategory, eventDate, venue, location, relatedOccupations, description } = req.body;
+    const {
+      eventName,
+      eventCategory,
+      eventDate,
+      venue,
+      location,
+      relatedOccupations,
+      description,
+    } = req.body;
 
     // Create a new volunteer event instance
     const newVolunteerEvent = new VolunteerEvent({
@@ -22,7 +30,7 @@ export const addVolunteerEvent = async (req, res) => {
     res.status(201).json(savedVolunteerEvent); // Respond with the saved volunteer event
   } catch (error) {
     console.error("Error adding new volunteer event:", error);
-    res.status(500).json({ error: "Failed to add new volunteer event" });
+    res.status(500).json({ error: "Failed to add new volunteer event", error });
   }
 };
 
@@ -72,7 +80,11 @@ export const updateVolunteerEvent = async (req, res) => {
     const updatedVolunteerEventData = req.body; // Updated volunteer event data from the request body
 
     // Find the volunteer event by ID in the database and update its information
-    const updatedVolunteerEvent = await VolunteerEvent.findByIdAndUpdate(volunteerEventId, updatedVolunteerEventData, { new: true });
+    const updatedVolunteerEvent = await VolunteerEvent.findByIdAndUpdate(
+      volunteerEventId,
+      updatedVolunteerEventData,
+      { new: true }
+    );
 
     if (!updatedVolunteerEvent) {
       return res.status(404).json({ message: "Volunteer event not found" });
