@@ -119,7 +119,7 @@ import { useAddDeranaDaruwoProgramMutation } from "state/api";
                     </Box>
                     <Box sx={{ mt: 4 }}>
                         <label style={{ fontWeight: "bold", color: "black", fontSize: "16px", marginTop: "16px" }} htmlFor="Principal Info">
-                        Principal's Information
+                        Area Officer Details
                         </label>
                     </Box>  
                     <Box sx={{ mt: 3 }}>
