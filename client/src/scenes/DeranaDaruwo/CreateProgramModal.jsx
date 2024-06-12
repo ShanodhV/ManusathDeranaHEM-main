@@ -28,8 +28,11 @@ import { useAddDeranaDaruwoProgramMutation } from "state/api";
                             district,
                             town,
                         },
-                        mobileNumber,
-                        name,
+                        areaOfficerDetails:{
+                            mobileNumber,
+                            name,
+                        }
+                      
                     };
 
                     addProgram(programData).then((Response)=>{

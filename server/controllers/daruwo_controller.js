@@ -28,7 +28,7 @@ export const getDeranaDaruwoPrograms = async (req, res) => {
     const deranaDaruwoPrograms = await DeranaDaruwo.find(); // Fetching all Derana Daruwo programs
     res.status(200).json(deranaDaruwoPrograms);
   } catch (error) {
-    res.status(404).json({ message: error.message });
+    res.status(404).json({ message: error.message, error });
   }
 };
 

@@ -60,7 +60,7 @@ app.use("/camp", campRoutes);
 app.use("/labreport", labreportRoutes);
 app.use("/school", schoolRoutes);
 app.use("/doner", donerRoutes);
-app.use("/daruwo", daruwoRoutes);
+app.use("/derana-daruwo", daruwoRoutes);
 app.use("/student", studentRoutes);
 app.use("/donnerVolunteer", donerVolunteerRoutes);
 app.use("/volunteer", volunteerRoutes);
