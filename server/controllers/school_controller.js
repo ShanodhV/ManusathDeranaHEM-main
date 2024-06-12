@@ -21,7 +21,7 @@ export const addSchool = async (req, res) => {
     res.status(201).json(savedSchool); // Respond with the saved school
   } catch (error) {
     console.error("Error adding new school:", error);
-    res.status(500).json({ error: "Failed to add new school" });
+    res.status(500).json({ error: "Failed to add new school",error });
   }
 };
 

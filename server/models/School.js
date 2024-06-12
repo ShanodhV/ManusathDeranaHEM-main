@@ -20,15 +20,15 @@ const SchoolSchema = new mongoose.Schema(
     location: {
       province: {
         type: String,
-        required: true,
+        //required: true,
       },
       district: {
         type: String,
-        required: true,
+        //required: true,
       },
       town: {
         type: String,
-        required: true,
+        //required: true,
       },
     },
     schoolMobileNumber: {
