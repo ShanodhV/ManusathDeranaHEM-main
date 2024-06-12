@@ -3,7 +3,7 @@ import Student from "../models/Student.js";
 // Add a new student
 export const addStudent = async (req, res) => {
   try {
-    const { studentName, studentAddress, studentID, programID, parentDetails, bankAccountDetails } = req.body;
+      const { studentName, studentAddress, studentID, programID, parentName, parentContactDetails,bankAccountDetails,accountNumber } = req.body;
 
     // Create a new student instance
     const newStudent = new Student({
@@ -11,13 +11,16 @@ export const addStudent = async (req, res) => {
       studentAddress,
       studentID,
       programID,
-      parentDetails,
+      parentName,
+      parentContactDetails,
       bankAccountDetails,
+      accountNumber
+      
     });
 
     // Save the student to the database
     const savedStudent = await newStudent.save();
-
+    console.log(savedStudent);
     res.status(201).json(savedStudent); // Respond with the saved student
   } catch (error) {
     console.error("Error adding new student:", error);

@@ -4,27 +4,24 @@ import Buttons from 'components/Buttons';
 import StudentRegistrationModal from './StudentRegistrationModal';
 
 const StudentRegistrationTab = () => {
+  const [openModal, setOpenModal] = useState(false);
 
-    const [openModal,setOpenModal]=useState(false);
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  };
 
-    const handleOpenModal=()=>{
-        setOpenModal(true);
-    }
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
 
-    const handleCloseModal=()=>{
-        setOpenModal(false);
-    }
   return (
     <div>
-      <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
-        {/* imports Buttuons component from Component folder */}
-        <Buttons label={"Register Student"} onClick={handleOpenModal} />
-
-        {/* import StudentRegistrationModal component */}
-        <StudentRegistrationModal openModal={openModal} closeModal={handleCloseModal}/>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+        <Buttons label="Register Student" onClick={handleOpenModal} />
       </Box>
+      <StudentRegistrationModal openModal={openModal} closeModal={handleCloseModal} />
     </div>
   );
 };
 
-export default StudentRegistrationTab
+export default StudentRegistrationTab;

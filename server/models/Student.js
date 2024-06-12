@@ -19,7 +19,6 @@ const StudentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    parentDetails: {
       parentName: {
         type: String,
         required: true,
@@ -28,8 +27,7 @@ const StudentSchema = new mongoose.Schema(
         type: String,
         required: true,
       },
-    },
-    bankAccountDetails: {
+
       bankName: {
         type: String,
         required: true,
@@ -38,7 +36,7 @@ const StudentSchema = new mongoose.Schema(
         type: String,
         required: true,
       },
-    },
+    
   },
   { timestamps: true }
 );

@@ -279,8 +279,10 @@ export const api = createApi({
         studentAddress,
         studentID,
         programID,
-        parentDetails,
+        parentName,
+        parentContactDetails,
         bankAccountDetails,
+        accountNumber,
       }) => ({
         url: `student/add`,
         method: "POST",
@@ -289,8 +291,10 @@ export const api = createApi({
           studentAddress,
           studentID,
           programID,
-          parentDetails,
+          parentName,
+          parentContactDetails,
           bankAccountDetails,
+          accountNumber
         },
       }),
       providesTags: ["Students"],
