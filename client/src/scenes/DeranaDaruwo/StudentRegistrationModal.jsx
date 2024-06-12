@@ -58,7 +58,7 @@ const StudentRegistrationModal = ({openModal,closeModal}) => {
    
     <Box>
       
-      <Modal
+    <Modal
      open={openModal}
      onClose={closeModal}
      aria-labelledby="modal-modal-title"

@@ -1,83 +1,76 @@
-import DonorVolunteer from "../models/DonorVolunteer.js";
+import DonorVolunteers from "../models/DonorVolunteer.js";
 
-// Add a new donor volunteer
+// Add Donor Volunteer
 export const addDonorVolunteer = async (req, res) => {
   try {
-    const { donorName, donorAddress, donorContactNumber, donorID, assignedStudentID, programID } = req.body;
+    const { donorNIC, donorName, donorAddress, dateOfBirth, mobileNumber, occupation } = req.body;
 
-    // Create a new donor volunteer instance
-    const newDonorVolunteer = new DonorVolunteer({
+    const newDonorVolunteer = new DonorVolunteers({
+      donorNIC,
       donorName,
       donorAddress,
-      donorContactNumber,
-      donorID,
-      assignedStudentID,
-      programID,
+      dateOfBirth,
+      mobileNumber,
+      occupation,
     });
 
-    // Save the donor volunteer to the database
     const savedDonorVolunteer = await newDonorVolunteer.save();
-
-    res.status(201).json(savedDonorVolunteer); // Respond with the saved donor volunteer
+    res.status(201).json(savedDonorVolunteer);
   } catch (error) {
     console.error("Error adding new donor volunteer:", error);
-    res.status(500).json({ error: "Failed to add new donor volunteer" });
+    res.status(500).json({ error: "Failed to add new donor volunteer",error });
   }
 };
 
-// Get all donor volunteers
+// Get All Donor Volunteers
 export const getDonorVolunteers = async (req, res) => {
   try {
-    const donorVolunteers = await DonorVolunteer.find(); // Fetching all donor volunteers
+    const donorVolunteers = await DonorVolunteers.find();
     res.status(200).json(donorVolunteers);
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
 };
 
-// Get a single donor volunteer by ID
+// Get Donor Volunteer by ID
 export const getDonorVolunteer = async (req, res) => {
   try {
     const { id } = req.params;
-    const donorVolunteer = await DonorVolunteer.findById(id);
-    if (!donorVolunteer) {
-      return res.status(404).json({ message: "Donor volunteer not found" });
-    }
+    const donorVolunteer = await DonorVolunteers.findById(id);
     res.status(200).json(donorVolunteer);
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
 };
 
-// Delete a donor volunteer by ID
+// Delete Donor Volunteer
 export const deleteDonorVolunteer = async (req, res) => {
   const { id } = req.params;
   try {
-    const deletedDonorVolunteer = await DonorVolunteer.findByIdAndDelete(id); // Deleting donor volunteer by ID
+    const deletedDonorVolunteer = await DonorVolunteers.findByIdAndDelete(id);
     if (!deletedDonorVolunteer) {
-      return res.status(404).json({ error: "Donor volunteer not found" });
+      return res.status(404).json({ error: "Donor Volunteer not found" });
     }
-    res.json({ message: "Donor volunteer deleted successfully" });
+    res.json({ message: "Donor Volunteer deleted successfully" });
   } catch (error) {
     console.error("Error deleting donor volunteer:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-// Update a donor volunteer by ID
+// Update Donor Volunteer
 export const updateDonorVolunteer = async (req, res) => {
   try {
     const donorVolunteerId = req.params.id;
-    const updatedDonorVolunteerData = req.body; // Updated donor volunteer data from the request body
+    const updatedDonorVolunteerData = req.body;
 
-    // Find the donor volunteer by ID in the database and update its information
-    const updatedDonorVolunteer = await DonorVolunteer.findByIdAndUpdate(donorVolunteerId, updatedDonorVolunteerData, { new: true });
+    const updatedDonorVolunteer = await DonorVolunteers.findByIdAndUpdate(
+      donorVolunteerId,
+      updatedDonorVolunteerData,
+      { new: true }
+    );
 
-    if (!updatedDonorVolunteer) {
-      return res.status(404).json({ message: "Donor volunteer not found" });
-    }
-
-    res.json(updatedDonorVolunteer); // Send back the updated donor volunteer object
+    res.json(updatedDonorVolunteer);
   } catch (error) {
     console.error("Error updating donor volunteer:", error);
     res.status(500).json({ message: "Internal server error" });
