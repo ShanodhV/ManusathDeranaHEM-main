@@ -7,24 +7,28 @@ const CustomTextField = ({
   fullWidth,
   value,
   select,
-  onChange, // Changed from Function to onChange
+  onChange,
   children,
   inputType,
+  error,
+  helperText,
 }) => {
   return (
     <TextField
       inputMode={inputType}
       label={label}
       variant={variant}
-      onChange={onChange} // Updated here
+      onChange={onChange}
       fullWidth={fullWidth}
       value={value}
       select={select}
+      error={error}
+      helperText={helperText}
       sx={{
         "& .Mui-focused": {
-          color: "#000", // Change the text color when focused
+          color: "#000",
           "& .MuiOutlinedInput-notchedOutline": {
-            borderColor: "#000", // Change the border color when focused
+            borderColor: "#000",
           },
         },
       }}
