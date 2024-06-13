@@ -1,6 +1,6 @@
-import React, { useState } from "react";
 import { Box } from "@mui/material";
 import Buttons from "components/Buttons";
+import { useState } from "react";
 import VolunteerRegistrationModal from "./VolunteerRegistrationModal"; // Import the VolunteerRegistrationModal component
 
 const VolunteerRegistrationTab = () => {
@@ -17,7 +17,7 @@ const VolunteerRegistrationTab = () => {
   return (
     <Box>
       <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
-        <Buttons label={"Register School"} onClick={handleOpenModal} />
+        <Buttons label={"Register"} onClick={handleOpenModal} />
       </Box>
       {/* Render the VolunteerRegistrationModal component and pass necessary props */}
       <VolunteerRegistrationModal openModal={openModal} handleCloseModal={handleCloseModal} />
