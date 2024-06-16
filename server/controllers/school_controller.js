@@ -52,14 +52,15 @@ export const getSchool = async (req, res) => {
 // Delete a school registration by ID
 export const deleteSchool = async (req, res) => {
   const { id } = req.params;
+  
   try {
-    const deletedSchool = await School.findByIdAndDelete(id); // Deleting school by ID
+    const deletedSchool = await School.deleteOne({schoolID: id}); // Deleting school by ID
     if (!deletedSchool) {
       return res.status(404).json({ error: "School not found" });
     }
     res.json({ message: "School deleted successfully" });
   } catch (error) {
-    console.error("Error deleting school:", error);
+    console.log("Error deleting school:" +error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
