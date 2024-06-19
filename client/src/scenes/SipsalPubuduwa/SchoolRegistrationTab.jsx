@@ -44,6 +44,13 @@ const SchoolRegistrationTab = () => {
       });
   };
 
+  const handleUpdate = (schoolID) => {
+    // Logic to handle update action
+    console.log("Update school with ID:", schoolID);
+    // Open modal with school data to update
+    // You might want to set some state here to pass the school data to the modal
+  };
+
   const schoolColumns = [
     {
       field: "schoolID",
@@ -82,10 +89,18 @@ const SchoolRegistrationTab = () => {
       sortable: false,
       filterable: false,
       renderCell: (params) => (
-        <Buttons
-          label="Delete"
-          onClick={() => handleDelete(params.row.schoolID)}
-        />
+        <Box display="flex" alignItems="center">
+          <Buttons
+            label="Update"
+            onClick={() => handleUpdate(params.row.schoolID)}
+            style={{ backgroundColor: "blue", color: "white", marginRight: "8px" }}
+          />
+          <Buttons
+            label="Delete"
+            onClick={() => handleDelete(params.row.schoolID)}
+            style={{ backgroundColor: "red", color: "white" }} // Assuming you have styles for the Delete button as well
+          />
+        </Box>
       ),
     },
   ];
