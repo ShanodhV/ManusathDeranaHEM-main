@@ -46,22 +46,22 @@ const HealthCampsTab = () => {
 
   const campColumns = [
     {
-      field: "campId",
+      field: "CampId",
       headerName: "Camp ID",
       flex: 1,
     },
     {
-      field: "province",
+      Province: "province",
       headerName: "Province",
       flex: 1,
     },
     {
-      field: "district",
+      field: "District",
       headerName: "District",
       flex: 1,
     },
     {
-      field: "town",
+      field: "Town",
       headerName: "Town",
       flex: 1,
     },
@@ -130,6 +130,7 @@ const HealthCampsTab = () => {
           },
           "& .MuiDataGrid-cell": {
             borderBottom: "none",
+            color: theme.palette.secondary[100],
           },
           "& .MuiDataGrid-columnHeaders": {
             backgroundColor: theme.palette.background.alt,

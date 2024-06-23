@@ -4,11 +4,11 @@ const VolunteerEventSchema = new mongoose.Schema(
   {
     eventName: {
       type: String,
-      //required: true,
+      required: true,
     },
     eventCategory: {
       type: String,
-      //required: true,
+      required: true,
     },
     eventDate: {
       date: { type: Number, },
@@ -26,11 +26,11 @@ const VolunteerEventSchema = new mongoose.Schema(
     },
     relatedOccupations: {
       type: [String],
-      //required: true,
+      required: true,
     },
     description: {
       type: String,
-      //required: true,
+      required: true,
     },
   },
   { timestamps: true }

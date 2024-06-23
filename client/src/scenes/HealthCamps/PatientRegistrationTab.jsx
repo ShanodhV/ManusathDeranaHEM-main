@@ -6,6 +6,7 @@ import PatientRegistrationModal from "./PatientRegistrationModal";
 import DataGridCustomToolbar from "components/DataGridCustomToolbar";
 import { DataGrid } from "@mui/x-data-grid";
 import { useGetPatientsQuery, useDeletePatientMutation } from "state/api";
+import { Delete } from "@mui/icons-material";
 
 const PatientRegistrationTab = () => {
   const theme = useTheme();
@@ -94,7 +95,7 @@ const PatientRegistrationTab = () => {
               color="error"
               onClick={() => handleDelete(params.row._id)}
             >
-              Delete
+              <Delete sx={{color:"#fffff"}}/>Delete
             </Button>
           </Box>
           <Box
