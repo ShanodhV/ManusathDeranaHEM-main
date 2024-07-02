@@ -1,5 +1,6 @@
 import Patients from "../models/Patient.js";
 
+// Add Patient
 export const addPatient = async (req, res) => {
   try {
     const { name, NIC, phone, address, city, emergencyPhone } = req.body;
@@ -23,6 +24,8 @@ export const addPatient = async (req, res) => {
     res.status(500).json({ error: "Failed to add new patient" });
   }
 };
+
+// Get All Patients
 export const getPatients = async (req, res) => {
   try {
     const patients = await Patients.find(); // Fetching all patients using the Patient model
@@ -31,16 +34,19 @@ export const getPatients = async (req, res) => {
     res.status(404).json({ message: error.message });
   }
 };
+
+// Get Patient by ID
 export const getPatient = async (req, res) => {
   try {
     const { id } = req.params;
-    const patients = await Patients.findById(id);
-    res.status(200).json(patients);
+    const patient = await Patients.findById(id);
+    res.status(200).json(patient);
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
 };
 
+// Delete Patient
 export const deletePatient = async (req, res) => {
   const { id } = req.params;
   try {
@@ -55,6 +61,7 @@ export const deletePatient = async (req, res) => {
   }
 };
 
+// Update Patient
 export const updatePatient = async (req, res) => {
   try {
     const patientId = req.params.id;

@@ -11,18 +11,18 @@ const VolunteerEventSchema = new mongoose.Schema(
       required: true,
     },
     eventDate: {
-      date: { type: Number, required: true },
-      month: { type: Number, required: true },
-      year: { type: Number, required: true },
+      date: { type: Number, },
+      month: { type: Number,},
+      year: { type: Number, },
     },
     venue: {
       type: String,
       required: true,
     },
     location: {
-      province: { type: String, required: true },
-      district: { type: String, required: true },
-      town: { type: String, required: true },
+      province: { type: String, },
+      district: { type: String, },
+      town: { type: String, },
     },
     relatedOccupations: {
       type: [String],

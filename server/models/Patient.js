@@ -20,9 +20,11 @@ const PatientSchema = new mongoose.Schema(
     },
     phone: {
       type: Number,
+      required: true,
     },
     address: {
       type: String,
+      required: true,
     },
     city: {
       type: String,
@@ -30,8 +32,17 @@ const PatientSchema = new mongoose.Schema(
       min: 2,
       max: 100,
     },
+    province: {
+      type: String,
+      required: true,
+    },
+    district: {
+      type: String,
+      required: true,
+    },
     emergencyPhone: {
       type: Number,
+      required: true,
     },
   },
   { timestamps: true }

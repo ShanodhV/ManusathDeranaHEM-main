@@ -18,13 +18,13 @@ import {
 import { DataGrid } from "@mui/x-data-grid";
 import BreakdownChart from "components/BreakdownChart";
 import OverviewChart from "components/OverviewChart";
-import { useGetDashboardQuery } from "state/api";
+import { useGetCampQuery } from "state/api";
 import StatBox from "components/StatBox";
 
 const Dashboard = () => {
   const theme = useTheme();
   const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
-  const { data, isLoading } = useGetDashboardQuery();
+  const { data, isLoading } = useGetCampQuery();
 
   const columns = [
     {
