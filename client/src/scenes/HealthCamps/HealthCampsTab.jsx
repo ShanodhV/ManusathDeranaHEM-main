@@ -50,11 +50,11 @@ const HealthCampsTab = () => {
       headerName: "Camp ID",
       flex: 1,
     },
-    {
-      Province: "province",
-      headerName: "Province",
-      flex: 1,
-    },
+    // {
+    //   Province: "Province",
+    //   headerName: "Province",
+    //   flex: 1,
+    // },
     {
       field: "District",
       headerName: "District",

@@ -195,7 +195,7 @@ const PatientRegistrationModal = ({ open, onClose }) => {
           />
         </Box>
 
-        <Box sx={{ mt: 2 }}>
+        {/* <Box sx={{ mt: 2 }}>
           <CustomTextField
             label="Province"
             variant="outlined"
@@ -252,7 +252,7 @@ const PatientRegistrationModal = ({ open, onClose }) => {
               </MenuItem>
             ))}
           </CustomTextField>
-        </Box>
+        </Box> */}
 
         <Box sx={{ mt: 2 }}>
           <CustomTextField

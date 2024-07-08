@@ -8,7 +8,7 @@ const PatientSchema = new mongoose.Schema(
     },
     name: {
       type: String,
-      required: true,
+      //required: true,
       min: 2,
       max: 100,
     },
@@ -24,25 +24,25 @@ const PatientSchema = new mongoose.Schema(
     },
     address: {
       type: String,
-      required: true,
+      //required: true,
     },
-    city: {
-      type: String,
-      required: true,
-      min: 2,
-      max: 100,
-    },
-    province: {
-      type: String,
-      required: true,
-    },
-    district: {
-      type: String,
-      required: true,
-    },
+    // city: {
+    //   type: String,
+    //   //required: true,
+    //   min: 2,
+    //   max: 100,
+    // },
+    // province: {
+    //   type: String,
+    //   //required: true,
+    // },
+    // district: {
+    //   type: String,
+    //   //required: true,
+    // },
     emergencyPhone: {
       type: Number,
-      required: true,
+      //required: true,
     },
   },
   { timestamps: true }
