@@ -62,7 +62,7 @@ app.use("/school", schoolRoutes);
 app.use("/doner", donerRoutes);
 app.use("/derana-daruwo", daruwoRoutes);
 app.use("/student", studentRoutes);
-app.use("/donnerVolunteer", donerVolunteerRoutes);
+app.use("/donor-volunteer", donerVolunteerRoutes);
 app.use("/volunteer", volunteerRoutes);
 app.use("/volunteer-event", volunteerEventRoutes);
 

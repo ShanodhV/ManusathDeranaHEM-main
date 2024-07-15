@@ -1,86 +1,80 @@
-import Camps from "../models/HealthCamp.js";
+import HealthCamps from "../models/HealthCamp.js";
 
-// Add a new camp
+// Add Health Camp
 export const addCamp = async (req, res) => {
   try {
-    const { CampId, Province, District, Town, MOH, ContactPersons, Sponsor } = req.body;
+    const { campId, province, district, town } = req.body;
 
-    // Create a new camp instance
-    const newCamp = new Camps({
-      CampId,
-      Province,
-      District,
-      Town,
-      MOH,
-      ContactPersons,
-      Sponsor,
+    // Create a new health camp instance
+    const newHealthCamp = new HealthCamps({
+      campId,
+      province,
+      district,
+      town,
     });
 
-    // Save the camp to the database
-    const savedCamp = await newCamp.save();
+    // Save the health camp to the database
+    const savedHealthCamp = await newHealthCamp.save();
 
-    res.status(201).json(savedCamp); // Respond with the saved camp
+    res.status(201).json(savedHealthCamp); // Respond with the saved health camp
   } catch (error) {
-    console.error("Error adding new camp:", error);
-    res.status(500).json({ error: "Failed to add new camp" });
+    console.error("Error adding new health camp:", error);
+    res.status(500).json({ error: "Failed to add new health camp" });
   }
 };
 
-// Get all camps
+// Get All Health Camps
 export const getCamps = async (req, res) => {
   try {
-    const camps = await Camps.find(); // Fetching all camps using the Camp model
-    res.status(200).json(camps);
+    const healthCamps = await HealthCamps.find(); // Fetching all health camps using the HealthCamp model
+    res.status(200).json(healthCamps);
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
 };
 
-// Get a single camp by ID
+// Get Health Camp by ID
 export const getCamp = async (req, res) => {
   try {
     const { id } = req.params;
-    const camp = await Camps.findById(id);
-    if (!camp) {
-      return res.status(404).json({ message: "Camp not found" });
-    }
-    res.status(200).json(camp);
+    const healthCamp = await HealthCamps.findById(id);
+    res.status(200).json(healthCamp);
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
 };
 
-// Delete a camp by ID
+// Delete Health Camp
 export const deleteCamp = async (req, res) => {
   const { id } = req.params;
   try {
-    const deletedCamp = await Camps.findByIdAndDelete(id); // Deleting camp by ID using the Camp model
-    if (!deletedCamp) {
-      return res.status(404).json({ error: "Camp not found" });
+    const deletedHealthCamp = await HealthCamps.findByIdAndDelete(id); // Deleting health camp by ID using the HealthCamp model
+    if (!deletedHealthCamp) {
+      return res.status(404).json({ error: "Health Camp not found" });
     }
-    res.json({ message: "Camp deleted successfully" });
+    res.json({ message: "Health Camp deleted successfully" });
   } catch (error) {
-    console.error("Error deleting camp:", error);
+    console.error("Error deleting health camp:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-// Update a camp by ID
+// Update Health Camp
 export const updateCamp = async (req, res) => {
   try {
-    const campId = req.params.id;
-    const updatedCampData = req.body; // Updated camp data from the request body
+    const healthCampId = req.params.id;
+    const updatedHealthCampData = req.body; // Updated health camp data from the request body
 
-    // Find the camp by ID in the database and update its information
-    const updatedCamp = await Camps.findByIdAndUpdate(campId, updatedCampData, { new: true });
+    // Find the health camp by ID in the database and update its information
+    const updatedHealthCamp = await HealthCamps.findByIdAndUpdate(
+      healthCampId,
+      updatedHealthCampData,
+      { new: true }
+    );
 
-    if (!updatedCamp) {
-      return res.status(404).json({ message: "Camp not found" });
-    }
-
-    res.json(updatedCamp); // Send back the updated camp object
+    res.json(updatedHealthCamp); // Send back the updated health camp object
   } catch (error) {
-    console.error("Error updating camp:", error);
+    console.error("Error updating health camp:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };

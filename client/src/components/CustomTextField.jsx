@@ -10,12 +10,11 @@ const CustomTextField = ({
   onChange,
   children,
   inputType,
-  error,
-  helperText,
 }) => {
   return (
     <TextField
       inputMode={inputType}
+      type={inputType === "numeric" ? "text" : inputType}
       label={label}
       variant={variant}
       onChange={onChange}
@@ -30,6 +29,9 @@ const CustomTextField = ({
           "& .MuiOutlinedInput-notchedOutline": {
             borderColor: "#000",
           },
+        },
+        "& .MuiFormHelperText-root.Mui-error": {
+          color: "red",
         },
       }}
     >

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { Modal, Box, Grid } from "@mui/material";
+import { Modal, Box, Grid, MenuItem } from "@mui/material";
 import Buttons from "components/Buttons";
 import CustomTextField from "components/CustomTextField"; // Import your custom TextField component
-import { useAddDonorMutation } from "state/api"; // Adjust the import according to your file structure
+import { useAddDonorVolunteerMutation } from "state/api"; // Adjust the import according to your file structure
 
 const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
   const [donorNIC, setDonorNIC] = useState("");
@@ -13,39 +13,57 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
   const [day, setDay] = useState("");
   const [year, setYear] = useState("");
   const [occupation, setOccupation] = useState("");
+  const [errors, setErrors] = useState({});
 
-  const [addDonor] = useAddDonorMutation();
+  const [addDonor] = useAddDonorVolunteerMutation();
+
+  const validatePhoneNumber = (number) => /^\d+$/.test(number);
 
   const handleAddDonor = () => {
-    const donorData = {
-      donorNIC,
-      donorName,
-      donorAddress,
-      dateOfBirth: {
-        month,
-        day,
-        year,
-      },
-      mobileNumber,
-      occupation,
-    };
-
-    addDonor(donorData)
-      .then((response) => {
-        console.log("Donor added successfully:", response);
-        // Clear form fields
-        setDonorNIC("");
-        setDonorName("");
-        setDonorAddress("");
-        setMobileNumber("");
-        setMonth("");
-        setDay("");
-        setYear("");
-        setOccupation("");
-      })
-      .catch((error) => {
-        console.error("Error adding donor:", error);
-      });
+    const newErrors = {};
+    
+    if (!donorNIC) newErrors.donorNIC = "NIC is required";
+    if (!donorName) newErrors.donorName = "Name is required";
+    if (!donorAddress) newErrors.donorAddress = "Address is required";
+    if (!month || !day || !year) newErrors.dateOfBirth = "Date of Birth is required";
+    if (!mobileNumber) newErrors.mobileNumber = "Mobile number is required";
+    else if (!validatePhoneNumber(mobileNumber)) newErrors.mobileNumber = "Mobile number must contain only numbers";
+    if (!occupation) newErrors.occupation = "Occupation is required";
+    
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+    } else {
+      const donorData = {
+        donorNIC,
+        donorName,
+        donorAddress,
+        dateOfBirth: {
+          month,
+          day,
+          year,
+        },
+        mobileNumber,
+        occupation,
+      };
+  
+      addDonor(donorData)
+        .then((response) => {
+          console.log("Donor added successfully:", response);
+          // Clear form fields
+          setDonorNIC("");
+          setDonorName("");
+          setDonorAddress("");
+          setMonth("");
+          setDay("");
+          setYear("");
+          setMobileNumber("");
+          setOccupation("");
+          setErrors({});
+        })
+        .catch((error) => {
+          console.error("Error adding donor:", error);
+        });
+    }
   };
 
   const labelStyle = {
@@ -54,6 +72,10 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
     fontSize: "16px",
     marginTop: "16px",
   };
+
+  const months = Array.from({ length: 12 }, (_, i) => i + 1);
+  const days = Array.from({ length: 31 }, (_, i) => i + 1);
+  const years = Array.from({ length: 100 }, (_, i) => new Date().getFullYear() - i);
 
   return (
     <Modal
@@ -86,6 +108,8 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
             fullWidth
             value={donorNIC}
             onChange={(e) => setDonorNIC(e.target.value)}
+            error={!!errors.donorNIC}
+            helperText={errors.donorNIC}
           />
         </Box>
         <Box sx={{ mt: 6 }}>
@@ -95,6 +119,8 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
             fullWidth
             value={donorName}
             onChange={(e) => setDonorName(e.target.value)}
+            error={!!errors.donorName}
+            helperText={errors.donorName}
           />
         </Box>
         <Box sx={{ mt: 6 }}>
@@ -104,6 +130,8 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
             fullWidth
             value={donorAddress}
             onChange={(e) => setDonorAddress(e.target.value)}
+            error={!!errors.donorAddress}
+            helperText={errors.donorAddress}
           />
         </Box>
         <Box sx={{ mt: 6 }}>
@@ -113,6 +141,8 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
             fullWidth
             value={mobileNumber}
             onChange={(e) => setMobileNumber(e.target.value)}
+            error={!!errors.mobileNumber}
+            helperText={errors.mobileNumber}
           />
         </Box>
 
@@ -129,8 +159,14 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
                 fullWidth
                 value={month}
                 onChange={(e) => setMonth(e.target.value)}
+                error={!!errors.dateOfBirth}
+                helperText={errors.dateOfBirth}
               >
-                {/* Month options */}
+                {months.map((m) => (
+                  <MenuItem key={m} value={m}>
+                    {m}
+                  </MenuItem>
+                ))}
               </CustomTextField>
             </Grid>
             <Grid item xs={4}>
@@ -141,8 +177,14 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
                 fullWidth
                 value={day}
                 onChange={(e) => setDay(e.target.value)}
+                error={!!errors.dateOfBirth}
+                helperText={errors.dateOfBirth}
               >
-                {/* Day options */}
+                {days.map((d) => (
+                  <MenuItem key={d} value={d}>
+                    {d}
+                  </MenuItem>
+                ))}
               </CustomTextField>
             </Grid>
             <Grid item xs={4}>
@@ -153,8 +195,14 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
                 fullWidth
                 value={year}
                 onChange={(e) => setYear(e.target.value)}
+                error={!!errors.dateOfBirth}
+                helperText={errors.dateOfBirth}
               >
-                {/* Year options */}
+                {years.map((y) => (
+                  <MenuItem key={y} value={y}>
+                    {y}
+                  </MenuItem>
+                ))}
               </CustomTextField>
             </Grid>
           </Grid>
@@ -166,6 +214,8 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
             fullWidth
             value={occupation}
             onChange={(e) => setOccupation(e.target.value)}
+            error={!!errors.occupation}
+            helperText={errors.occupation}
           />
         </Box>
 

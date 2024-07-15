@@ -1,30 +1,29 @@
-
 import mongoose from "mongoose";
 
 const DonorVolunteerSchema = new mongoose.Schema(
   {
+    donorName: {
+      type: String,
+      //required: true,
+    },
+    donorAddress: {
+      type: String,
+      //required: true,
+    },
+    donorContactNumber: {
+      type: String,
+      required: true,
+    },
     donorID: {
       type: String,
       required: true,
       unique: true,
     },
-    donorName: {
+    assignedStudentID: {
       type: String,
       required: true,
     },
-    donorAddress: {
-      type: String,
-      required: true,
-    },
-    contactNumber: {
-      type: String,
-      required: true,
-    },
-    studentID: {
-      type: String,
-      required: true,
-    },
-    programID: {
+    occupation: {
       type: String,
       required: true,
     },
@@ -32,5 +31,5 @@ const DonorVolunteerSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const DonorVolunteer = mongoose.model("DonorVolunteer", DonorVolunteerSchema);
-export default DonorVolunteer;
+const DonorVolunteers = mongoose.model("DonorVolunteers", DonorVolunteerSchema);
+export default DonorVolunteers;
