@@ -2,11 +2,6 @@ import mongoose from "mongoose";
 
 const DonorVolunteerSchema = new mongoose.Schema(
   {
-    donorNIC: {
-      type: String,
-      //required: true,
-      unique: true,
-    },
     donorName: {
       type: String,
       //required: true,
@@ -15,14 +10,18 @@ const DonorVolunteerSchema = new mongoose.Schema(
       type: String,
       //required: true,
     },
-    dateOfBirth: {
-      month: { type: String },
-      day: { type: String},
-      year: { type: String,},
-    },
-    mobileNumber: {
+    donorContactNumber: {
       type: String,
-      //required: true,
+      required: true,
+    },
+    donorID: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    assignedStudentID: {
+      type: String,
+      required: true,
     },
     occupation: {
       type: String,

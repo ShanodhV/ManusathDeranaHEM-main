@@ -250,10 +250,10 @@ export const api = createApi({
       invalidatesTags: ["DeranaDaruwoPrograms"],
     }),
     addDeranaDaruwoProgram: build.mutation({
-      query: ({ programID, location, areaOfficerDetails }) => ({
+      query: ({ programId, programName, province,district,town,mobileNumber,name }) => ({
         url: `derana-daruwo/add`,
         method: "POST",
-        body: { programID, location, areaOfficerDetails },
+        body: { programId, programName, province,district,town,mobileNumber,name },
       }),
       providesTags: ["DeranaDaruwoPrograms"],
     }),
@@ -291,7 +291,7 @@ export const api = createApi({
           studentAddress,
           studentID,
           programID,
-          parentName,
+          parentName, 
           parentContactDetails,
           bankAccountDetails,
           accountNumber
@@ -310,39 +310,39 @@ export const api = createApi({
     // Donor Volunteers
     deleteDonorVolunteer: build.mutation({
       query: (donorVolunteerId) => ({
-        url: `donor-volunteer/delete/${donorVolunteerId}`,
+        url: `donnerVolunteer/delete/${donorVolunteerId}`,
         method: "DELETE",
       }),
       invalidatesTags: ["DonorVolunteers"],
     }),
     addDonorVolunteer: build.mutation({
       query: ({
+        donorID,
         donorName,
         donorAddress,
-        donorContactNumber,
-        donorID,
-        assignedStudentID,
+        contactNumber,
+        studentID,
         programID,
       }) => ({
-        url: `donor-volunteer/add`,
+        url: `donnerVolunteer/add`,
         method: "POST",
-        body: {
+        body: { 
+          donorID,
           donorName,
           donorAddress,
-          donorContactNumber,
-          donorID,
-          assignedStudentID,
+          contactNumber,
+          studentID,
           programID,
         },
       }),
       providesTags: ["DonorVolunteers"],
     }),
     getDonorVolunteers: build.query({
-      query: () => `donor-volunteer/gets`,
+      query: () => `donnerVolunteer/gets`,
       providesTags: ["DonorVolunteers"],
     }),
     getDonorVolunteer: build.query({
-      query: (id) => `donor-volunteer/get/${id}`,
+      query: (id) => `donnerVolunteer/get/${id}`,
       providesTags: ["DonorVolunteers"],
     }),
     // Volunteers
@@ -388,6 +388,7 @@ export const api = createApi({
       providesTags: ["Volunteers"],
     }),
     // Volunteer Events
+    
     deleteVolunteerEvent: build.mutation({
       query: (volunteerEventId) => ({
         url: `volunteer-event/delete/${volunteerEventId}`,

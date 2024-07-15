@@ -3,15 +3,16 @@ import DonorVolunteers from "../models/DonorVolunteer.js";
 // Add Donor Volunteer
 export const addDonorVolunteer = async (req, res) => {
   try {
-    const { donorNIC, donorName, donorAddress, dateOfBirth, mobileNumber, occupation } = req.body;
+    const { donorName, donorAddress, donorContactNumber, donorID, assignedStudentID, programID } = req.body;
 
-    const newDonorVolunteer = new DonorVolunteers({
-      donorNIC,
+    // Create a new donor volunteer instance
+    const newDonorVolunteer = new DonorVolunteer({
       donorName,
       donorAddress,
-      dateOfBirth,
-      mobileNumber,
-      occupation,
+      donorContactNumber,
+      donorID,
+      assignedStudentID,
+      programID,
     });
 
     const savedDonorVolunteer = await newDonorVolunteer.save();

@@ -3,17 +3,27 @@ import DeranaDaruwo from "../models/DeranaDarwo.js";
 // Add a new Derana Daruwo program
 export const addDeranaDaruwo = async (req, res) => {
   try {
-    const { programID, location, areaOfficerDetails } = req.body;
+    const { programId, programName, province,district,town,name, mobileNumber } = req.body;
 
     // Create a new Derana Daruwo instance
     const newDeranaDaruwo = new DeranaDaruwo({
-      programID,
-      location,
-      areaOfficerDetails,
+      programId,
+      programName,
+      province,
+      district,
+      town,
+      name,
+      mobileNumber, 
     });
+
+
+    console.log("save sucess");
+    console.log(newDeranaDaruwo);
+
 
     // Save the Derana Daruwo program to the database
     const savedDeranaDaruwo = await newDeranaDaruwo.save();
+    
 
     res.status(201).json(savedDeranaDaruwo); // Respond with the saved Derana Daruwo program
   } catch (error) {
