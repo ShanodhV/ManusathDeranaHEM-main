@@ -78,3 +78,18 @@ export const updateCamp = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+// Get Last Health Camp
+export const getLastCamp = async (req, res) => {
+  try {
+    const lastCamp = await HealthCamps.findOne().sort({ createdAt: -1 }); // Fetch the last created camp
+    if (!lastCamp) {
+      return res.status(404).json({ message: "No health camps found" });
+    }
+    res.status(200).json(lastCamp);
+  } catch (error) {
+    console.error("Error fetching last health camp:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+

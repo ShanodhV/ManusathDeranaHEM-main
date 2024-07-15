@@ -1,8 +1,66 @@
-import React, { useState } from "react";
-import { Modal, Box, Grid } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Modal, Box, Grid, MenuItem } from "@mui/material";
 import Buttons from "components/Buttons";
 import CustomTextField from "components/CustomTextField";
-import { useAddCampMutation } from "state/api"; // Adjust the import according to your file structure
+import { useAddCampMutation } from "state/api";
+
+const fetchLastHealthCampId = async () => {
+  const response = await fetch("/api/camps/last");
+  const lastCamp = await response.json();
+  return lastCamp ? lastCamp.CampId : null;
+};
+
+const generateNextId = (lastId) => {
+  const idNumber = parseInt(lastId.split('-')[2], 10);
+  const nextIdNumber = (idNumber + 1).toString().padStart(6, '0');
+  return `MD-HC-${nextIdNumber}`;
+};
+
+const sriLankanData = {
+  "Western": {
+    "Colombo": ["Colombo 1", "Colombo 2", "Colombo 3", "Colombo 4", "Colombo 5", "Colombo 6", "Colombo 7", "Colombo 8", "Colombo 9", "Colombo 10", "Colombo 11", "Colombo 12", "Colombo 13", "Colombo 14", "Colombo 15"],
+    "Gampaha": ["Negombo", "Gampaha", "Veyangoda", "Wattala", "Minuwangoda", "Ja-Ela", "Kadawatha", "Ragama", "Divulapitiya", "Nittambuwa", "Kiribathgoda"],
+    "Kalutara": ["Kalutara", "Panadura", "Horana", "Beruwala", "Aluthgama", "Matugama", "Wadduwa", "Bandaragama", "Ingiriya"]
+  },
+  "Central": {
+    "Kandy": ["Kandy", "Gampola", "Nawalapitiya", "Peradeniya", "Akurana", "Kadugannawa", "Katugastota"],
+    "Matale": ["Matale", "Dambulla", "Sigiriya", "Nalanda", "Ukuwela", "Rattota"],
+    "Nuwara Eliya": ["Nuwara Eliya", "Hatton", "Nanu Oya", "Talawakele", "Bandarawela", "Welimada"]
+  },
+  "Southern": {
+    "Galle": ["Galle", "Hikkaduwa", "Ambalangoda", "Elpitiya", "Bentota", "Baddegama"],
+    "Matara": ["Matara", "Weligama", "Mirissa", "Akurugoda", "Hakmana", "Devinuwara"],
+    "Hambantota": ["Hambantota", "Tangalle", "Tissamaharama", "Ambalantota", "Beliatta", "Weeraketiya"]
+  },
+  "Northern": {
+    "Jaffna": ["Jaffna", "Nallur", "Chavakachcheri", "Point Pedro", "Karainagar", "Velanai"],
+    "Kilinochchi": ["Kilinochchi", "Pallai", "Paranthan", "Poonakary"],
+    "Mannar": ["Mannar", "Nanattan", "Madhu", "Pesalai"],
+    "Vavuniya": ["Vavuniya", "Nedunkeni", "Settikulam", "Vavuniya South"],
+    "Mullaitivu": ["Mullaitivu", "Oddusuddan", "Puthukudiyiruppu", "Weli Oya"]
+  },
+  "Eastern": {
+    "Trincomalee": ["Trincomalee", "Kinniya", "Mutur", "Kuchchaveli"],
+    "Batticaloa": ["Batticaloa", "Kaluwanchikudy", "Valachchenai", "Eravur"],
+    "Ampara": ["Ampara", "Akkaraipattu", "Kalmunai", "Sainthamaruthu", "Pottuvil"]
+  },
+  "North Western": {
+    "Kurunegala": ["Kurunegala", "Kuliyapitiya", "Narammala", "Wariyapola", "Pannala", "Melsiripura"],
+    "Puttalam": ["Puttalam", "Chilaw", "Wennappuwa", "Anamaduwa", "Nattandiya", "Dankotuwa"]
+  },
+  "North Central": {
+    "Anuradhapura": ["Anuradhapura", "Kekirawa", "Thambuttegama", "Eppawala", "Medawachchiya"],
+    "Polonnaruwa": ["Polonnaruwa", "Kaduruwela", "Medirigiriya", "Hingurakgoda"]
+  },
+  "Uva": {
+    "Badulla": ["Badulla", "Bandarawela", "Haputale", "Welimada", "Mahiyanganaya", "Passara"],
+    "Monaragala": ["Monaragala", "Bibile", "Wellawaya", "Medagama", "Buttala"]
+  },
+  "Sabaragamuwa": {
+    "Ratnapura": ["Ratnapura", "Embilipitiya", "Balangoda", "Pelmadulla", "Eheliyagoda", "Kuruwita"],
+    "Kegalle": ["Kegalle", "Mawanella", "Warakapola", "Rambukkana", "Galigamuwa"]
+  }
+};
 
 const HealthCampModal = ({ openModal, handleCloseModal }) => {
   const [campId, setCampId] = useState("");
@@ -12,14 +70,38 @@ const HealthCampModal = ({ openModal, handleCloseModal }) => {
   const [mohFields, setMohFields] = useState([""]);
   const [contactPersons, setContactPersons] = useState([{ cname: "", cnumber: "" }]);
   const [sponsors, setSponsors] = useState([""]);
+  const [errors, setErrors] = useState({});
   const [addCamp] = useAddCampMutation();
 
-  const labelStyle = {
-    fontWeight: "bold",
-    color: "black",
-    fontSize: "16px",
-    marginTop: "16px",
-  };
+  const [districts, setDistricts] = useState([]);
+  const [towns, setTowns] = useState([]);
+
+  useEffect(() => {
+    const initializeCampId = async () => {
+      const lastId = await fetchLastHealthCampId();
+      setCampId(lastId ? generateNextId(lastId) : "MD-HC-000001");
+    };
+    initializeCampId();
+  }, []);
+
+  useEffect(() => {
+    if (province) {
+      setDistricts(Object.keys(sriLankanData[province]));
+    } else {
+      setDistricts([]);
+    }
+    setDistrict("");
+    setTown("");
+  }, [province]);
+
+  useEffect(() => {
+    if (district) {
+      setTowns(sriLankanData[province][district]);
+    } else {
+      setTowns([]);
+    }
+    setTown("");
+  }, [district]);
 
   const handleClickAddMoh = () => {
     setMohFields([...mohFields, ""]);
@@ -51,33 +133,39 @@ const HealthCampModal = ({ openModal, handleCloseModal }) => {
     setSponsors(updatedSponsors);
   };
 
-  const handleClick = () => {
-    const newCamp = {
-      CampId: campId,
-      Province: province,
-      District: district,
-      Town: town,
-      MOH: mohFields,
-      ContactPersons: contactPersons,
-      Sponsors: sponsors, // Update to plural to match schema
-    };
+  const validatePhoneNumber = (number) => /^\d+$/.test(number);
 
-    addCamp(newCamp)
-      .then(response => {
-        console.log("Camp added successfully:", response);
-        // Reset fields
-        setCampId("");
-        setProvince("");
-        setDistrict("");
-        setTown("");
-        setMohFields([""]);
-        setContactPersons([{ cname: "", cnumber: "" }]);
-        setSponsors([""]);
-        handleCloseModal();
-      })
-      .catch(error => {
-        console.error("Error adding camp:", error);
-      });
+  const handleClick = () => {
+    const newErrors = {};
+    if (!campId) newErrors.campId = "Camp ID is required";
+    if (!province) newErrors.province = "Province is required";
+    if (!district) newErrors.district = "District is required";
+    if (!town) newErrors.town = "Town is required";
+    contactPersons.forEach((person, index) => {
+      if (!person.cname) newErrors[`contactPersons${index}cname`] = "Name is required";
+      if (!person.cnumber) newErrors[`contactPersons${index}cnumber`] = "Phone number is required";
+      else if (!validatePhoneNumber(person.cnumber)) newErrors[`contactPersons${index}cnumber`] = "Phone number must contain only numbers";
+    });
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+    } else {
+      addCamp({ CampId: campId, Province: province, District: district, Town: town, MOH: mohFields, ContactPersons: contactPersons, Sponsors: sponsors })
+        .then((response) => {
+          console.log("Camp added successfully:", response);
+          setCampId(generateNextId(campId)); // Set the next CampId for the next entry
+          setProvince("");
+          setDistrict("");
+          setTown("");
+          setMohFields([""]);
+          setContactPersons([{ cname: "", cnumber: "" }]);
+          setSponsors([""]);
+          handleCloseModal();
+        })
+        .catch((error) => {
+          console.error("Error adding camp:", error);
+        });
+    }
   };
 
   return (
@@ -110,11 +198,14 @@ const HealthCampModal = ({ openModal, handleCloseModal }) => {
             value={campId}
             onChange={(e) => setCampId(e.target.value)}
             fullWidth
+            error={!!errors.campId}
+            helperText={errors.campId}
+            disabled
           />
         </Box>
 
         <Box sx={{ mt: 2 }}>
-          <label style={labelStyle} htmlFor="Add Location name">
+          <label style={{ fontWeight: "bold", color: "black", fontSize: "16px", marginTop: "16px" }} htmlFor="Add Location name">
             Add Location Name
           </label>
           <Grid container spacing={2} sx={{ mt: 0 }}>
@@ -124,8 +215,17 @@ const HealthCampModal = ({ openModal, handleCloseModal }) => {
                 variant="outlined"
                 value={province}
                 onChange={(e) => setProvince(e.target.value)}
+                select
                 fullWidth
-              />
+                error={!!errors.province}
+                helperText={errors.province}
+              >
+                {Object.keys(sriLankanData).map((prov) => (
+                  <MenuItem key={prov} value={prov}>
+                    {prov}
+                  </MenuItem>
+                ))}
+              </CustomTextField>
             </Grid>
             <Grid item xs={4}>
               <CustomTextField
@@ -133,8 +233,18 @@ const HealthCampModal = ({ openModal, handleCloseModal }) => {
                 variant="outlined"
                 value={district}
                 onChange={(e) => setDistrict(e.target.value)}
+                select
                 fullWidth
-              />
+                error={!!errors.district}
+                helperText={errors.district}
+                disabled={!province}
+              >
+                {districts.map((dist) => (
+                  <MenuItem key={dist} value={dist}>
+                    {dist}
+                  </MenuItem>
+                ))}
+              </CustomTextField>
             </Grid>
             <Grid item xs={4}>
               <CustomTextField
@@ -142,11 +252,24 @@ const HealthCampModal = ({ openModal, handleCloseModal }) => {
                 variant="outlined"
                 value={town}
                 onChange={(e) => setTown(e.target.value)}
+                select
                 fullWidth
-              />
+                error={!!errors.town}
+                helperText={errors.town}
+                disabled={!district}
+              >
+                {towns.map((t) => (
+                  <MenuItem key={t} value={t}>
+                    {t}
+                  </MenuItem>
+                ))}
+              </CustomTextField>
             </Grid>
           </Grid>
-          <Grid container spacing={2} sx={{ mt: 2 }}>
+        </Box>
+
+        <Box sx={{ mt: 2 }}>
+          <Grid container spacing={2}>
             {mohFields.map((moh, index) => (
               <Grid item xs={4} key={index}>
                 <CustomTextField
@@ -165,7 +288,7 @@ const HealthCampModal = ({ openModal, handleCloseModal }) => {
         </Box>
 
         <Box sx={{ mt: 3 }}>
-          <label style={labelStyle} htmlFor="Add Location name">
+          <label style={{ fontWeight: "bold", color: "black", fontSize: "16px", marginTop: "16px" }} htmlFor="Add Location name">
             Camp Contact Persons
           </label>
         </Box>
@@ -179,6 +302,8 @@ const HealthCampModal = ({ openModal, handleCloseModal }) => {
                   value={person.cname}
                   onChange={(e) => handleChangeContactPerson(index, "cname", e.target.value)}
                   fullWidth
+                  error={!!errors[`contactPersons${index}cname`]}
+                  helperText={errors[`contactPersons${index}cname`]}
                 />
               </Grid>
               <Grid item xs={6}>
@@ -188,6 +313,8 @@ const HealthCampModal = ({ openModal, handleCloseModal }) => {
                   value={person.cnumber}
                   onChange={(e) => handleChangeContactPerson(index, "cnumber", e.target.value)}
                   fullWidth
+                  error={!!errors[`contactPersons${index}cnumber`]}
+                  helperText={errors[`contactPersons${index}cnumber`]}
                 />
               </Grid>
             </Grid>
@@ -198,7 +325,7 @@ const HealthCampModal = ({ openModal, handleCloseModal }) => {
         </Box>
 
         <Box sx={{ mt: 3 }}>
-          <label style={labelStyle} htmlFor="Add Location name">
+          <label style={{ fontWeight: "bold", color: "black", fontSize: "16px", marginTop: "16px" }} htmlFor="Add Location name">
             Add Camp Activities
           </label>
         </Box>
@@ -211,7 +338,7 @@ const HealthCampModal = ({ openModal, handleCloseModal }) => {
         </Box>
 
         <Box sx={{ mt: 3 }}>
-          <label style={labelStyle} htmlFor="Add Location name">
+          <label style={{ fontWeight: "bold", color: "black", fontSize: "16px", marginTop: "16px" }} htmlFor="Add Location name">
             Add Sponsors
           </label>
         </Box>
