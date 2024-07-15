@@ -66,7 +66,7 @@ export default function CreateProgramTab() {
         {
           field: "province",
           headerName: "Province ",
-          flex: 1,
+          flex: 0.5,
         },
         {
           field: "district",
@@ -76,12 +76,23 @@ export default function CreateProgramTab() {
         {
           field: "town",
           headerName: "Town",
+          flex: 0.5,
+        },
+        {
+          field: "name",
+          headerName: "Name",
           flex: 1,
         },
         {
+          field: "mobileNumber",
+          headerName: "MobileNumber",
+          flex: 0.8,
+        },
+        
+        {
           field: "actions",
           headerName: "Actions",
-          flex: 1,
+          flex: 1.6,
           sortable: false,
           filterable: false,
           renderCell: (params) => (

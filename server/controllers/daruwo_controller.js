@@ -13,12 +13,17 @@ export const addDeranaDaruwo = async (req, res) => {
       district,
       town,
       name,
-      mobileNumber,
-      
+      mobileNumber, 
     });
+
+
+    console.log("save sucess");
+    console.log(newDeranaDaruwo);
+
 
     // Save the Derana Daruwo program to the database
     const savedDeranaDaruwo = await newDeranaDaruwo.save();
+    
 
     res.status(201).json(savedDeranaDaruwo); // Respond with the saved Derana Daruwo program
   } catch (error) {

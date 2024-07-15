@@ -10,6 +10,8 @@ const CustomTextField = ({
   onChange,
   children,
   inputType,
+  error,
+  helperText,
 }) => {
   return (
     <TextField

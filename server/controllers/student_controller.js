@@ -15,7 +15,6 @@ export const addStudent = async (req, res) => {
       parentContactDetails,
       bankAccountDetails,
       accountNumber
-      
     });
 
     // Save the student to the database
