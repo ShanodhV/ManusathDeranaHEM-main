@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import Buttons from "components/Buttons";
 import DonorRegistrationModal from "./DonorRegistrationModal";
 import { DataGrid } from "@mui/x-data-grid";
@@ -18,6 +18,7 @@ const DonorRegistrationTab = () => {
   const [sort, setSort] = useState({});
   const [search, setSearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
+  const [selectedDonor, setSelectedDonor] = useState(null); // State to manage selected donor for update
 
   useEffect(() => {
     if (error) {
@@ -25,12 +26,14 @@ const DonorRegistrationTab = () => {
     }
   }, [error]);
 
-  const handleOpenModal = () => {
+  const handleOpenModal = (donor = null) => {
+    setSelectedDonor(donor); // Set the selected donor for the modal
     setOpenModal(true);
   };
 
   const handleCloseModal = () => {
     setOpenModal(false);
+    setSelectedDonor(null); // Clear the selected donor on modal close
   };
 
   const handleDelete = (donorId) => {
@@ -83,10 +86,45 @@ const DonorRegistrationTab = () => {
       sortable: false,
       filterable: false,
       renderCell: (params) => (
-        <Buttons
-          label="Delete"
-          onClick={() => handleDelete(params.row.donorId)}
-        />
+        <Box display="flex" justifyContent="space-around">
+          <Box
+            display="flex"
+            justifyContent="flex-end"
+            mr={2}
+            sx={{
+              "& button": {
+                backgroundColor: theme.palette.secondary[400],
+                color: "white",
+              },
+            }}
+          >
+            <Button
+              variant="contained"
+              color="error"
+              onClick={() => handleDelete(params.row.donorId)}
+            >
+              Delete
+            </Button>
+          </Box>
+          <Box
+            display="flex"
+            justifyContent="flex-end"
+            sx={{
+              "& button": {
+                backgroundColor: theme.palette.primary[700],
+                color: "white",
+              },
+            }}
+          >
+            <Button
+              variant="contained"
+              color="info"
+              onClick={() => handleOpenModal(params.row)}
+            >
+              Update
+            </Button>
+          </Box>
+        </Box>
       ),
     },
   ];
@@ -94,11 +132,12 @@ const DonorRegistrationTab = () => {
   return (
     <Box>
       <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
-        <Buttons label={"Register Donor"} onClick={handleOpenModal} />
+        <Buttons label={"Register Donor"} onClick={() => handleOpenModal()} />
       </Box>
       <DonorRegistrationModal
         openModal={openModal}
         handleCloseModal={handleCloseModal}
+        donor={selectedDonor} // Pass the selected donor data to the modal
       />
       <Box
         mt="40px"

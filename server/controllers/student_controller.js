@@ -15,10 +15,11 @@ export const addStudent = async (req, res) => {
       parentContactDetails,
       bankAccountDetails,
       accountNumber
-      
     });
 
     // Save the student to the database
+    console.log("controll runner");
+
     const savedStudent = await newStudent.save();
     console.log(savedStudent);
     res.status(201).json(savedStudent); // Respond with the saved student

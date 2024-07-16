@@ -9,7 +9,7 @@ const CustomTextField = ({
   select,
   onChange,
   children,
-  inputType = "text",
+  inputType,
   error,
   helperText,
 }) => {
