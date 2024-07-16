@@ -19,7 +19,6 @@ import studentRoutes from "./routes/student_routes.js";
 import donerVolunteerRoutes from "./routes/donorVolunteer_routes.js";
 import volunteerRoutes from "./routes/volunteer_routes.js";
 import volunteerEventRoutes from "./routes/volunteerEvent_routes.js";
-
 // data imports
 import Camps from './models/HealthCamp.js';
 import Patients from "./models/Patient.js";
