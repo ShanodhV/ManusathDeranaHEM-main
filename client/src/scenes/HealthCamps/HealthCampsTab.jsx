@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Box, Avatar } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import Button from "components/Buttons";
+import CustomButton from "components/Buttons"; // Import your custom button
 import HealthCampModal from "./HealthCampModal";
 import DataGridCustomToolbar from "components/DataGridCustomToolbar";
 import { DataGrid } from "@mui/x-data-grid";
@@ -44,17 +44,18 @@ const HealthCampsTab = () => {
       });
   };
 
+  const handleUpdateClick = (camp) => {
+    console.log("Update camp:", camp);
+    // Implement the update logic here
+    handleOpenModal(); // If you want to reuse the modal for update
+  };
+
   const campColumns = [
     {
       field: "CampId",
       headerName: "Camp ID",
       flex: 1,
     },
-    // {
-    //   Province: "Province",
-    //   headerName: "Province",
-    //   flex: 1,
-    // },
     {
       field: "District",
       headerName: "District",
@@ -105,7 +106,7 @@ const HealthCampsTab = () => {
             <Button
               variant="contained"
               color="info"
-              onClick={() => console.log("Update functionality not implemented")}
+              onClick={() => handleUpdateClick(params.row)}
             >
               Update
             </Button>
@@ -118,7 +119,7 @@ const HealthCampsTab = () => {
   return (
     <Box m="1.5rem 2.5rem">
       <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
-        <Button label="Create Health Camp" onClick={handleOpenModal} />
+        <CustomButton label="Create Health Camp" onClick={handleOpenModal} />
         <HealthCampModal openModal={openModal} closeModal={handleCloseModal} />
       </Box>
       <Box

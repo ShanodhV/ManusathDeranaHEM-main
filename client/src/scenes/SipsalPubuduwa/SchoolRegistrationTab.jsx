@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box } from "@mui/material";
+import { Box, Avatar, Button } from "@mui/material";
 import Buttons from "components/Buttons";
 import SchoolRegistrationModal from "./SchoolRegistrationModal"; // Import the SchoolRegistrationModal component
 import { DataGrid } from "@mui/x-data-grid";
@@ -17,6 +17,7 @@ const SchoolRegistrationTab = () => {
   const [sort, setSort] = useState({});
   const [search, setSearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
+  const [selectedSchool, setSelectedSchool] = useState(null); // State to manage selected school for update
 
   useEffect(() => {
     if (error) {
@@ -24,12 +25,14 @@ const SchoolRegistrationTab = () => {
     }
   }, [error]);
 
-  const handleOpenModal = () => {
+  const handleOpenModal = (school = null) => {
+    setSelectedSchool(school); // Set the selected school for the modal
     setOpenModal(true);
   };
 
   const handleCloseModal = () => {
     setOpenModal(false);
+    setSelectedSchool(null); // Clear the selected school on modal close
   };
 
   const handleDelete = (schoolID) => {
@@ -42,13 +45,6 @@ const SchoolRegistrationTab = () => {
       .catch((error) => {
         console.error("Error deleting school:", error);
       });
-  };
-
-  const handleUpdate = (schoolID) => {
-    // Logic to handle update action
-    console.log("Update school with ID:", schoolID);
-    // Open modal with school data to update
-    // You might want to set some state here to pass the school data to the modal
   };
 
   const schoolColumns = [
@@ -89,17 +85,44 @@ const SchoolRegistrationTab = () => {
       sortable: false,
       filterable: false,
       renderCell: (params) => (
-        <Box display="flex" alignItems="center">
-          <Buttons
-            label="Update"
-            onClick={() => handleUpdate(params.row.schoolID)}
-            style={{ backgroundColor: "blue", color: "white", marginRight: "8px" }}
-          />
-          <Buttons
-            label="Delete"
-            onClick={() => handleDelete(params.row.schoolID)}
-            style={{ backgroundColor: "red", color: "white" }} // Assuming you have styles for the Delete button as well
-          />
+        <Box display="flex" justifyContent="space-around">
+          <Box
+            display="flex"
+            justifyContent="flex-end"
+            mr={2}
+            sx={{
+              "& button": {
+                backgroundColor: theme.palette.secondary[400],
+                color: "white",
+              },
+            }}
+          >
+            <Button
+              variant="contained"
+              color="error"
+              onClick={() => handleDelete(params.row.schoolID)}
+            >
+              Delete
+            </Button>
+          </Box>
+          <Box
+            display="flex"
+            justifyContent="flex-end"
+            sx={{
+              "& button": {
+                backgroundColor: theme.palette.primary[700],
+                color: "white",
+              },
+            }}
+          >
+            <Button
+              variant="contained"
+              color="info"
+              onClick={() => handleOpenModal(params.row)}
+            >
+              Update
+            </Button>
+          </Box>
         </Box>
       ),
     },
@@ -108,12 +131,13 @@ const SchoolRegistrationTab = () => {
   return (
     <Box>
       <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
-        <Buttons label={"Register School"} onClick={handleOpenModal} />
+        <Buttons label={"Register School"} onClick={() => handleOpenModal()} />
       </Box>
       {/* Render the SchoolRegistrationModal component and pass necessary props */}
       <SchoolRegistrationModal
         openModal={openModal}
         handleCloseModal={handleCloseModal}
+        school={selectedSchool} // Pass the selected school data to the modal
       />
       <Box
         mt="40px"
