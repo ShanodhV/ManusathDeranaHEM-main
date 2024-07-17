@@ -265,6 +265,7 @@ export const api = createApi({
       query: (id) => `derana-daruwo/get/${id}`,
       providesTags: ["DeranaDaruwoPrograms"],
     }),
+    
     // Students
     deleteStudent: build.mutation({
       query: (studentId) => ({
@@ -307,6 +308,34 @@ export const api = createApi({
       query: (id) => `student/get/${id}`,
       providesTags: ["Students"],
     }),
+    
+    updateStudents: build.mutation({
+      query: ({
+        studentID,
+        studentName,
+        studentAddress,
+        programID,
+        parentName,
+        parentContactDetails,
+        bankAccountDetails,
+        accountNumber,
+      }) => ({
+        url: `student/update/${studentID}`,
+        method: "PUT",
+        body: {
+          
+          studentName,
+          studentAddress,
+          programID,
+          parentName,
+          parentContactDetails,
+          bankAccountDetails,
+          accountNumber,
+        },
+      }),
+      invalidatesTags: ["Students"],
+    }),
+    
     // Donor Volunteers
     deleteDonorVolunteer: build.mutation({
       query: (donorVolunteerId) => ({
@@ -471,11 +500,14 @@ export const {
   useAddDeranaDaruwoProgramMutation,
   useGetDeranaDaruwoProgramsQuery,
   useGetDeranaDaruwoProgramQuery,
+  
 
   useDeleteStudentMutation,
   useAddStudentMutation,
   useGetStudentsQuery,
   useGetStudentQuery,
+  useUpdateStudentsMutation,
+
 
   useDeleteDonorVolunteerMutation,
   useAddDonorVolunteerMutation,

@@ -1,20 +1,21 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
-import { Box,Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import Buttons from 'components/Buttons';
 import StudentRegistrationModal from './StudentRegistrationModal';
 import DataGridCustomToolbar from 'components/DataGridCustomToolbar';
 import { DataGrid } from '@mui/x-data-grid';
-import { useGetStudentsQuery,useDeleteStudentMutation } from 'state/api';
+import { useGetStudentsQuery, useDeleteStudentMutation } from 'state/api';
+import { UpdateStudentRegistationDetails } from './UpdateStudentRegistationDetails';
+import CustomHeader from './CustomerHead';
 
 const StudentRegistrationTab = () => {
-
   const theme = useTheme();
   const [openModal, setOpenModal] = useState(false);
   const { data, isLoading, refetch, error } = useGetStudentsQuery();
   const [deleteTreeEvent] = useDeleteStudentMutation();
   const [showUpdateForm, setShowUpdateForm] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [selectedStudent, setSelectedStudent] = useState(null);
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(20);
   const [sort, setSort] = useState({});
@@ -35,8 +36,8 @@ const StudentRegistrationTab = () => {
     setOpenModal(false);
   };
 
-  const handleDelete = (eventID) => {
-    deleteTreeEvent(eventID)
+  const handleDelete = (studentID) => {
+    deleteTreeEvent(studentID)
       .unwrap()
       .then((response) => {
         console.log("Event deleted successfully");
@@ -47,31 +48,40 @@ const StudentRegistrationTab = () => {
       });
   };
 
-  const handleUpdateClick = (event) => {
-    setSelectedEvent(event);
+  const handleUpdateClick = (student) => {
+    setSelectedStudent(student);
     setShowUpdateForm(true);
   };
+
+  const handleCloseUpdateForm = () => {
+    setShowUpdateForm(false);
+    setSelectedStudent(null);
+    refetch();
+  };
+
   const eventColumns = [
+    {
+      field: "studentID",
+      headerName: "Student ID",
+      flex: 0.4,
+      renderHeader: () => <CustomHeader title1="Student" title2="ID" />,
+    },
     {
       field: "studentName",
       headerName: "Student Name",
       flex: 1,
-      
     },
     {
       field: "studentAddress",
       headerName: "Student Address",
       flex: 1,
     },
-    {
-      field: "studentID",
-      headerName: "Student ID ",
-      flex: 0.4,
-    },
+   
     {
       field: "programID",
       headerName: "Program ID",
       flex: 0.4,
+      renderHeader: () => <CustomHeader title1="Program" title2="ID" />,
     },
     {
       field: "parentName",
@@ -82,16 +92,22 @@ const StudentRegistrationTab = () => {
       field: "parentContactDetails",
       headerName: "Parent Contact",
       flex: 0.6,
+      renderHeader: () => <CustomHeader title1="Parent" title2="Contact" />,
+
     },
     {
       field: "bankAccountDetails",
       headerName: "Bank Branch",
       flex: 0.6,
+      renderHeader: () => <CustomHeader title1="Bank" title2="Branch" />,
+
     },
     {
       field: "accountNumber",
       headerName: "Account Number",
       flex: 0.7,
+      renderHeader: () => <CustomHeader title1="Account" title2="Number" />,
+
     },
     {
       field: "actions",
@@ -147,8 +163,8 @@ const StudentRegistrationTab = () => {
     <Box m="1.5rem 2.5rem">
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
         <Buttons label="Register Student" onClick={handleOpenModal} />
-      <StudentRegistrationModal openModal={openModal} closeModal={handleCloseModal} />
-    </Box>
+        <StudentRegistrationModal openModal={openModal} closeModal={handleCloseModal} newStudentData={selectedStudent} refetch={refetch}/>
+      </Box>
       <Box
         mt="40px"
         height="75vh"
@@ -198,6 +214,15 @@ const StudentRegistrationTab = () => {
           }}
         />
       </Box>
+
+      {showUpdateForm && (
+        <UpdateStudentRegistationDetails
+          openModal={showUpdateForm}
+          closeModal={handleCloseUpdateForm}
+          newStudentData={selectedStudent}
+          refetch={refetch}
+        />
+      )}
     </Box>
   );
 };
