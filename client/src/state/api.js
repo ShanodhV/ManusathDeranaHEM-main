@@ -250,10 +250,10 @@ export const api = createApi({
       invalidatesTags: ["DeranaDaruwoPrograms"],
     }),
     addDeranaDaruwoProgram: build.mutation({
-      query: ({ programId, programName, province,district,town,mobileNumber,name }) => ({
+      query: ({ programId, programName, province,district,town,name,mobileNumber }) => ({
         url: `derana-daruwo/add`,
         method: "POST",
-        body: { programId, programName, province,district,town,mobileNumber,name },
+        body: { programId, programName, province,district,town,name,mobileNumber},
       }),
       providesTags: ["DeranaDaruwoPrograms"],
     }),
@@ -265,6 +265,32 @@ export const api = createApi({
       query: (id) => `derana-daruwo/get/${id}`,
       providesTags: ["DeranaDaruwoPrograms"],
     }),
+    UpdateDeranDaruwoProgram: build.mutation({
+      query: ({
+        programId,
+        programName,
+        province,
+        district,
+        town,
+        name,
+        mobileNumber,
+        
+      }) => ({
+        url: `derana-daruwo/update/${programId}`,
+        method: "PUT",
+        body: {
+          programName,
+          province,
+          district,
+          town,
+          name,
+          mobileNumber,
+         
+        },
+      }),
+      invalidatesTags: ["DeranaDaruwoPrograms"],
+    }),
+    
     // Students
     deleteStudent: build.mutation({
       query: (studentId) => ({
@@ -307,10 +333,38 @@ export const api = createApi({
       query: (id) => `student/get/${id}`,
       providesTags: ["Students"],
     }),
+    
+    updateStudents: build.mutation({
+      query: ({
+        studentID,
+        studentName,
+        studentAddress,
+        programID,
+        parentName,
+        parentContactDetails,
+        bankAccountDetails,
+        accountNumber,
+      }) => ({
+        url: `student/update/${studentID}`,
+        method: "PUT",
+        body: {
+          
+          studentName,
+          studentAddress,
+          programID,
+          parentName,
+          parentContactDetails,
+          bankAccountDetails,
+          accountNumber,
+        },
+      }),
+      invalidatesTags: ["Students"],
+    }),
+    
     // Donor Volunteers
     deleteDonorVolunteer: build.mutation({
       query: (donorVolunteerId) => ({
-        url: `donnerVolunteer/delete/${donorVolunteerId}`,
+        url: `donor-volunteer/delete/${donorVolunteerId}`,
         method: "DELETE",
       }),
       invalidatesTags: ["DonorVolunteers"],
@@ -322,9 +376,9 @@ export const api = createApi({
         donorAddress,
         contactNumber,
         studentID,
-        programID,
+      programID,
       }) => ({
-        url: `donnerVolunteer/add`,
+        url: `donor-volunteer/add`,
         method: "POST",
         body: { 
           donorID,
@@ -338,11 +392,11 @@ export const api = createApi({
       providesTags: ["DonorVolunteers"],
     }),
     getDonorVolunteers: build.query({
-      query: () => `donnerVolunteer/gets`,
+      query: () => `donor-volunteer/gets`,
       providesTags: ["DonorVolunteers"],
     }),
     getDonorVolunteer: build.query({
-      query: (id) => `donnerVolunteer/get/${id}`,
+      query: (id) => `donor-volunteer/get/${id}`,
       providesTags: ["DonorVolunteers"],
     }),
     // Volunteers
@@ -471,11 +525,15 @@ export const {
   useAddDeranaDaruwoProgramMutation,
   useGetDeranaDaruwoProgramsQuery,
   useGetDeranaDaruwoProgramQuery,
+  useUpdateDeranDaruwoProgramMutation,
+  
 
   useDeleteStudentMutation,
   useAddStudentMutation,
   useGetStudentsQuery,
   useGetStudentQuery,
+  useUpdateStudentsMutation,
+
 
   useDeleteDonorVolunteerMutation,
   useAddDonorVolunteerMutation,

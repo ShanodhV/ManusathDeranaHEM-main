@@ -2,6 +2,11 @@ import mongoose from "mongoose";
 
 const DonorVolunteerSchema = new mongoose.Schema(
   {
+    donorID: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     donorName: {
       type: String,
       //required: true,
@@ -10,20 +15,16 @@ const DonorVolunteerSchema = new mongoose.Schema(
       type: String,
       //required: true,
     },
-    donorContactNumber: {
+    contactNumber: {
       type: String,
       required: true,
     },
-    donorID: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-    assignedStudentID: {
+    
+    studentID: {
       type: String,
       required: true,
     },
-    occupation: {
+    programID: {
       type: String,
       required: true,
     },
