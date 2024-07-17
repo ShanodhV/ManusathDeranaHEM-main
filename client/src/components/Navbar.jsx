@@ -49,7 +49,7 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
           </IconButton>
           <FlexBetween
             backgroundColor={theme.palette.background.alt}
-            borderRadius="9px"
+            borderRadius="10px"
             gap="3rem"
             p="0.1rem 1.5rem"
           >
@@ -90,7 +90,7 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
                 src={profileImage}
                 height="32px"
                 width="32px"
-                borderRadius="50%"
+                borderRadius="15px"
                 sx={{ objectFit: "cover" }}
               />
               <Box textAlign="left">

@@ -6,13 +6,14 @@ const Buttons = ({ onClick, label, variant, color, disabled }) => {
       onClick={onClick}
       style={{ 
         padding: '10px 20px', 
-        borderRadius: '5px', 
-        backgroundColor: color || "#DD7070" , 
+        borderRadius: '10px', 
+        backgroundColor: color || "#CD0000" , 
         color: 'white', 
         border: 'none', 
+        fontFamily:'Poppins',
         cursor: 'pointer', 
         fontWeight: 'bold', 
-        fontSize: '16px', 
+        fontSize: '15px', 
       }}
       disabled={disabled}
     >
