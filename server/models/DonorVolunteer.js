@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const DonorVolunteerSchema = new mongoose.Schema(
+const DonorVolunteersSchema = new mongoose.Schema(
   {
     donorID: {
       type: String,
@@ -32,5 +32,5 @@ const DonorVolunteerSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const DonorVolunteers = mongoose.model("DonorVolunteers", DonorVolunteerSchema);
+const DonorVolunteers = mongoose.model("DonorVolunteers", DonorVolunteersSchema);
 export default DonorVolunteers;
