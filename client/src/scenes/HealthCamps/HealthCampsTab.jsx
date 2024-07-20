@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Snackbar } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import CustomButton from "components/Buttons"; // Import your custom button
+import CustomButton from "components/Buttons";
 import HealthCampModal from "./HealthCampModal";
 import DataGridCustomToolbar from "components/DataGridCustomToolbar";
 import { DataGrid } from "@mui/x-data-grid";
 import { useGetCampsQuery, useDeleteCampMutation } from "state/api";
+import ConfirmationDialog from "components/ConfirmationDialog"; // Import the confirmation dialog
 
 const HealthCampsTab = () => {
   const theme = useTheme();
@@ -17,6 +18,10 @@ const HealthCampsTab = () => {
   const [sort, setSort] = useState({});
   const [search, setSearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
+  const [selectedCamp, setSelectedCamp] = useState(null);
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [toastOpen, setToastOpen] = useState(false);
+  
 
   useEffect(() => {
     if (error) {
@@ -28,20 +33,30 @@ const HealthCampsTab = () => {
     setOpenModal(true);
   };
 
-  const handleCloseModal = () => {
-    setOpenModal(false);
+  const handleCloseModal = (event) => {
+    // Check if the click target is the modal background
+    if (event.target.classList.contains('modal-background')) {
+      setOpenModal(false);
+    }
   };
 
   const handleDelete = (campID) => {
-    deleteHealthCamp(campID)
+    setOpenConfirm(true);
+    setSelectedCamp(campID);
+  };
+
+  const confirmDelete = () => {
+    deleteHealthCamp(selectedCamp)
       .unwrap()
       .then((response) => {
         console.log("Health Camp deleted successfully");
+        setToastOpen(true);
         refetch();
       })
       .catch((error) => {
         console.error("Error deleting health camp:", error);
       });
+    setOpenConfirm(false);
   };
 
   const handleUpdateClick = (camp) => {
@@ -172,6 +187,19 @@ const HealthCampsTab = () => {
           }}
         />
       </Box>
+      <ConfirmationDialog
+        open={openConfirm}
+        onClose={() => setOpenConfirm(false)}
+        onConfirm={confirmDelete}
+        title="Confirm Delete"
+        description="Are you sure you want to delete this health camp? This action cannot be undone."
+      />
+      <Snackbar
+        open={toastOpen}
+        autoHideDuration={6000}
+        onClose={() => setToastOpen(false)}
+        message="Health Camp deleted successfully"
+      />
     </Box>
   );
 };

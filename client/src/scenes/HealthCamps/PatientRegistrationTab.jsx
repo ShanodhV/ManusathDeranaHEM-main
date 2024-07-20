@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Box } from "@mui/material";
+import { Box, Button, Snackbar } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import Button from "components/Buttons";
 import PatientRegistrationModal from "./PatientRegistrationModal";
 import DataGridCustomToolbar from "components/DataGridCustomToolbar";
 import { DataGrid } from "@mui/x-data-grid";
 import { useGetPatientsQuery, useDeletePatientMutation } from "state/api";
+import ConfirmationDialog from "components/ConfirmationDialog"; // Import the confirmation dialog
 import { Delete } from "@mui/icons-material";
+import Buttons from "components/Buttons";
 
 const PatientRegistrationTab = () => {
   const theme = useTheme();
@@ -18,6 +19,9 @@ const PatientRegistrationTab = () => {
   const [sort, setSort] = useState({});
   const [search, setSearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
+  const [selectedPatient, setSelectedPatient] = useState(null);
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [toastOpen, setToastOpen] = useState(false);
 
   useEffect(() => {
     if (error) {
@@ -34,15 +38,28 @@ const PatientRegistrationTab = () => {
   };
 
   const handleDelete = (patientID) => {
-    deletePatient(patientID)
+    setOpenConfirm(true);
+    setSelectedPatient(patientID);
+  };
+
+  const confirmDelete = () => {
+    deletePatient(selectedPatient)
       .unwrap()
       .then((response) => {
         console.log("Patient deleted successfully");
+        setToastOpen(true);
         refetch();
       })
       .catch((error) => {
         console.error("Error deleting patient:", error);
       });
+    setOpenConfirm(false);
+  };
+
+  const handleUpdateClick = (camp) => {
+    console.log("Update camp:", camp);
+    // Implement the update logic here
+    handleOpenModal(); // If you want to reuse the modal for update
   };
 
   const patientColumns = [
@@ -67,7 +84,7 @@ const PatientRegistrationTab = () => {
       flex: 1,
     },
     {
-      field: "city",
+      field: "City",
       headerName: "City",
       flex: 1,
     },
@@ -95,7 +112,7 @@ const PatientRegistrationTab = () => {
               color="error"
               onClick={() => handleDelete(params.row._id)}
             >
-              <Delete sx={{color:"#fffff"}}/>Delete
+              Delete
             </Button>
           </Box>
           <Box
@@ -111,7 +128,7 @@ const PatientRegistrationTab = () => {
             <Button
               variant="contained"
               color="info"
-              onClick={() => console.log("Update functionality not implemented")}
+              onClick={() => handleUpdateClick(params.row)}
             >
               Update
             </Button>
@@ -124,7 +141,7 @@ const PatientRegistrationTab = () => {
   return (
     <Box m="1.5rem 2.5rem">
       <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
-        <Button label="Register Patient" onClick={handleOpenModal} />
+        <Buttons label="Register Patient" onClick={handleOpenModal} />
         <PatientRegistrationModal open={openModal} onClose={handleCloseModal} />
       </Box>
       <Box
@@ -177,6 +194,19 @@ const PatientRegistrationTab = () => {
           }}
         />
       </Box>
+      <ConfirmationDialog
+        open={openConfirm}
+        onClose={() => setOpenConfirm(false)}
+        onConfirm={confirmDelete}
+        title="Confirm Delete"
+        description="Are you sure you want to delete this patient? This action cannot be undone."
+      />
+      <Snackbar
+        open={toastOpen}
+        autoHideDuration={6000}
+        onClose={() => setToastOpen(false)}
+        message="Patient deleted successfully"
+      />
     </Box>
   );
 };

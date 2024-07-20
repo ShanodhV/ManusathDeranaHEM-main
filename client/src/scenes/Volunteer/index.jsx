@@ -1,18 +1,16 @@
 import React, { useState } from "react";
 import { Box, Tabs, Tab } from "@mui/material";
-import Buttons from "components/Buttons";
-import AddVoluteerEventsTab from "./AddVolunteerEventsTab";
+import AddVolunteerEventsTab from "./AddVolunteerEventsTab";
 import VolunteerRegistrationTab from "./VolunteerRegistrationTab";
-import AddVoluteerEventsModal from "./AddVolunteerEventsModal";
-import VolunteerRegistrationModal from "./VolunteerRegistrationModal";
+
 
 const Volunteer = () => {
   const [activeTab, setActiveTab] = useState(0); // State to manage active tab
+  const [openModal, setOpenModal] = useState(false);
+
   const handleTabChange = (event, newValue) => {
     setActiveTab(newValue);
   };
-
-  const [openModal, setOpenModal] = useState(false);
 
   const handleOpenModal = () => {
     setOpenModal(true);
@@ -38,13 +36,12 @@ const Volunteer = () => {
       </Tabs>
 
       {/* Render tab content based on active tab */}
-      {activeTab === 0 && <AddVoluteerEventsTab handleOpenModal={handleOpenModal} />}
-      {activeTab === 1 && <VolunteerRegistrationTab />}
+      {activeTab === 0 && <AddVolunteerEventsTab handleOpenModal={handleOpenModal} />}
+      {activeTab === 1 && <VolunteerRegistrationTab handleOpenModal={handleOpenModal} />}
     
-
-      {/* Modal */}
-      <AddVoluteerEventsModal open={openModal} handleClose={handleCloseModal} />
-      <VolunteerRegistrationModal open={openModal} handleClose={handleCloseModal} />
+      {/* Modals
+      {activeTab === 0 && <AddVolunteerEventsModal open={openModal} handleClose={handleCloseModal} />}
+      {activeTab === 1 && <VolunteerRegistrationModal open={openModal} handleClose={handleCloseModal} />} */}
     </Box>
   );
 };

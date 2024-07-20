@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Box, Grid, MenuItem } from "@mui/material";
+import { Modal, Box, Grid, MenuItem, Button, Snackbar } from "@mui/material";
 import Buttons from "components/Buttons";
 import CustomTextField from "components/CustomTextField";
 import { useAddCampMutation } from "state/api";
@@ -72,6 +72,9 @@ const HealthCampModal = ({ openModal, handleCloseModal }) => {
   const [sponsors, setSponsors] = useState([""]);
   const [errors, setErrors] = useState({});
   const [addCamp] = useAddCampMutation();
+  const [loading, setLoading] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
 
   const [districts, setDistricts] = useState([]);
   const [towns, setTowns] = useState([]);
@@ -146,10 +149,11 @@ const HealthCampModal = ({ openModal, handleCloseModal }) => {
       if (!person.cnumber) newErrors[`contactPersons${index}cnumber`] = "Phone number is required";
       else if (!validatePhoneNumber(person.cnumber)) newErrors[`contactPersons${index}cnumber`] = "Phone number must contain only numbers";
     });
-
+  
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
     } else {
+      setLoading(true); // Set loading state
       addCamp({ CampId: campId, Province: province, District: district, Town: town, MOH: mohFields, ContactPersons: contactPersons, Sponsors: sponsors })
         .then((response) => {
           console.log("Camp added successfully:", response);
@@ -161,12 +165,18 @@ const HealthCampModal = ({ openModal, handleCloseModal }) => {
           setContactPersons([{ cname: "", cnumber: "" }]);
           setSponsors([""]);
           handleCloseModal();
+          setSnackbarOpen(true); // Show Snackbar
+          // Add refetch or callback to refresh the table
         })
         .catch((error) => {
           console.error("Error adding camp:", error);
+        })
+        .finally(() => {
+          setLoading(false); // Reset loading state
         });
     }
   };
+  
 
   return (
     <Modal
@@ -358,8 +368,15 @@ const HealthCampModal = ({ openModal, handleCloseModal }) => {
         </Box>
 
         <Box sx={{ mt: 6, display: "flex", justifyContent: "center" }}>
-          <Buttons onClick={handleClick} label="Create Health Camp" />
+          <Buttons onClick={handleClick} label="Create Health Camp" disabled={loading} loading={loading} />
         </Box>
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={6000}
+          onClose={() => setSnackbarOpen(false)}
+          message="Health Camp created successfully"
+        />
+
       </Box>
     </Modal>
   );

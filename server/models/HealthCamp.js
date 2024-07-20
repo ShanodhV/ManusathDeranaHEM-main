@@ -11,29 +11,29 @@ const CampSchema = new mongoose.Schema(
     },
     Province: {
       type: String,
-      required: true,
+      //required: true,
     },
     District: {
       type: String,
-      required: true,
+      //required: true,
     },
     Town: {
       type: String,
-      required: true,
+      //required: true,
     },
     MOH: {
       type: [String],
-      required: true,
+      //required: true,
     },
     ContactPersons: [
       {
         cname: {
           type: String,
-          required: true,
+          //required: true,
         },
         cnumber: {
           type: String, // Changed from Number to String to match the input type
-          required: true,
+         // required: true,
         },
       },
     ],
