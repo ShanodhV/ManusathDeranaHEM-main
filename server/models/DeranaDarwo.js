@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const DeranaDaruwoSchema = new mongoose.Schema(
+const DeranaDaruwosSchema = new mongoose.Schema(
   {
     programId: {
       type: String,
@@ -43,5 +43,5 @@ const DeranaDaruwoSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const DeranaDaruwo = mongoose.model("DeranaDaruwo", DeranaDaruwoSchema);
-export default DeranaDaruwo;
+const DeranaDaruwos = mongoose.model("DeranaDaruwos", DeranaDaruwosSchema);
+export default DeranaDaruwos;
