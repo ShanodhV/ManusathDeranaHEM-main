@@ -15,7 +15,7 @@ const Buttons = ({ onClick, label, variant, color, disabled }) => {
         border: 'none', 
         cursor: 'pointer', 
         fontWeight: 'bold', 
-        fontSize: '16px', 
+        // fontSize: '16px', 
       }}
       disabled={disabled}
     >

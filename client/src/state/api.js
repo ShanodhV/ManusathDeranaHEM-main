@@ -89,46 +89,80 @@ export const api = createApi({
       query: (id) => `patient/get/${id}`,
       providesTags: ["Patients"],
     }),
-    // Camps
-    deleteCamp: build.mutation({
-      query: (campId) => ({
-        url: `camp/delete/${campId}`,
-        method: "DELETE",
-      }),
-      invalidatesTags: ["Camps"],
-    }),
-    addCamp: build.mutation({
-      query: ({
-        CampId,
-        Province,
-        District,
-        Town,
-        MOH,
-        ContactPersons,
-        Sponsor,
-      }) => ({
-        url: `camp/add`,
-        method: "POST",
-        body: {
-          CampId,
-          Province,
-          District,
-          Town,
-          MOH,
-          ContactPersons,
-          Sponsor,
-        },
-      }),
-      providesTags: ["Camps"],
-    }),
-    getCamps: build.query({
-      query: () => `camp/gets`,
-      providesTags: ["Camps"],
-    }),
-    getCamp: build.query({
-      query: (id) => `camp/get/${id}`,
-      providesTags: ["Camps"],
-    }),
+// Camps
+deleteCamp: build.mutation({
+  query: (campId) => ({
+    url: `camp/delete/${campId}`,
+    method: "DELETE",
+  }),
+  invalidatesTags: ["Camps"],
+}),
+addCamp: build.mutation({
+  query: ({
+    CampId,
+    Province,
+    District,
+    Town,
+    Date,
+    MOH,
+    ContactPersons,
+    Sponsors,
+  }) => ({
+    url: `camp/add`,
+    method: "POST",
+    body: {
+      CampId,
+      Province,
+      District,
+      Town,
+      Date,
+      MOH,
+      ContactPersons,
+      Sponsors,
+    },
+  }),
+  providesTags: ["Camps"],
+}),
+updateCamp: build.mutation({
+  query: ({
+    id,
+    CampId,
+    Province,
+    District,
+    Town,
+    Date,
+    MOH,
+    ContactPersons,
+    Sponsors,
+  }) => ({
+    url: `camp/update/${id}`,
+    method: "PUT",
+    body: {
+      CampId,
+      Province,
+      District,
+      Town,
+      Date,
+      MOH,
+      ContactPersons,
+      Sponsors,
+    },
+  }),
+  invalidatesTags: ["Camps"],
+}),
+getCamps: build.query({
+  query: () => `camp/gets`,
+  providesTags: ["Camps"],
+}),
+getCamp: build.query({
+  query: (id) => `camp/get/${id}`,
+  providesTags: ["Camps"],
+}),
+getLastCamp: build.query({
+  query: () => `camp/last`,
+  providesTags: ["Camps"],
+}),
+
     // Lab Reports
     deleteLabReport: build.mutation({
       query: (labReportId) => ({
@@ -505,6 +539,8 @@ export const {
   useGetCampQuery,
   useGetCampsQuery,
   useAddCampMutation,
+  useUpdateCampMutation,
+  useGetLastCampQuery,
 
   useDeleteLabReportMutation,
   useGetLabReportQuery,

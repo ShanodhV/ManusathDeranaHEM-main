@@ -1,5 +1,6 @@
 import React from "react";
 import TextField from "@mui/material/TextField";
+import { useTheme } from "@mui/material";
 
 const CustomTextField = ({
   label,
@@ -13,6 +14,8 @@ const CustomTextField = ({
   error,
   helperText,
 }) => {
+  const theme = useTheme();
+
   return (
     <TextField
       inputMode={inputType}
@@ -27,9 +30,15 @@ const CustomTextField = ({
       helperText={helperText}
       sx={{
         "& .Mui-focused": {
-          color: "#000",
+          color: theme.palette.secondary.main,
           "& .MuiOutlinedInput-notchedOutline": {
-            borderColor: "#000",
+            borderColor: theme.palette.secondary.main,
+          },
+          "& .MuiInputLabel-root": {
+            color: theme.palette.secondary.main, // Make label color primary when focused
+          },
+          "& .MuiInputBase-input": {
+            color: theme.palette.secondary.main, // Make input text color primary when focused
           },
         },
         "& .MuiFormHelperText-root.Mui-error": {

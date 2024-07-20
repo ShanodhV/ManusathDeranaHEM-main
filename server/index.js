@@ -20,7 +20,7 @@ import donerVolunteerRoutes from "./routes/donorVolunteer_routes.js";
 import volunteerRoutes from "./routes/volunteer_routes.js";
 import volunteerEventRoutes from "./routes/volunteerEvent_routes.js";
 // data imports
-import Camps from './models/HealthCamp.js';
+import Camps from './models/Camps.js';
 import Patients from "./models/Patient.js";
 import LabReport from "./models/LabReport.js";
 import User from "./models/User.js";

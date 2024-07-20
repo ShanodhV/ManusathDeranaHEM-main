@@ -5,7 +5,7 @@ import {
   addCamp,
   deleteCamp,
   updateCamp,
-  getLastCamp // Import the new controller function
+  getLastCamp
 } from "../controllers/camp_controller.js";
 
 const router = express.Router();
@@ -15,6 +15,6 @@ router.get("/get/:id", getCamp);
 router.post("/add", addCamp);
 router.delete("/delete/:id", deleteCamp);
 router.put("/update/:id", updateCamp);
-router.get("/last", getLastCamp); // Add the new route
+router.get("/last", getLastCamp);
 
 export default router;
