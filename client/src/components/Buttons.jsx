@@ -13,6 +13,7 @@ const Buttons = ({ onClick, label, variant, color, disabled }) => {
         backgroundColor: theme.palette.secondary.main, 
         color: 'white', 
         border: 'none', 
+        fontFamily:'Poppins',
         cursor: 'pointer', 
         fontWeight: 'bold', 
         // fontSize: '16px', 
