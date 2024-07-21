@@ -1,6 +1,7 @@
 import React from 'react'
 import { useTheme } from "@mui/material/styles";
 
+
 const Buttons = ({ onClick, label, variant, color, disabled }) => {
   const theme = useTheme();
 
@@ -9,8 +10,8 @@ const Buttons = ({ onClick, label, variant, color, disabled }) => {
       onClick={onClick}
       style={{ 
         padding: '10px 20px', 
-        borderRadius: '5px', 
-        backgroundColor: theme.palette.secondary.main, 
+        borderRadius: '15px', 
+        backgroundColor: color || "#CD0000" , 
         color: 'white', 
         border: 'none', 
         fontFamily:'Poppins',
