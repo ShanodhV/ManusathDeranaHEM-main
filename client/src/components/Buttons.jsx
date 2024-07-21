@@ -17,7 +17,7 @@ const Buttons = ({ onClick, label, variant, color, disabled }) => {
         fontFamily:'Poppins',
         cursor: 'pointer', 
         fontWeight: 'bold', 
-        // fontSize: '16px', 
+        fontSize: '12px', 
       }}
       disabled={disabled}
     >
