@@ -1,19 +1,23 @@
 import React from 'react'
+import { useTheme } from "@mui/material/styles";
+
 
 const Buttons = ({ onClick, label, variant, color, disabled }) => {
+  const theme = useTheme();
+
   return (
     <button
       onClick={onClick}
       style={{ 
         padding: '10px 20px', 
-        borderRadius: '10px', 
+        borderRadius: '15px', 
         backgroundColor: color || "#CD0000" , 
         color: 'white', 
         border: 'none', 
         fontFamily:'Poppins',
         cursor: 'pointer', 
         fontWeight: 'bold', 
-        fontSize: '15px', 
+        fontSize: '16px', 
       }}
       disabled={disabled}
     >
