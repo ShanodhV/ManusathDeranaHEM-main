@@ -15,14 +15,8 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useTheme } from "@mui/material/styles";
 import Buttons from "components/Buttons";
 import CustomTextField from "components/CustomTextField";
-import { useAddCampMutation, useGetLastCampQuery } from "state/api";
+import { useUpdateCampMutation } from "state/api";
 import { Alert, Snackbar } from "@mui/material";
-
-const generateNextId = (lastId) => {
-  const idNumber = parseInt(lastId.split('-')[2], 10);
-  const nextIdNumber = (idNumber + 1).toString().padStart(6, '0');
-  return `MD-HC-${nextIdNumber}`;
-};
 
 const sriLankanData = {
     "Western": {
@@ -71,7 +65,7 @@ const sriLankanData = {
   };
   
 
-const HealthCampCreateModal = ({ openModal, closeModal }) => {
+const UpdateHealthCampModal = ({ openModal, closeModal, currentCamp }) => {
   const theme = useTheme();
   const [campId, setCampId] = useState("");
   const [province, setProvince] = useState("");
@@ -80,14 +74,11 @@ const HealthCampCreateModal = ({ openModal, closeModal }) => {
   const [mohFields, setMohFields] = useState([""]);
   const [contactPersons, setContactPersons] = useState([{ cname: "", cnumber: "" }]);
   const [sponsors, setSponsors] = useState([""]);
-  const [addCamp] = useAddCampMutation();
+  const [updateCamp] = useUpdateCampMutation();
   const [loading, setLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
-
   const [districts, setDistricts] = useState([]);
   const [towns, setTowns] = useState([]);
-
-  const { data: lastCamp, isSuccess } = useGetLastCampQuery();
 
   const formatDate = (value) => {
     const digits = value.replace(/\D/g, '');
@@ -96,7 +87,7 @@ const HealthCampCreateModal = ({ openModal, closeModal }) => {
     const year = digits.slice(4, 8);
     return `${day}${day && month ? '/' : ''}${month}${month && year ? '/' : ''}${year}`;
   };
-
+  
   const isValidDate = (value) => {
     const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
     return dateRegex.test(value);
@@ -129,30 +120,48 @@ const HealthCampCreateModal = ({ openModal, closeModal }) => {
   };
 
   useEffect(() => {
-    if (isSuccess && lastCamp) {
-      setCampId(generateNextId(lastCamp.CampId));
-    } else {
-      setCampId("MD-HC-000001");
+    if (currentCamp) {
+      console.log("Current Camp data:", currentCamp); // Add console log to see the current camp data
+      setCampId(currentCamp.CampId);
+      setProvince(currentCamp.Province);
+      setDistrict(currentCamp.District);
+      setTown(currentCamp.Town);
+      setDate(currentCamp.Date ? currentCamp.Date.split('T')[0].split('-').reverse().join('/') : '');
+      setMohFields(currentCamp.MOH.length ? currentCamp.MOH : [""]);
+      setContactPersons(currentCamp.ContactPersons.length ? currentCamp.ContactPersons : [{ cname: "", cnumber: "" }]);
+      setSponsors(currentCamp.Sponsors.length ? currentCamp.Sponsors : [""]);
+
+      // Setting districts and towns based on the current province and district
+      if (currentCamp.Province) {
+        setDistricts(Object.keys(sriLankanData[currentCamp.Province]));
+      }
+      if (currentCamp.Province && currentCamp.District) {
+        setTowns(sriLankanData[currentCamp.Province][currentCamp.District]);
+      }
     }
-  }, [lastCamp, isSuccess]);
+  }, [currentCamp]);
 
   useEffect(() => {
     if (province) {
-      setDistricts(Object.keys(sriLankanData[province]));
+      const updatedDistricts = Object.keys(sriLankanData[province]);
+      setDistricts(updatedDistricts);
+      console.log(`Districts for ${province}:`, updatedDistricts);
     } else {
       setDistricts([]);
     }
-    setDistrict("");
-    setTown("");
+    setDistrict(""); // Allow user to reselect
+    setTown(""); // Allow user to reselect
   }, [province]);
 
   useEffect(() => {
     if (district) {
-      setTowns(sriLankanData[province][district]);
+      const updatedTowns = sriLankanData[province][district];
+      setTowns(updatedTowns);
+      console.log(`Towns for ${district}:`, updatedTowns);
     } else {
       setTowns([]);
     }
-    setTown("");
+    setTown(""); // Allow user to reselect
   }, [district]);
 
   const handleClickAddMoh = () => {
@@ -216,30 +225,22 @@ const HealthCampCreateModal = ({ openModal, closeModal }) => {
         Sponsors: sponsors,
       };
 
-      addCamp(campData)
+      updateCamp({ id: currentCamp._id, ...campData })
         .then((response) => {
-          console.log("Camp created successfully:", response);
-          setCampId(generateNextId(campId));
-          setProvince("");
-          setDistrict("");
-          setTown("");
-          setDate("");
-          setMohFields([""]);
-          setContactPersons([{ cname: "", cnumber: "" }]);
-          setSponsors([""]);
+          console.log("Camp updated successfully:", response);
 
           const elapsedTime = Date.now() - startTime;
           const remainingTime = 500 - elapsedTime;
           setTimeout(() => {
             setLoading(false);
             closeModal();
-            setSnackbar({ open: true, message: "Health Camp created successfully", severity: "success" });
+            setSnackbar({ open: true, message: `Health Camp updated successfully`, severity: "success" });
           }, remainingTime > 0 ? remainingTime : 0);
         })
         .catch((error) => {
-          console.error("Error creating camp:", error);
+          console.error("Error updating camp:", error);
           setLoading(false);
-          setSnackbar({ open: true, message: "Error creating camp", severity: "error" });
+          setSnackbar({ open: true, message: "Error updating camp", severity: "error" });
         });
     }
   };
@@ -252,8 +253,11 @@ const HealthCampCreateModal = ({ openModal, closeModal }) => {
         onClose={closeModal}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">
-          Create Health Camp
+        <DialogTitle sx={{ bgcolor: "#f0f0f0" }} id="form-dialog-title">
+          <div style={{ color: "#d63333", fontWeight: '700', fontSize: '16px' }}>
+            {"Update Health Camp"}
+            <hr style={{ borderColor: "#d63333", }} />
+          </div>
           <IconButton
             aria-label="close"
             onClick={closeModal}
@@ -355,6 +359,7 @@ const HealthCampCreateModal = ({ openModal, closeModal }) => {
           </Box>
 
           <Box sx={{ mt: 2 }}>
+            <label style={{ fontWeight: "bold", color: "black", fontSize: "16px" }}>Medical Officer of Health (MOH)</label>
             <Grid container spacing={2}>
               {mohFields.map((moh, index) => (
                 <Grid item xs={4} key={index}>
@@ -409,15 +414,6 @@ const HealthCampCreateModal = ({ openModal, closeModal }) => {
           </Box>
 
           <Box sx={{ mt: 2 }}>
-            <label style={{ fontWeight: "bold", color: "black", fontSize: "16px" }}>Add Camp Activities</label>
-            <CustomTextField
-              label="Add Camp Activities"
-              variant="outlined"
-              fullWidth
-            />
-          </Box>
-
-          <Box sx={{ mt: 2 }}>
             <label style={{ fontWeight: "bold", color: "black", fontSize: "16px" }}>Add Sponsors</label>
             {sponsors.map((sponsor, index) => (
               <Box key={index} sx={{ mt: 2 }}>
@@ -435,16 +431,17 @@ const HealthCampCreateModal = ({ openModal, closeModal }) => {
             </Box>
           </Box>
         </DialogContent>
-        <DialogActions>
+        <DialogActions sx={{ bgcolor: "#f0f0f0" }}>
           <Button
             onClick={handleSubmit}
-            color="primary"
+            color="secondary"
+            variant="contained"
             disabled={loading}
-            startIcon={loading && <CircularProgress size={20} />}
+            endIcon={loading && <CircularProgress size={20} />}
           >
-            Create Health Camp
+            {"Update Health Camp"}
           </Button>
-          <Button onClick={closeModal} color="secondary">
+          <Button onClick={closeModal} variant="outlined" color="secondary">
             Cancel
           </Button>
         </DialogActions>
@@ -464,4 +461,4 @@ const HealthCampCreateModal = ({ openModal, closeModal }) => {
   );
 };
 
-export default HealthCampCreateModal;
+export default UpdateHealthCampModal;

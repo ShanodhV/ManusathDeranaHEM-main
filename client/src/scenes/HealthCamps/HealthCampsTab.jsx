@@ -2,16 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Box, Button, Snackbar, Alert } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import CustomButton from "components/Buttons";
-import HealthCampModal from "./HealthCampModal";
 import DataGridCustomToolbar from "components/DataGridCustomToolbar";
 import { DataGrid } from "@mui/x-data-grid";
 import { useGetCampsQuery, useDeleteCampMutation } from "state/api";
 import ConfirmationDialog from "components/ConfirmationDialog";
 import { Delete, Edit } from "@mui/icons-material";
 
-const HealthCampsTab = () => {
+const HealthCampsTab = ({ handleOpenCreateModal, handleOpenUpdateModal }) => {
   const theme = useTheme();
-  const [openModal, setOpenModal] = useState(false);
   const [currentCamp, setCurrentCamp] = useState(null);
   const { data, isLoading, refetch, error } = useGetCampsQuery();
   const [deleteHealthCamp] = useDeleteCampMutation();
@@ -30,16 +28,6 @@ const HealthCampsTab = () => {
       setSnackbar({ open: true, message: "Error fetching health camps", severity: "error" });
     }
   }, [error]);
-
-  const handleOpenModal = (camp = null) => {
-    setCurrentCamp(camp);
-    setOpenModal(true);
-  };
-
-  const handleCloseModal = () => {
-    setOpenModal(false);
-    refetch();  // Refresh grid after closing modal
-  };
 
   const handleDelete = (campID) => {
     setOpenConfirm(true);
@@ -105,7 +93,7 @@ const HealthCampsTab = () => {
             variant="contained"
             color="info"
             endIcon={<Edit/>}
-            onClick={() => handleOpenModal(params.row)}
+            onClick={() => handleOpenUpdateModal(params.row)}
           >
             Update
           </Button>
@@ -117,8 +105,7 @@ const HealthCampsTab = () => {
   return (
     <Box m="1.5rem 2.5rem">
       <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
-        <CustomButton label="Create Health Camp" onClick={() => handleOpenModal()} />
-        <HealthCampModal openModal={openModal} closeModal={handleCloseModal} currentCamp={currentCamp} />
+        <CustomButton label="Create Health Camp" onClick={handleOpenCreateModal} />
       </Box>
       <Box
         mt="40px"
