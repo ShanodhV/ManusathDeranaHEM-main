@@ -4,36 +4,36 @@ const CampSchema = new mongoose.Schema(
   {
     CampId: {
       type: String,
-      required: true,
+      //required: true,
       unique: true,
       min: 2,
       max: 100,
     },
     Province: {
       type: String,
-      required: true,
+      //required: true,
     },
     District: {
       type: String,
-      required: true,
+      //required: true,
     },
     Town: {
       type: String,
-      required: true,
+      //required: true,
     },
     MOH: {
       type: [String],
-      required: true,
+      //required: true,
     },
     ContactPersons: [
       {
         cname: {
           type: String,
-          required: true,
+          //required: true,
         },
         cnumber: {
           type: String, // Changed from Number to String to match the input type
-          required: true,
+         // required: true,
         },
       },
     ],

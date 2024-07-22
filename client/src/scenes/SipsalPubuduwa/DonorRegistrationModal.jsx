@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Modal, Box, Grid } from "@mui/material";
 import Buttons from "components/Buttons";
 import CustomTextField from "components/CustomTextField"; // Import your custom TextField component
-import { useAddDonorMutation } from "state/api"; // Adjust the import according to your file structure
+import {   useAddDonorVolunteerMutation } from "state/api"; // Adjust the import according to your file structure
 
 const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
   const [donorNIC, setDonorNIC] = useState("");
@@ -14,7 +14,7 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
   const [year, setYear] = useState("");
   const [occupation, setOccupation] = useState("");
 
-  const [addDonor] = useAddDonorMutation();
+  const [addDonor] =   useAddDonorVolunteerMutation();
 
   const handleAddDonor = () => {
     const donorData = {

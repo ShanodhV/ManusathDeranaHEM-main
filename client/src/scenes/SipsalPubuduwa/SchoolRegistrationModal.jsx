@@ -117,7 +117,7 @@ const SchoolRegistrationModal = ({ openModal, handleCloseModal }) => {
         <Box sx={{ mt: 4 }}>
           <label style={{ fontWeight: "bold", color: "black", fontSize: "16px", marginTop: "16px" }} htmlFor="Add Location name">
             Add Location Name
-          </label>
+          </label> 
           <Grid container spacing={2} sx={{ mt: 0 }}>
             <Grid item xs={4}>
               <CustomTextField

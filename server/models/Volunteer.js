@@ -4,38 +4,38 @@ const VolunteerSchema = new mongoose.Schema(
   {
     volunteerNIC: {
       type: String,
-      required: true,
+      //required: true,
       unique: true, 
     },
     volunteerName: {
       type: String,
-      required: true,
+      //required: true,
     },
     dateOfBirth: {
-      date: { type: Number, required: true },
-      month: { type: Number, required: true },
-      year: { type: Number, required: true },
+      date: { type: Number, },
+      month: { type: Number,},
+      year: { type: Number, },
     },
     contactNumber: {
       type: String,
-      required: true,
+      //required: true,
     },
     volunteerAddress: {
       type: String,
-      required: true,
+     // required: true,
     },
     location: {
-      province: { type: String, required: true },
-      district: { type: String, required: true },
-      town: { type: String, required: true },
+      province: { type: String, },
+      district: { type: String, },
+      town: { type: String, },
     },
     occupation: {
       type: String,
-      required: true,
+      //required: true,
     },
     status: {
       type: String,
-      required: true,
+      //required: true,
     },
   },
   { timestamps: true }
