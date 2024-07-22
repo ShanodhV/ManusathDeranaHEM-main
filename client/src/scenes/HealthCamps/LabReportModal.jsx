@@ -10,29 +10,46 @@ const LabReportModal = ({ open, onClose }) => {
   const [sugarLevel, setSugarLevel] = useState("");
   const [cholesterolLevel, setCholesterolLevel] = useState("");
   const [bloodPressure, setBloodPressure] = useState("");
+  const [errors, setErrors] = useState({});
 
   const [addLabReport] = useAddLabReportMutation();
 
+  const validateInputs = () => {
+    const newErrors = {};
+    if (!patientNIC) newErrors.patientNIC = "Patient NIC is required";
+    if (!kidneySerum) newErrors.kidneySerum = "Kidney Serum is required";
+    if (!sugarLevel) newErrors.sugarLevel = "Sugar Level is required";
+    if (!cholesterolLevel) newErrors.cholesterolLevel = "Cholesterol Level is required";
+    if (!bloodPressure) newErrors.bloodPressure = "Blood Pressure is required";
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleAddReport = () => {
-    addLabReport({
-      patientNIC,
-      kidneySerum,
-      sugarLevel,
-      cholesterolLevel,
-      bloodPressure,
-    })
-      .then((response) => {
-        console.log("Lab Report added successfully from frontend:", response);
-        // Clear form fields
-        setPatientNIC("");
-        setKidneySerum("");
-        setSugarLevel("");
-        setCholesterolLevel("");
-        setBloodPressure("");
+    if (validateInputs()) {
+      addLabReport({
+        patientNIC,
+        kidneySerum,
+        sugarLevel,
+        cholesterolLevel,
+        bloodPressure,
       })
-      .catch((error) => {
-        console.error("Error adding Report:", error);
-      });
+        .then((response) => {
+          console.log("Lab Report added successfully from frontend:", response);
+          // Clear form fields
+          setPatientNIC("");
+          setKidneySerum("");
+          setSugarLevel("");
+          setCholesterolLevel("");
+          setBloodPressure("");
+          setErrors({});
+        })
+        .catch((error) => {
+          console.error("Error adding Report:", error);
+        });
+    }
   };
 
   return (
@@ -65,6 +82,8 @@ const LabReportModal = ({ open, onClose }) => {
             value={patientNIC}
             onChange={(e) => setPatientNIC(e.target.value)}
             fullWidth
+            error={!!errors.patientNIC}
+            helperText={errors.patientNIC}
           />
         </Box>
 
@@ -75,6 +94,8 @@ const LabReportModal = ({ open, onClose }) => {
             value={kidneySerum}
             onChange={(e) => setKidneySerum(e.target.value)}
             fullWidth
+            error={!!errors.kidneySerum}
+            helperText={errors.kidneySerum}
           />
         </Box>
 
@@ -85,6 +106,8 @@ const LabReportModal = ({ open, onClose }) => {
             value={sugarLevel}
             onChange={(e) => setSugarLevel(e.target.value)}
             fullWidth
+            error={!!errors.sugarLevel}
+            helperText={errors.sugarLevel}
           />
         </Box>
 
@@ -95,6 +118,8 @@ const LabReportModal = ({ open, onClose }) => {
             value={cholesterolLevel}
             onChange={(e) => setCholesterolLevel(e.target.value)}
             fullWidth
+            error={!!errors.cholesterolLevel}
+            helperText={errors.cholesterolLevel}
           />
         </Box>
 
@@ -105,6 +130,8 @@ const LabReportModal = ({ open, onClose }) => {
             value={bloodPressure}
             onChange={(e) => setBloodPressure(e.target.value)}
             fullWidth
+            error={!!errors.bloodPressure}
+            helperText={errors.bloodPressure}
           />
         </Box>
 

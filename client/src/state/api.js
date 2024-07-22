@@ -89,46 +89,80 @@ export const api = createApi({
       query: (id) => `patient/get/${id}`,
       providesTags: ["Patients"],
     }),
-    // Camps
-    deleteCamp: build.mutation({
-      query: (campId) => ({
-        url: `camp/delete/${campId}`,
-        method: "DELETE",
-      }),
-      invalidatesTags: ["Camps"],
-    }),
-    addCamp: build.mutation({
-      query: ({
-        CampId,
-        Province,
-        District,
-        Town,
-        MOH,
-        ContactPersons,
-        Sponsor,
-      }) => ({
-        url: `camp/add`,
-        method: "POST",
-        body: {
-          CampId,
-          Province,
-          District,
-          Town,
-          MOH,
-          ContactPersons,
-          Sponsor,
-        },
-      }),
-      providesTags: ["Camps"],
-    }),
-    getCamps: build.query({
-      query: () => `camp/gets`,
-      providesTags: ["Camps"],
-    }),
-    getCamp: build.query({
-      query: (id) => `camp/get/${id}`,
-      providesTags: ["Camps"],
-    }),
+// Camps
+deleteCamp: build.mutation({
+  query: (campId) => ({
+    url: `camp/delete/${campId}`,
+    method: "DELETE",
+  }),
+  invalidatesTags: ["Camps"],
+}),
+addCamp: build.mutation({
+  query: ({
+    CampId,
+    Province,
+    District,
+    Town,
+    Date,
+    MOH,
+    ContactPersons,
+    Sponsors,
+  }) => ({
+    url: `camp/add`,
+    method: "POST",
+    body: {
+      CampId,
+      Province,
+      District,
+      Town,
+      Date,
+      MOH,
+      ContactPersons,
+      Sponsors,
+    },
+  }),
+  providesTags: ["Camps"],
+}),
+updateCamp: build.mutation({
+  query: ({
+    id,
+    CampId,
+    Province,
+    District,
+    Town,
+    Date,
+    MOH,
+    ContactPersons,
+    Sponsors,
+  }) => ({
+    url: `camp/update/${id}`,
+    method: "PUT",
+    body: {
+      CampId,
+      Province,
+      District,
+      Town,
+      Date,
+      MOH,
+      ContactPersons,
+      Sponsors,
+    },
+  }),
+  invalidatesTags: ["Camps"],
+}),
+getCamps: build.query({
+  query: () => `camp/gets`,
+  providesTags: ["Camps"],
+}),
+getCamp: build.query({
+  query: (id) => `camp/get/${id}`,
+  providesTags: ["Camps"],
+}),
+getLastCamp: build.query({
+  query: () => `camp/last`,
+  providesTags: ["Camps"],
+}),
+
     // Lab Reports
     deleteLabReport: build.mutation({
       query: (labReportId) => ({
@@ -250,10 +284,10 @@ export const api = createApi({
       invalidatesTags: ["DeranaDaruwoPrograms"],
     }),
     addDeranaDaruwoProgram: build.mutation({
-      query: ({ programID, location, areaOfficerDetails }) => ({
+      query: ({ programId, programName, province,district,town,name,mobileNumber }) => ({
         url: `derana-daruwo/add`,
         method: "POST",
-        body: { programID, location, areaOfficerDetails },
+        body: { programId, programName, province,district,town,name,mobileNumber},
       }),
       providesTags: ["DeranaDaruwoPrograms"],
     }),
@@ -265,6 +299,32 @@ export const api = createApi({
       query: (id) => `derana-daruwo/get/${id}`,
       providesTags: ["DeranaDaruwoPrograms"],
     }),
+    UpdateDeranDaruwoProgram: build.mutation({
+      query: ({
+        programId,
+        programName,
+        province,
+        district,
+        town,
+        name,
+        mobileNumber,
+        
+      }) => ({
+        url: `derana-daruwo/update/${programId}`,
+        method: "PUT",
+        body: {
+          programName,
+          province,
+          district,
+          town,
+          name,
+          mobileNumber,
+         
+        },
+      }),
+      invalidatesTags: ["DeranaDaruwoPrograms"],
+    }),
+    
     // Students
     deleteStudent: build.mutation({
       query: (studentId) => ({
@@ -279,8 +339,10 @@ export const api = createApi({
         studentAddress,
         studentID,
         programID,
-        parentDetails,
+        parentName,
+        parentContactDetails,
         bankAccountDetails,
+        accountNumber,
       }) => ({
         url: `student/add`,
         method: "POST",
@@ -289,8 +351,10 @@ export const api = createApi({
           studentAddress,
           studentID,
           programID,
-          parentDetails,
+          parentName, 
+          parentContactDetails,
           bankAccountDetails,
+          accountNumber
         },
       }),
       providesTags: ["Students"],
@@ -303,6 +367,34 @@ export const api = createApi({
       query: (id) => `student/get/${id}`,
       providesTags: ["Students"],
     }),
+    
+    updateStudents: build.mutation({
+      query: ({
+        studentID,
+        studentName,
+        studentAddress,
+        programID,
+        parentName,
+        parentContactDetails,
+        bankAccountDetails,
+        accountNumber,
+      }) => ({
+        url: `student/update/${studentID}`,
+        method: "PUT",
+        body: {
+          
+          studentName,
+          studentAddress,
+          programID,
+          parentName,
+          parentContactDetails,
+          bankAccountDetails,
+          accountNumber,
+        },
+      }),
+      invalidatesTags: ["Students"],
+    }),
+    
     // Donor Volunteers
     deleteDonorVolunteer: build.mutation({
       query: (donorVolunteerId) => ({
@@ -313,21 +405,21 @@ export const api = createApi({
     }),
     addDonorVolunteer: build.mutation({
       query: ({
+        donorID,
         donorName,
         donorAddress,
-        donorContactNumber,
-        donorID,
-        assignedStudentID,
-        programID,
+        contactNumber,
+        studentID,
+      programID,
       }) => ({
         url: `donor-volunteer/add`,
         method: "POST",
-        body: {
+        body: { 
+          donorID,
           donorName,
           donorAddress,
-          donorContactNumber,
-          donorID,
-          assignedStudentID,
+          contactNumber,
+          studentID,
           programID,
         },
       }),
@@ -384,6 +476,7 @@ export const api = createApi({
       providesTags: ["Volunteers"],
     }),
     // Volunteer Events
+    
     deleteVolunteerEvent: build.mutation({
       query: (volunteerEventId) => ({
         url: `volunteer-event/delete/${volunteerEventId}`,
@@ -446,6 +539,8 @@ export const {
   useGetCampQuery,
   useGetCampsQuery,
   useAddCampMutation,
+  useUpdateCampMutation,
+  useGetLastCampQuery,
 
   useDeleteLabReportMutation,
   useGetLabReportQuery,
@@ -466,11 +561,15 @@ export const {
   useAddDeranaDaruwoProgramMutation,
   useGetDeranaDaruwoProgramsQuery,
   useGetDeranaDaruwoProgramQuery,
+  useUpdateDeranDaruwoProgramMutation,
+  
 
   useDeleteStudentMutation,
   useAddStudentMutation,
   useGetStudentsQuery,
   useGetStudentQuery,
+  useUpdateStudentsMutation,
+
 
   useDeleteDonorVolunteerMutation,
   useAddDonorVolunteerMutation,

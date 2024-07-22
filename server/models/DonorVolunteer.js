@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 
-const DonorVolunteerSchema = new mongoose.Schema(
+const DonorVolunteersSchema = new mongoose.Schema(
   {
-    donorNIC: {
+    donorID: {
       type: String,
-      //required: true,
+      required: true,
       unique: true,
     },
     donorName: {
@@ -15,16 +15,16 @@ const DonorVolunteerSchema = new mongoose.Schema(
       type: String,
       //required: true,
     },
-    dateOfBirth: {
-      month: { type: String },
-      day: { type: String},
-      year: { type: String,},
-    },
-    mobileNumber: {
+    contactNumber: {
       type: String,
-      //required: true,
+      required: true,
     },
-    occupation: {
+    
+    studentID: {
+      type: String,
+      required: true,
+    },
+    programID: {
       type: String,
       required: true,
     },
@@ -32,5 +32,5 @@ const DonorVolunteerSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const DonorVolunteers = mongoose.model("DonorVolunteers", DonorVolunteerSchema);
+const DonorVolunteers = mongoose.model("DonorVolunteers", DonorVolunteersSchema);
 export default DonorVolunteers;

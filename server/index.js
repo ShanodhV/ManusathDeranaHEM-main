@@ -19,9 +19,10 @@ import studentRoutes from "./routes/student_routes.js";
 import donerVolunteerRoutes from "./routes/donorVolunteer_routes.js";
 import volunteerRoutes from "./routes/volunteer_routes.js";
 import volunteerEventRoutes from "./routes/volunteerEvent_routes.js";
-
 // data imports
+import Camps from './models/Camps.js';
 import Patients from "./models/Patient.js";
+import LabReport from "./models/LabReport.js";
 import User from "./models/User.js";
 import Product from "./models/Product.js";
 import ProductStat from "./models/ProductStat.js";
@@ -30,6 +31,9 @@ import Transaction from "./models/Transaction.js";
 import OverallStat from "./models/OverallStat.js";
 import AffiliateStat from "./models/AffiliateStat.js";
 import {
+  healthCamps,
+  labReports,
+  patients,
   dataUser,
   dataPatient,
   dataProduct,
@@ -84,5 +88,13 @@ mongoose
     // Transaction.insertMany(dataTransaction);
     // User.insertMany(dataUser);
     // Patients.insertMany(dataPatient);
+    //Inserting healthCamps data into MongoDB
+    // LabReport.insertMany(labReports)
+    //   .then(docs => {
+    //     console.log('Data inserted:', docs);
+    //   })
+    //   .catch(err => {
+    //     console.error('Insert error:', err);
+    //   });
   })
   .catch((error) => console.log(`${error} did not connect`));

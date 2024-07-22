@@ -7,7 +7,8 @@ import DataViewerTab from "./DataViewerTab";
 import LabReportTab from "./LabReportTab";
 import PatientDataAnalyzerTab from "./PatientDataAnalyzerTab";
 import CampPredictorTab from "./CampPredictorTab";
-import HealthCampModal from "./HealthCampModal";
+import CreateHealthCampModal from "./CreateHealthCampModal";
+import UpdateHealthCampModal from "./UpdateHealthCampModal";
 
 const HealthCamps = () => {
   const [activeTab, setActiveTab] = useState(0); // State to manage active tab
@@ -15,14 +16,26 @@ const HealthCamps = () => {
     setActiveTab(newValue);
   };
 
-  const [openModal, setOpenModal] = useState(false);
+  const [openCreateModal, setOpenCreateModal] = useState(false);
+  const [openUpdateModal, setOpenUpdateModal] = useState(false);
+  const [currentCamp, setCurrentCamp] = useState(null);
 
-  const handleOpenModal = () => {
-    setOpenModal(true);
+  const handleOpenCreateModal = () => {
+    setOpenCreateModal(true);
   };
 
-  const handleCloseModal = () => {
-    setOpenModal(false);
+  const handleCloseCreateModal = () => {
+    setOpenCreateModal(false);
+  };
+
+  const handleOpenUpdateModal = (camp) => {
+    setCurrentCamp(camp);
+    setOpenUpdateModal(true);
+  };
+
+  const handleCloseUpdateModal = () => {
+    setOpenUpdateModal(false);
+    setCurrentCamp(null);
   };
 
   return (
@@ -45,15 +58,18 @@ const HealthCamps = () => {
       </Tabs>
 
       {/* Render tab content based on active tab */}
-      {activeTab === 0 && <HealthCampsTab handleOpenModal={handleOpenModal} />}
+      {activeTab === 0 && <HealthCampsTab handleOpenCreateModal={handleOpenCreateModal} handleOpenUpdateModal={handleOpenUpdateModal} />}
       {activeTab === 1 && <PatientRegistrationTab />}
       {activeTab === 2 && <LabReportTab />}
       {activeTab === 3 && <DataViewerTab />}
       {activeTab === 4 && <CampPredictorTab />}
       {activeTab === 5 && <PatientDataAnalyzerTab />}
 
-      {/* Modal */}
-      <HealthCampModal open={openModal} handleClose={handleCloseModal} />
+      {/* Create Modal */}
+      <CreateHealthCampModal openModal={openCreateModal} closeModal={handleCloseCreateModal} />
+
+      {/* Update Modal */}
+      <UpdateHealthCampModal openModal={openUpdateModal} closeModal={handleCloseUpdateModal} currentCamp={currentCamp} />
     </Box>
   );
 };

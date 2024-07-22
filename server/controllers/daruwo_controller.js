@@ -3,24 +3,38 @@ import DeranaDaruwo from "../models/DeranaDarwo.js";
 // Add a new Derana Daruwo program
 export const addDeranaDaruwo = async (req, res) => {
   try {
-    const { programID, location, areaOfficerDetails } = req.body;
+    const { programId, programName, province, district, town, name, mobileNumber } = req.body;
+
+    // Validate programId to ensure it's not null or empty
+    if (!programId) {
+      return res.status(400).json({ error: 'programId is required' });
+    }
 
     // Create a new Derana Daruwo instance
     const newDeranaDaruwo = new DeranaDaruwo({
-      programID,
-      location,
-      areaOfficerDetails,
+      programId,
+      programName,
+      province,
+      district,
+      town,
+      name,
+      mobileNumber,
     });
-
+console.log(newDeranaDaruwo);
     // Save the Derana Daruwo program to the database
     const savedDeranaDaruwo = await newDeranaDaruwo.save();
 
     res.status(201).json(savedDeranaDaruwo); // Respond with the saved Derana Daruwo program
   } catch (error) {
+    // Check for duplicate key error
+    if (error.code === 11000 && error.keyPattern && error.keyPattern.programId) {
+      return res.status(400).json({ error: 'Duplicate programId. Program ID must be unique.' });
+    }
     console.error("Error adding new Derana Daruwo program:", error);
     res.status(500).json({ error: "Failed to add new Derana Daruwo program" });
   }
 };
+
 
 // Get all Derana Daruwo programs
 export const getDeranaDaruwoPrograms = async (req, res) => {
@@ -64,8 +78,10 @@ export const deleteDeranaDaruwoProgram = async (req, res) => {
 // Update a Derana Daruwo program by ID
 export const updateDeranaDaruwoProgram = async (req, res) => {
   try {
+    
     const programId = req.params.id;
     const updatedProgramData = req.body; // Updated program data from the request body
+    console.log(req.body);
 
     // Find the program by ID in the database and update its information
     const updatedDeranaDaruwoProgram = await DeranaDaruwo.findByIdAndUpdate(programId, updatedProgramData, { new: true });

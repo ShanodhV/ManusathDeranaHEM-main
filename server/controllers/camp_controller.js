@@ -1,22 +1,23 @@
-import HealthCamps from "../models/HealthCamp.js";
+import Camps from "../models/Camps.js";
 
 // Add Health Camp
 export const addCamp = async (req, res) => {
   try {
-    const { campId, province, district, town } = req.body;
+    const { CampId, Province, District, Town, Date, MOH, ContactPersons, Sponsors } = req.body;
 
-    // Create a new health camp instance
-    const newHealthCamp = new HealthCamps({
-      campId,
-      province,
-      district,
-      town,
+    const newHealthCamp = new Camps({
+      CampId,
+      Province,
+      District,
+      Town,
+      Date,
+      MOH,
+      ContactPersons,
+      Sponsors,
     });
 
-    // Save the health camp to the database
     const savedHealthCamp = await newHealthCamp.save();
-
-    res.status(201).json(savedHealthCamp); // Respond with the saved health camp
+    res.status(201).json(savedHealthCamp);
   } catch (error) {
     console.error("Error adding new health camp:", error);
     res.status(500).json({ error: "Failed to add new health camp" });
@@ -26,7 +27,7 @@ export const addCamp = async (req, res) => {
 // Get All Health Camps
 export const getCamps = async (req, res) => {
   try {
-    const healthCamps = await HealthCamps.find(); // Fetching all health camps using the HealthCamp model
+    const healthCamps = await Camps.find();
     res.status(200).json(healthCamps);
   } catch (error) {
     res.status(404).json({ message: error.message });
@@ -37,7 +38,7 @@ export const getCamps = async (req, res) => {
 export const getCamp = async (req, res) => {
   try {
     const { id } = req.params;
-    const healthCamp = await HealthCamps.findById(id);
+    const healthCamp = await Camps.findById(id);
     res.status(200).json(healthCamp);
   } catch (error) {
     res.status(404).json({ message: error.message });
@@ -48,7 +49,7 @@ export const getCamp = async (req, res) => {
 export const deleteCamp = async (req, res) => {
   const { id } = req.params;
   try {
-    const deletedHealthCamp = await HealthCamps.findByIdAndDelete(id); // Deleting health camp by ID using the HealthCamp model
+    const deletedHealthCamp = await Camps.findByIdAndDelete(id);
     if (!deletedHealthCamp) {
       return res.status(404).json({ error: "Health Camp not found" });
     }
@@ -63,18 +64,31 @@ export const deleteCamp = async (req, res) => {
 export const updateCamp = async (req, res) => {
   try {
     const healthCampId = req.params.id;
-    const updatedHealthCampData = req.body; // Updated health camp data from the request body
+    const updatedHealthCampData = req.body;
 
-    // Find the health camp by ID in the database and update its information
-    const updatedHealthCamp = await HealthCamps.findByIdAndUpdate(
+    const updatedHealthCamp = await Camps.findByIdAndUpdate(
       healthCampId,
       updatedHealthCampData,
       { new: true }
     );
 
-    res.json(updatedHealthCamp); // Send back the updated health camp object
+    res.json(updatedHealthCamp);
   } catch (error) {
     console.error("Error updating health camp:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// Get Last Health Camp
+export const getLastCamp = async (req, res) => {
+  try {
+    const lastCamp = await Camps.findOne().sort({ createdAt: -1 });
+    if (!lastCamp) {
+      return res.status(404).json({ message: "No health camps found" });
+    }
+    res.status(200).json(lastCamp);
+  } catch (error) {
+    console.error("Error fetching last health camp:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };

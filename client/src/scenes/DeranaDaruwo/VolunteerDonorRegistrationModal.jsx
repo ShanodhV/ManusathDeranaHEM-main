@@ -2,10 +2,10 @@ import { Box,Modal } from '@mui/material'
 import React, { useState } from 'react';
 import CustomTextField from 'components/CustomTextField';
 import Buttons from 'components/Buttons';
-import { useAddDonorMutation } from 'state/api';
+import { useAddDonorVolunteerMutation } from 'state/api';
 
 
-const VolunteerDonorRegistrationModal = ({ openModal, handleCloseModal }) => {
+const VolunteerDonorRegistrationModal = ({ openModal, closeModal }) => {
 
     const[donorID,setDonorID]=useState("");
     const[donorName,setDonorName]=useState("");
@@ -14,7 +14,7 @@ const VolunteerDonorRegistrationModal = ({ openModal, handleCloseModal }) => {
     const[studentID,setStudentID]=useState("");
     const[programID,setProgramID]=useState("");
 
-    const [addDonor] =   useAddDonorMutation();
+    const [addDonor] =   useAddDonorVolunteerMutation();
 
   const handleAddDonor = () => {
     const donorData = {
@@ -36,6 +36,7 @@ const VolunteerDonorRegistrationModal = ({ openModal, handleCloseModal }) => {
         setContactNumber("");
         setStudentID("");
         setProgramID("");
+        closeModal();
        
       })
       .catch((error) => {
@@ -53,7 +54,7 @@ const VolunteerDonorRegistrationModal = ({ openModal, handleCloseModal }) => {
   return (
     <div>
       <Box>
-        <Modal open={openModal} onClose={handleCloseModal} aria-labelledby="modal-modal-title"
+        <Modal open={openModal} onClose={closeModal} aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description">
                 <Box sx={{
                 position: "absolute",
@@ -117,7 +118,7 @@ const VolunteerDonorRegistrationModal = ({ openModal, handleCloseModal }) => {
                         />
                     </Box>
 
-                    <h3>programID ID</h3>
+                    <h3>program ID</h3>
                     <Box sx={{ mt: 6 }}>
                         <CustomTextField
                             label=""
@@ -128,7 +129,7 @@ const VolunteerDonorRegistrationModal = ({ openModal, handleCloseModal }) => {
                         />
                     </Box>
                     <Box sx={{ mt: 6, display: "flex", justifyContent: "center" }}>
-                        <Buttons label="Add Donor" onCLick={handleAddDonor}></Buttons>
+                        <Buttons label="Add Donor" onClick={handleAddDonor}></Buttons>
                     </Box>
 
 

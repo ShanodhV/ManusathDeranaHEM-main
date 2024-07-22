@@ -19,26 +19,24 @@ const StudentSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    parentDetails: {
-      parentName: {
-        type: String,
-        required: true,
-      },
-      parentContactNumber: {
-        type: String,
-        required: true,
-      },
+    parentName: {
+      type: String,
+      required: true,
     },
+    parentContactDetails: {
+      type: String,
+      required: true,
+    },
+
     bankAccountDetails: {
-      bankName: {
-        type: String,
-        required: true,
-      },
-      accountNumber: {
-        type: String,
-        required: true,
-      },
+      type: String,
+      required: true,
     },
+    accountNumber: {
+      type: String,
+      required: true,
+    },
+    
   },
   { timestamps: true }
 );
