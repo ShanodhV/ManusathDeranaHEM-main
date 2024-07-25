@@ -6,6 +6,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { useTheme } from "@mui/material/styles";
 import DataGridCustomToolbar from "components/DataGridCustomToolbar";
 import { useGetSchoolsQuery, useDeleteSchoolMutation } from "state/api";
+import ConfirmationDialog from "components/ConfirmationDialog"; // Import the ConfirmationDialog component
 
 const SchoolRegistrationTab = () => {
   const theme = useTheme();
@@ -18,6 +19,8 @@ const SchoolRegistrationTab = () => {
   const [search, setSearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
   const [selectedSchool, setSelectedSchool] = useState(null); // State to manage selected school for update
+  const [openConfirm, setOpenConfirm] = useState(false); // State to manage confirmation dialog
+  const [schoolToDelete, setSchoolToDelete] = useState(null); // State to store the school to delete
 
   useEffect(() => {
     if (error) {
@@ -36,14 +39,21 @@ const SchoolRegistrationTab = () => {
   };
 
   const handleDelete = (schoolID) => {
-    deleteSchool(schoolID)
+    setOpenConfirm(true);
+    setSchoolToDelete(schoolID);
+  };
+
+  const confirmDelete = () => {
+    deleteSchool(schoolToDelete)
       .unwrap()
       .then((response) => {
         console.log("School deleted successfully");
+        setOpenConfirm(false);
         refetch();
       })
       .catch((error) => {
         console.error("Error deleting school:", error);
+        setOpenConfirm(false);
       });
   };
 
@@ -185,6 +195,13 @@ const SchoolRegistrationTab = () => {
           }}
         />
       </Box>
+      <ConfirmationDialog
+        open={openConfirm}
+        onClose={() => setOpenConfirm(false)}
+        onConfirm={confirmDelete}
+        title="Confirm Delete"
+        description="Are you sure you want to delete this school? This action cannot be undone."
+      />
     </Box>
   );
 };
