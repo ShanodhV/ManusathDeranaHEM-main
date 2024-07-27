@@ -14,9 +14,9 @@ import CloseIcon from "@mui/icons-material/Close";
 import { DataGrid } from "@mui/x-data-grid";
 import { useTheme } from "@mui/material/styles";
 import { useGetPatientsByCampQuery, useDeletePatientMutation } from "state/api";
-import PatientRegistrationModal from "./PatientRegistrationModal";
 import ConfirmationDialog from "components/ConfirmationDialog";
 import { Delete, Edit } from "@mui/icons-material";
+import PatientRegistrationModal from "./PatientRegistrationModal";
 
 const PatientListModal = ({ open, onClose, camp }) => {
   const theme = useTheme();
@@ -86,7 +86,7 @@ const PatientListModal = ({ open, onClose, camp }) => {
           >
             Delete
           </Button>
-          <div style={{ padding: '2px' }}></div>
+          <div style={{ padding: "2px" }}></div>
           <Button
             variant="contained"
             color="info"
@@ -104,15 +104,15 @@ const PatientListModal = ({ open, onClose, camp }) => {
     <>
       <Dialog fullScreen open={open} onClose={onClose}>
         <DialogTitle sx={{ bgcolor: "#f0f0f0" }} id="form-dialog-title">
-          <div style={{ color: "#d63333", fontWeight: '700', fontSize: '16px' }}>
+          <div style={{ color: "#d63333", fontWeight: "700", fontSize: "16px" }}>
             Patients of {camp?.CampId}
-            <hr style={{ borderColor: "#d63333", }} />
+            <hr style={{ borderColor: "#d63333" }} />
           </div>
           <IconButton
             aria-label="close"
             onClick={onClose}
             sx={{
-              position: 'absolute',
+              position: "absolute",
               right: 8,
               top: 8,
               color: theme.palette.grey[500],
@@ -121,7 +121,7 @@ const PatientListModal = ({ open, onClose, camp }) => {
             <CloseIcon />
           </IconButton>
         </DialogTitle>
-        <DialogContent>
+        <DialogContent sx={{ marginTop: "10px" }}>
           <Box height="75vh">
             <DataGrid
               loading={isLoading}
@@ -133,7 +133,11 @@ const PatientListModal = ({ open, onClose, camp }) => {
           </Box>
         </DialogContent>
         <DialogActions sx={{ bgcolor: "#f0f0f0" }}>
-          <Button onClick={() => handleOpenPatientModal()} color="secondary" variant="contained">
+          <Button
+            onClick={() => handleOpenPatientModal()}
+            color="secondary"
+            variant="contained"
+          >
             Register Patient
           </Button>
           <Button onClick={onClose} variant="outlined" color="secondary">
@@ -147,6 +151,7 @@ const PatientListModal = ({ open, onClose, camp }) => {
         closeModal={handleClosePatientModal}
         currentPatient={currentPatient}
         isUpdate={isUpdate}
+        campId={camp?._id} // Change CampId to _id for consistency
       />
 
       <ConfirmationDialog
@@ -163,7 +168,11 @@ const PatientListModal = ({ open, onClose, camp }) => {
         onClose={() => setSnackbar({ ...snackbar, open: false })}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >
-        <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} sx={{ width: '100%' }}>
+        <Alert
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
+        >
           {snackbar.message}
         </Alert>
       </Snackbar>

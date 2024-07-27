@@ -17,6 +17,6 @@ router.post("/add", addPatient);
 router.delete("/delete/:id", deletePatient);
 router.put("/update/:id", updatePatient);
 router.get("/last", getLastPatient);
-router.get("/camp/:campId", getPatientsByCamp);  // Add this line
+router.get("/camp/:campId", getPatientsByCamp);
 
 export default router;

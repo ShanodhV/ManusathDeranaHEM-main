@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
 import {
+  useAddPatientMutation,
+  useUpdatePatientMutation,
+  useGetLastPatientQuery,
+  useGetPatientsByCampQuery,
+} from "state/api";
+import {
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
   Box,
-  Grid,
-  MenuItem,
   Button,
   IconButton,
   CircularProgress,
@@ -16,9 +20,14 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { useTheme } from "@mui/material/styles";
 import CustomTextField from "components/CustomTextField";
-import { useAddPatientMutation, useGetCampsQuery, useGetLastPatientQuery } from "state/api";
 
-const PatientRegistrationModal = ({ openModal, closeModal, currentPatient, isUpdate = false }) => {
+const PatientRegistrationModal = ({
+  openModal,
+  closeModal,
+  currentPatient,
+  isUpdate = false,
+  campId,
+}) => {
   const theme = useTheme();
   const [patientId, setPatientId] = useState("");
   const [name, setName] = useState("");
@@ -26,12 +35,16 @@ const PatientRegistrationModal = ({ openModal, closeModal, currentPatient, isUpd
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [emergencyPhone, setEmergencyPhone] = useState("");
-  const [healthCamp, setHealthCamp] = useState("");
   const [addPatient] = useAddPatientMutation();
-  const { data: camps, isLoading: isLoadingCamps } = useGetCampsQuery();
+  const [updatePatient] = useUpdatePatientMutation();
   const { data: lastPatient } = useGetLastPatientQuery();
+  const { data: campPatients } = useGetPatientsByCampQuery(campId, { skip: !campId });
   const [loading, setLoading] = useState(false);
-  const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
@@ -42,11 +55,10 @@ const PatientRegistrationModal = ({ openModal, closeModal, currentPatient, isUpd
       setPhone(currentPatient.phone);
       setAddress(currentPatient.address);
       setEmergencyPhone(currentPatient.emergencyPhone);
-      setHealthCamp(currentPatient.healthCamp._id);
     } else {
       if (lastPatient) {
-        const idNumber = parseInt(lastPatient.patientId.split('-')[2], 10);
-        const nextIdNumber = (idNumber + 1).toString().padStart(6, '0');
+        const idNumber = parseInt(lastPatient.patientId.split("-")[2], 10);
+        const nextIdNumber = (idNumber + 1).toString().padStart(6, "0");
         setPatientId(`MD-PT-${nextIdNumber}`);
       } else {
         setPatientId("MD-PT-000001");
@@ -54,19 +66,27 @@ const PatientRegistrationModal = ({ openModal, closeModal, currentPatient, isUpd
     }
   }, [lastPatient, isUpdate, currentPatient]);
 
+  const validateNICFormat = (nic) => {
+    const nicRegex = /^\d{9}[vVxX]$|^\d{12}$/; // Old and new NIC formats
+    return nicRegex.test(nic);
+  };
+
   const validatePhoneNumber = (number) => /^\d{10}$/.test(number);
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const newErrors = {};
     if (!name) newErrors.name = "Name is required";
     if (!NIC) newErrors.NIC = "NIC is required";
+    else if (!validateNICFormat(NIC)) newErrors.NIC = "NIC format is invalid";
+    else if (!isUpdate && campPatients && campPatients.some(p => p.NIC === NIC)) {
+      newErrors.NIC = "NIC already exists for this health camp";
+    }
     if (!phone) newErrors.phone = "Phone number is required";
     else if (!validatePhoneNumber(phone)) newErrors.phone = "Phone number must contain only 10 digits";
     if (!address) newErrors.address = "Address is required";
     if (!emergencyPhone) newErrors.emergencyPhone = "Emergency Phone is required";
     else if (!validatePhoneNumber(emergencyPhone)) newErrors.emergencyPhone = "Phone number must contain only 10 digits";
-    if (!healthCamp) newErrors.healthCamp = "Health Camp is required";
-  
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
     } else {
@@ -78,34 +98,39 @@ const PatientRegistrationModal = ({ openModal, closeModal, currentPatient, isUpd
         phone,
         address,
         emergencyPhone,
-        healthCamp,
+        healthCamp: campId,
       };
-  
-      console.log(patientData); // Log the patient data before submitting
-  
-      addPatient(patientData)
-        .then((response) => {
-          console.log("Patient saved successfully:", response);
-          setPatientId("");
-          setName("");
-          setNic("");
-          setPhone("");
-          setAddress("");
-          setEmergencyPhone("");
-          setHealthCamp("");
-  
-          setLoading(false);
-          closeModal();
-          setSnackbar({ open: true, message: "Patient created successfully", severity: "success" });
-        })
-        .catch((error) => {
-          console.error("Error adding patient:", error);
-          setLoading(false);
-          setSnackbar({ open: true, message: "Error adding patient", severity: "error" });
-        });
+
+      try {
+        if (isUpdate) {
+          await updatePatient({ id: currentPatient._id, ...patientData }).unwrap();
+          setSnackbar({
+            open: true,
+            message: "Patient updated successfully",
+            severity: "success",
+          });
+        } else {
+          await addPatient(patientData).unwrap();
+          setSnackbar({
+            open: true,
+            message: "Patient created successfully",
+            severity: "success",
+          });
+        }
+        closeModal();
+        setPatientId("");
+        setName("");
+        setNic("");
+        setPhone("");
+        setAddress("");
+        setEmergencyPhone("");
+      } catch (error) {
+        setSnackbar({ open: true, message: "Error saving patient", severity: "error" });
+      } finally {
+        setLoading(false);
+      }
     }
   };
-  
 
   return (
     <>
@@ -116,34 +141,22 @@ const PatientRegistrationModal = ({ openModal, closeModal, currentPatient, isUpd
         aria-labelledby="form-dialog-title"
       >
         <DialogTitle sx={{ bgcolor: "#f0f0f0" }} id="form-dialog-title">
-          <div style={{ color: "#d63333", fontWeight: '700', fontSize: '16px' }}>
+          <div style={{ color: "#d63333", fontWeight: "700", fontSize: "16px" }}>
             {isUpdate ? "Update Patient" : "Register Patient"}
-            <hr style={{ borderColor: "#d63333", }} />
+            <hr style={{ borderColor: "#d63333" }} />
           </div>
           <IconButton
             aria-label="close"
             onClick={closeModal}
-            sx={{
-              position: 'absolute',
-              right: 8,
-              top: 8,
-              color: theme.palette.grey[500],
-            }}
+            sx={{ position: "absolute", right: 8, top: 8, color: theme.palette.grey[500] }}
           >
             <CloseIcon />
           </IconButton>
         </DialogTitle>
         <DialogContent>
           <Box sx={{ mt: 2 }}>
-            <CustomTextField
-              label="Patient ID"
-              variant="outlined"
-              value={patientId}
-              fullWidth
-              disabled
-            />
+            <CustomTextField label="Patient ID" variant="outlined" value={patientId} fullWidth disabled />
           </Box>
-
           <Box sx={{ mt: 2 }}>
             <CustomTextField
               label="Name"
@@ -155,7 +168,6 @@ const PatientRegistrationModal = ({ openModal, closeModal, currentPatient, isUpd
               helperText={errors.name}
             />
           </Box>
-
           <Box sx={{ mt: 2 }}>
             <CustomTextField
               label="NIC"
@@ -163,11 +175,10 @@ const PatientRegistrationModal = ({ openModal, closeModal, currentPatient, isUpd
               value={NIC}
               onChange={(e) => setNic(e.target.value)}
               fullWidth
-              error={!!errors.nic}
-              helperText={errors.nic}
+              error={!!errors.NIC}
+              helperText={errors.NIC}
             />
           </Box>
-
           <Box sx={{ mt: 2 }}>
             <CustomTextField
               label="Phone"
@@ -179,7 +190,6 @@ const PatientRegistrationModal = ({ openModal, closeModal, currentPatient, isUpd
               helperText={errors.phone}
             />
           </Box>
-
           <Box sx={{ mt: 2 }}>
             <CustomTextField
               label="Address"
@@ -191,7 +201,6 @@ const PatientRegistrationModal = ({ openModal, closeModal, currentPatient, isUpd
               helperText={errors.address}
             />
           </Box>
-
           <Box sx={{ mt: 2 }}>
             <CustomTextField
               label="Emergency Phone"
@@ -203,24 +212,8 @@ const PatientRegistrationModal = ({ openModal, closeModal, currentPatient, isUpd
               helperText={errors.emergencyPhone}
             />
           </Box>
-
           <Box sx={{ mt: 2 }}>
-            <CustomTextField
-              label="Health Camp"
-              variant="outlined"
-              value={healthCamp}
-              onChange={(e) => setHealthCamp(e.target.value)}
-              select
-              fullWidth
-              error={!!errors.healthCamp}
-              helperText={errors.healthCamp}
-            >
-              {camps && camps.map((camp) => (
-                <MenuItem key={camp._id} value={camp._id}>
-                  {camp.CampId} - {camp.Town}, {camp.District}
-                </MenuItem>
-              ))}
-            </CustomTextField>
+            <CustomTextField label="Health Camp" variant="outlined" value={campId} fullWidth disabled />
           </Box>
         </DialogContent>
         <DialogActions sx={{ bgcolor: "#f0f0f0" }}>
@@ -238,14 +231,17 @@ const PatientRegistrationModal = ({ openModal, closeModal, currentPatient, isUpd
           </Button>
         </DialogActions>
       </Dialog>
-
       <Snackbar
         open={snackbar.open}
         autoHideDuration={6000}
         onClose={() => setSnackbar({ ...snackbar, open: false })}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >
-        <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} sx={{ width: '100%' }}>
+        <Alert
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
+        >
           {snackbar.message}
         </Alert>
       </Snackbar>
