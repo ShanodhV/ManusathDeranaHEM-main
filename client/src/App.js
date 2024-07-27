@@ -9,30 +9,31 @@ import Dashboard from "scenes/dashboard";
 import HealthCamps from "scenes/HealthCamps/index";
 import SipsalPubuduwa from "scenes/SipsalPubuduwa/index";
 import DeranaDaruwo from "scenes/DeranaDaruwo/index";
+import Login from './scenes/login/Login';
+import Signup from './scenes/login/Signup';
 import Volunteer from "scenes/Volunteer/index";
 import { ToastContainer } from "react-toastify";
-
-
 
 function App() {
   const mode = useSelector((state) => state.global.mode);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
+
   return (
     <div className="app">
       <BrowserRouter>
         <ThemeProvider theme={theme}>
-        
           <CssBaseline />
+          <ToastContainer />
           <Routes>
-         
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route element={<Layout />}>
-              
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/Health Camps" element={<HealthCamps />} />
-              <Route path="/Sipsal Pubuduwa" element={<SipsalPubuduwa />} />
-              <Route path="/Derana Daruwo" element={<DeranaDaruwo />} />
+              <Route path="/HealthCamps" element={<HealthCamps />} />
+              <Route path="/SipsalPubuduwa" element={<SipsalPubuduwa />} />
+              <Route path="/DeranaDaruwo" element={<DeranaDaruwo />} />
               <Route path="/Volunteer" element={<Volunteer />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
             </Route>
           </Routes>
         </ThemeProvider>
