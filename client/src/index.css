@@ -22,12 +22,12 @@ body,
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #21295c;
+  background: #c2c3ca;
 }
 
 /* Handle on Hover */
 ::-webkit-scrollbar-track:hover {
-  background: #21295c;
+  background: #81838d;
 }
 
 
@@ -55,7 +55,7 @@ input {
   box-sizing: border-box;
 }
 
-button {
+/* button {
   background-color: #007bff;
   color: #fff;
   border: none;
@@ -65,4 +65,4 @@ button {
 
 button:hover {
   background-color: #0056b3;
-}
+} */

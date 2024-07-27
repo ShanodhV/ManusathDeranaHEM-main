@@ -122,3 +122,15 @@ export const getLastPatient = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+//get Patients by camp
+export const getPatientsByCamp = async (req, res) => {
+  try {
+    const { campId } = req.params;
+    const patients = await Patients.find({ healthCamp: campId }).populate("healthCamp");
+    res.status(200).json(patients);
+  } catch (error) {
+    console.error("Error fetching patients by camp:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}

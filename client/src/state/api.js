@@ -93,6 +93,10 @@ getLastPatient: build.query({
   query: () => `patient/last`,
   providesTags: ["Patients"],
 }),
+getPatientsByCamp: build.query({
+  query: (campId) => `patient/camp/${campId}`,  // Add this line
+  providesTags: ["Patients"],
+}),
 
 // Camps
 deleteCamp: build.mutation({
@@ -540,6 +544,7 @@ export const {
   useGetPatientsQuery,
   useAddPatientMutation,
   useGetLastPatientQuery,
+  useGetPatientsByCampQuery,
 
 
   useDeleteCampMutation,
