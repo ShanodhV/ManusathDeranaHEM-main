@@ -1,18 +1,38 @@
 import Patients from "../models/Patient.js";
+import Camps from "../models/Camps.js";
+
+// Generate the next patient ID
+const generateNextPatientId = async () => {
+  const lastPatient = await Patients.findOne().sort({ createdAt: -1 });
+  if (!lastPatient) return "MD-PT-000001";
+  
+  const idNumber = parseInt(lastPatient.patientId.split('-')[2], 10);
+  const nextIdNumber = (idNumber + 1).toString().padStart(6, '0');
+  return `MD-PT-${nextIdNumber}`;
+};
 
 // Add Patient
 export const addPatient = async (req, res) => {
   try {
-    const { name, NIC, phone, address, city, emergencyPhone } = req.body;
+    const { name, NIC, phone, address, emergencyPhone, healthCamp } = req.body;
+
+    // Validate the health camp
+    const campExists = await Camps.findById(healthCamp);
+    if (!campExists) {
+      return res.status(404).json({ error: "Health Camp not found" });
+    }
+
+    const patientId = await generateNextPatientId();
 
     // Create a new patient instance
     const newPatient = new Patients({
+      patientId,
       name,
       NIC,
       phone,
       address,
-      city,
       emergencyPhone,
+      healthCamp,
     });
 
     // Save the patient to the database
@@ -28,7 +48,7 @@ export const addPatient = async (req, res) => {
 // Get All Patients
 export const getPatients = async (req, res) => {
   try {
-    const patients = await Patients.find(); // Fetching all patients using the Patient model
+    const patients = await Patients.find().populate("healthCamp"); // Fetching all patients with health camp details
     res.status(200).json(patients);
   } catch (error) {
     res.status(404).json({ message: error.message });
@@ -39,7 +59,7 @@ export const getPatients = async (req, res) => {
 export const getPatient = async (req, res) => {
   try {
     const { id } = req.params;
-    const patient = await Patients.findById(id);
+    const patient = await Patients.findById(id).populate("healthCamp");
     res.status(200).json(patient);
   } catch (error) {
     res.status(404).json({ message: error.message });
@@ -67,16 +87,38 @@ export const updatePatient = async (req, res) => {
     const patientId = req.params.id;
     const updatedPatientData = req.body; // Updated patient data from the request body
 
+    // Validate the health camp if updated
+    if (updatedPatientData.healthCamp) {
+      const campExists = await Camps.findById(updatedPatientData.healthCamp);
+      if (!campExists) {
+        return res.status(404).json({ error: "Health Camp not found" });
+      }
+    }
+
     // Find the patient by ID in the database and update its information
     const updatedPatient = await Patients.findByIdAndUpdate(
       patientId,
       updatedPatientData,
       { new: true }
-    );
+    ).populate("healthCamp");
 
     res.json(updatedPatient); // Send back the updated patient object
   } catch (error) {
     console.error("Error updating patient:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// Get Last Patient
+export const getLastPatient = async (req, res) => {
+  try {
+    const lastPatient = await Patients.findOne().sort({ createdAt: -1 });
+    if (!lastPatient) {
+      return res.status(404).json({ message: "No patients found" });
+    }
+    res.status(200).json(lastPatient);
+  } catch (error) {
+    console.error("Error fetching last patient:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };

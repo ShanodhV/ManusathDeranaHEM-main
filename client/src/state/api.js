@@ -65,30 +65,35 @@ export const api = createApi({
       query: () => "general/dashboard",
       providesTags: ["Dashboard"],
     }),
-    // Patients
-    deletePatient: build.mutation({
-      query: (patientId) => ({
-        url: `patient/delete/${patientId}`,
-        method: "DELETE",
-      }),
-      invalidatesTags: ["Patients"],
-    }),
-    addPatient: build.mutation({
-      query: ({ name, NIC, phone, address, city }) => ({
-        url: `patient/add`,
-        method: "POST",
-        body: { name, NIC, phone, address, city },
-      }),
-      providesTags: ["Patients"],
-    }),
-    getPatients: build.query({
-      query: () => `patient/gets`,
-      providesTags: ["Patients"],
-    }),
-    getPatient: build.query({
-      query: (id) => `patient/get/${id}`,
-      providesTags: ["Patients"],
-    }),
+// Patients
+deletePatient: build.mutation({
+  query: (patientId) => ({
+    url: `patient/delete/${patientId}`,
+    method: "DELETE",
+  }),
+  invalidatesTags: ["Patients"],
+}),
+addPatient: build.mutation({
+  query: ({ name, NIC, phone, address, emergencyPhone, healthCamp }) => ({
+    url: `patient/add`,
+    method: "POST",
+    body: { name, NIC, phone, address, emergencyPhone, healthCamp },
+  }),
+  providesTags: ["Patients"],
+}),
+getPatients: build.query({
+  query: () => `patient/gets`,
+  providesTags: ["Patients"],
+}),
+getPatient: build.query({
+  query: (id) => `patient/get/${id}`,
+  providesTags: ["Patients"],
+}),
+getLastPatient: build.query({
+  query: () => `patient/last`,
+  providesTags: ["Patients"],
+}),
+
 // Camps
 deleteCamp: build.mutation({
   query: (campId) => ({
@@ -534,6 +539,8 @@ export const {
   useGetPatientQuery,
   useGetPatientsQuery,
   useAddPatientMutation,
+  useGetLastPatientQuery,
+
 
   useDeleteCampMutation,
   useGetCampQuery,

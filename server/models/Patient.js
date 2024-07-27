@@ -2,13 +2,17 @@ import mongoose from "mongoose";
 
 const PatientSchema = new mongoose.Schema(
   {
+    patientId: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     avatar: {
       type: String,
       default: "NULL",
     },
     name: {
       type: String,
-      //required: true,
       min: 2,
       max: 100,
     },
@@ -24,25 +28,14 @@ const PatientSchema = new mongoose.Schema(
     },
     address: {
       type: String,
-      //required: true,
     },
-    // city: {
-    //   type: String,
-    //   //required: true,
-    //   min: 2,
-    //   max: 100,
-    // },
-    // province: {
-    //   type: String,
-    //   //required: true,
-    // },
-    // district: {
-    //   type: String,
-    //   //required: true,
-    // },
     emergencyPhone: {
       type: Number,
-      //required: true,
+    },
+    healthCamp: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Camps",
+      required: true,
     },
   },
   { timestamps: true }

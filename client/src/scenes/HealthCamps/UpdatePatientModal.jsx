@@ -22,7 +22,7 @@ const PatientRegistrationModal = ({ openModal, closeModal, currentPatient, isUpd
   const theme = useTheme();
   const [patientId, setPatientId] = useState("");
   const [name, setName] = useState("");
-  const [NIC, setNic] = useState("");
+  const [nic, setNic] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [emergencyPhone, setEmergencyPhone] = useState("");
@@ -59,14 +59,14 @@ const PatientRegistrationModal = ({ openModal, closeModal, currentPatient, isUpd
   const handleSubmit = () => {
     const newErrors = {};
     if (!name) newErrors.name = "Name is required";
-    if (!NIC) newErrors.NIC = "NIC is required";
+    if (!nic) newErrors.nic = "NIC is required";
     if (!phone) newErrors.phone = "Phone number is required";
     else if (!validatePhoneNumber(phone)) newErrors.phone = "Phone number must contain only 10 digits";
     if (!address) newErrors.address = "Address is required";
     if (!emergencyPhone) newErrors.emergencyPhone = "Emergency Phone is required";
     else if (!validatePhoneNumber(emergencyPhone)) newErrors.emergencyPhone = "Phone number must contain only 10 digits";
     if (!healthCamp) newErrors.healthCamp = "Health Camp is required";
-  
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
     } else {
@@ -74,15 +74,13 @@ const PatientRegistrationModal = ({ openModal, closeModal, currentPatient, isUpd
       const patientData = {
         patientId,
         name,
-        NIC,
+        NIC: nic,
         phone,
         address,
         emergencyPhone,
         healthCamp,
       };
-  
-      console.log(patientData); // Log the patient data before submitting
-  
+
       addPatient(patientData)
         .then((response) => {
           console.log("Patient saved successfully:", response);
@@ -93,7 +91,7 @@ const PatientRegistrationModal = ({ openModal, closeModal, currentPatient, isUpd
           setAddress("");
           setEmergencyPhone("");
           setHealthCamp("");
-  
+
           setLoading(false);
           closeModal();
           setSnackbar({ open: true, message: "Patient created successfully", severity: "success" });
@@ -105,7 +103,6 @@ const PatientRegistrationModal = ({ openModal, closeModal, currentPatient, isUpd
         });
     }
   };
-  
 
   return (
     <>
@@ -136,6 +133,25 @@ const PatientRegistrationModal = ({ openModal, closeModal, currentPatient, isUpd
         <DialogContent>
           <Box sx={{ mt: 2 }}>
             <CustomTextField
+              label="Health Camp"
+              variant="outlined"
+              value={healthCamp}
+              onChange={(e) => setHealthCamp(e.target.value)}
+              select
+              fullWidth
+              error={!!errors.healthCamp}
+              helperText={errors.healthCamp}
+            >
+              {camps && camps.map((camp) => (
+                <MenuItem key={camp._id} value={camp._id}>
+                  {camp.CampId} - {camp.Town}, {camp.District}
+                </MenuItem>
+              ))}
+            </CustomTextField>
+          </Box>
+
+          <Box sx={{ mt: 2 }}>
+            <CustomTextField
               label="Patient ID"
               variant="outlined"
               value={patientId}
@@ -160,7 +176,7 @@ const PatientRegistrationModal = ({ openModal, closeModal, currentPatient, isUpd
             <CustomTextField
               label="NIC"
               variant="outlined"
-              value={NIC}
+              value={nic}
               onChange={(e) => setNic(e.target.value)}
               fullWidth
               error={!!errors.nic}
@@ -202,25 +218,6 @@ const PatientRegistrationModal = ({ openModal, closeModal, currentPatient, isUpd
               error={!!errors.emergencyPhone}
               helperText={errors.emergencyPhone}
             />
-          </Box>
-
-          <Box sx={{ mt: 2 }}>
-            <CustomTextField
-              label="Health Camp"
-              variant="outlined"
-              value={healthCamp}
-              onChange={(e) => setHealthCamp(e.target.value)}
-              select
-              fullWidth
-              error={!!errors.healthCamp}
-              helperText={errors.healthCamp}
-            >
-              {camps && camps.map((camp) => (
-                <MenuItem key={camp._id} value={camp._id}>
-                  {camp.CampId} - {camp.Town}, {camp.District}
-                </MenuItem>
-              ))}
-            </CustomTextField>
           </Box>
         </DialogContent>
         <DialogActions sx={{ bgcolor: "#f0f0f0" }}>
