@@ -66,6 +66,22 @@ export const api = createApi({
       providesTags: ["Dashboard"],
     }),
 // Patients
+getPatients: build.query({
+  query: () => "patient/gets",
+  providesTags: ["Patients"],
+}),
+getPatient: build.query({
+  query: (id) => `patient/get/${id}`,
+  providesTags: ["Patients"],
+}),
+addPatient: build.mutation({
+  query: ({ patientId, name, NIC, phone, address, emergencyPhone, healthCamp }) => ({
+    url: "patient/add",
+    method: "POST",
+    body: { patientId, name, NIC, phone, address, emergencyPhone, healthCamp },
+  }),
+  invalidatesTags: ["Patients"],
+}),
 deletePatient: build.mutation({
   query: (patientId) => ({
     url: `patient/delete/${patientId}`,
@@ -73,28 +89,20 @@ deletePatient: build.mutation({
   }),
   invalidatesTags: ["Patients"],
 }),
-addPatient: build.mutation({
-  query: ({ name, NIC, phone, address, emergencyPhone, healthCamp }) => ({
-    url: `patient/add`,
-    method: "POST",
-    body: { name, NIC, phone, address, emergencyPhone, healthCamp },
+updatePatient: build.mutation({
+  query: ({ id, patientId, name, NIC, phone, address, emergencyPhone, healthCamp }) => ({
+    url: `patient/update/${id}`,
+    method: "PUT",
+    body: { patientId, name, NIC, phone, address, emergencyPhone, healthCamp },
   }),
-  providesTags: ["Patients"],
-}),
-getPatients: build.query({
-  query: () => `patient/gets`,
-  providesTags: ["Patients"],
-}),
-getPatient: build.query({
-  query: (id) => `patient/get/${id}`,
-  providesTags: ["Patients"],
+  invalidatesTags: ["Patients"],
 }),
 getLastPatient: build.query({
-  query: () => `patient/last`,
+  query: () => "patient/last",
   providesTags: ["Patients"],
 }),
 getPatientsByCamp: build.query({
-  query: (campId) => `patient/camp/${campId}`,  // Add this line
+  query: (campId) => `patient/camp/${campId}`,
   providesTags: ["Patients"],
 }),
 
@@ -539,10 +547,11 @@ export const {
   useGetUserPerformanceQuery,
   useGetDashboardQuery,
 
-  useDeletePatientMutation,
-  useGetPatientQuery,
   useGetPatientsQuery,
+  useGetPatientQuery,
   useAddPatientMutation,
+  useDeletePatientMutation,
+  useUpdatePatientMutation,
   useGetLastPatientQuery,
   useGetPatientsByCampQuery,
 

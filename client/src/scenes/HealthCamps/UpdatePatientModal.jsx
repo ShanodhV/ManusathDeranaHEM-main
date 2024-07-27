@@ -6,7 +6,6 @@ import {
   DialogActions,
   Box,
   Grid,
-  MenuItem,
   Button,
   IconButton,
   CircularProgress,
@@ -16,43 +15,31 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { useTheme } from "@mui/material/styles";
 import CustomTextField from "components/CustomTextField";
-import { useAddPatientMutation, useGetCampsQuery, useGetLastPatientQuery } from "state/api";
+import { useUpdatePatientMutation } from "state/api";
 
-const PatientRegistrationModal = ({ openModal, closeModal, currentPatient, isUpdate = false }) => {
+const UpdatePatientModal = ({ openModal, closeModal, currentPatient }) => {
   const theme = useTheme();
   const [patientId, setPatientId] = useState("");
   const [name, setName] = useState("");
   const [nic, setNic] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
-  const [emergencyPhone, setEmergencyPhone] = useState("");
-  const [healthCamp, setHealthCamp] = useState("");
-  const [addPatient] = useAddPatientMutation();
-  const { data: camps, isLoading: isLoadingCamps } = useGetCampsQuery();
-  const { data: lastPatient } = useGetLastPatientQuery();
+  const [city, setCity] = useState("");
+  const [updatePatient] = useUpdatePatientMutation();
   const [loading, setLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    if (isUpdate && currentPatient) {
+    if (currentPatient) {
       setPatientId(currentPatient.patientId);
       setName(currentPatient.name);
-      setNic(currentPatient.NIC);
+      setNic(currentPatient.nic);
       setPhone(currentPatient.phone);
       setAddress(currentPatient.address);
-      setEmergencyPhone(currentPatient.emergencyPhone);
-      setHealthCamp(currentPatient.healthCamp._id);
-    } else {
-      if (lastPatient) {
-        const idNumber = parseInt(lastPatient.patientId.split('-')[2], 10);
-        const nextIdNumber = (idNumber + 1).toString().padStart(6, '0');
-        setPatientId(`MD-PT-${nextIdNumber}`);
-      } else {
-        setPatientId("MD-PT-000001");
-      }
+      setCity(currentPatient.city);
     }
-  }, [lastPatient, isUpdate, currentPatient]);
+  }, [currentPatient]);
 
   const validatePhoneNumber = (number) => /^\d{10}$/.test(number);
 
@@ -63,9 +50,7 @@ const PatientRegistrationModal = ({ openModal, closeModal, currentPatient, isUpd
     if (!phone) newErrors.phone = "Phone number is required";
     else if (!validatePhoneNumber(phone)) newErrors.phone = "Phone number must contain only 10 digits";
     if (!address) newErrors.address = "Address is required";
-    if (!emergencyPhone) newErrors.emergencyPhone = "Emergency Phone is required";
-    else if (!validatePhoneNumber(emergencyPhone)) newErrors.emergencyPhone = "Phone number must contain only 10 digits";
-    if (!healthCamp) newErrors.healthCamp = "Health Camp is required";
+    if (!city) newErrors.city = "City is required";
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
@@ -74,32 +59,24 @@ const PatientRegistrationModal = ({ openModal, closeModal, currentPatient, isUpd
       const patientData = {
         patientId,
         name,
-        NIC: nic,
+        nic,
         phone,
         address,
-        emergencyPhone,
-        healthCamp,
+        city,
       };
 
-      addPatient(patientData)
+      updatePatient({ id: currentPatient._id, ...patientData })
         .then((response) => {
-          console.log("Patient saved successfully:", response);
-          setPatientId("");
-          setName("");
-          setNic("");
-          setPhone("");
-          setAddress("");
-          setEmergencyPhone("");
-          setHealthCamp("");
+          console.log("Patient updated successfully:", response);
 
           setLoading(false);
           closeModal();
-          setSnackbar({ open: true, message: "Patient created successfully", severity: "success" });
+          setSnackbar({ open: true, message: `Patient updated successfully`, severity: "success" });
         })
         .catch((error) => {
-          console.error("Error adding patient:", error);
+          console.error("Error updating patient:", error);
           setLoading(false);
-          setSnackbar({ open: true, message: "Error adding patient", severity: "error" });
+          setSnackbar({ open: true, message: "Error updating patient", severity: "error" });
         });
     }
   };
@@ -114,7 +91,7 @@ const PatientRegistrationModal = ({ openModal, closeModal, currentPatient, isUpd
       >
         <DialogTitle sx={{ bgcolor: "#f0f0f0" }} id="form-dialog-title">
           <div style={{ color: "#d63333", fontWeight: '700', fontSize: '16px' }}>
-            {isUpdate ? "Update Patient" : "Register Patient"}
+            {"Update Patient"}
             <hr style={{ borderColor: "#d63333", }} />
           </div>
           <IconButton
@@ -131,25 +108,6 @@ const PatientRegistrationModal = ({ openModal, closeModal, currentPatient, isUpd
           </IconButton>
         </DialogTitle>
         <DialogContent>
-          <Box sx={{ mt: 2 }}>
-            <CustomTextField
-              label="Health Camp"
-              variant="outlined"
-              value={healthCamp}
-              onChange={(e) => setHealthCamp(e.target.value)}
-              select
-              fullWidth
-              error={!!errors.healthCamp}
-              helperText={errors.healthCamp}
-            >
-              {camps && camps.map((camp) => (
-                <MenuItem key={camp._id} value={camp._id}>
-                  {camp.CampId} - {camp.Town}, {camp.District}
-                </MenuItem>
-              ))}
-            </CustomTextField>
-          </Box>
-
           <Box sx={{ mt: 2 }}>
             <CustomTextField
               label="Patient ID"
@@ -210,13 +168,13 @@ const PatientRegistrationModal = ({ openModal, closeModal, currentPatient, isUpd
 
           <Box sx={{ mt: 2 }}>
             <CustomTextField
-              label="Emergency Phone"
+              label="City"
               variant="outlined"
-              value={emergencyPhone}
-              onChange={(e) => setEmergencyPhone(e.target.value)}
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
               fullWidth
-              error={!!errors.emergencyPhone}
-              helperText={errors.emergencyPhone}
+              error={!!errors.city}
+              helperText={errors.city}
             />
           </Box>
         </DialogContent>
@@ -228,7 +186,7 @@ const PatientRegistrationModal = ({ openModal, closeModal, currentPatient, isUpd
             disabled={loading}
             endIcon={loading && <CircularProgress size={20} />}
           >
-            {isUpdate ? "Update Patient" : "Register Patient"}
+            {"Update Patient"}
           </Button>
           <Button onClick={closeModal} variant="outlined" color="secondary">
             Cancel
@@ -250,4 +208,4 @@ const PatientRegistrationModal = ({ openModal, closeModal, currentPatient, isUpd
   );
 };
 
-export default PatientRegistrationModal;
+export default UpdatePatientModal;
