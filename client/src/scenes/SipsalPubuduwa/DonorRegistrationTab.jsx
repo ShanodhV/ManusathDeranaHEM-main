@@ -6,6 +6,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import { useGetDonorVolunteersQuery, useDeleteDonorVolunteerMutation } from "state/api";
 import { useTheme } from "@mui/material/styles";
 import DataGridCustomToolbar from "components/DataGridCustomToolbar";
+import ConfirmationDialog from "components/ConfirmationDialog"; // Import the ConfirmationDialog component
 
 const DonorRegistrationTab = () => {
   const theme = useTheme();
@@ -19,6 +20,8 @@ const DonorRegistrationTab = () => {
   const [search, setSearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
   const [selectedDonor, setSelectedDonor] = useState(null); // State to manage selected donor for update
+  const [openConfirm, setOpenConfirm] = useState(false); // State to manage confirmation dialog
+  const [donorToDelete, setDonorToDelete] = useState(null); // State to store the donor to delete
 
   useEffect(() => {
     if (error) {
@@ -37,14 +40,21 @@ const DonorRegistrationTab = () => {
   };
 
   const handleDelete = (donorId) => {
-    deleteDonor(donorId)
+    setOpenConfirm(true);
+    setDonorToDelete(donorId);
+  };
+
+  const confirmDelete = () => {
+    deleteDonor(donorToDelete)
       .unwrap()
       .then((response) => {
         console.log("Donor deleted successfully");
+        setOpenConfirm(false);
         refetch();
       })
       .catch((error) => {
         console.error("Error deleting donor:", error);
+        setOpenConfirm(false);
       });
   };
 
@@ -185,6 +195,13 @@ const DonorRegistrationTab = () => {
           }}
         />
       </Box>
+      <ConfirmationDialog
+        open={openConfirm}
+        onClose={() => setOpenConfirm(false)}
+        onConfirm={confirmDelete}
+        title="Confirm Delete"
+        description="Are you sure you want to delete this donor? This action cannot be undone."
+      />
     </Box>
   );
 };
