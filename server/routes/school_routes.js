@@ -5,6 +5,7 @@ import {
   addSchool,
   deleteSchool,
   updateSchool,
+  getLastSchool
 } from "../controllers/school_controller.js";
 
 const router = express.Router();

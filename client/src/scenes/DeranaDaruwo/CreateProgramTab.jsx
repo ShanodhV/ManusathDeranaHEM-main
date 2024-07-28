@@ -2,12 +2,15 @@ import { Box, Button } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 import Buttons from "components/Buttons";
-import CreateProgramModal from './CreateProgramModal';
+// import CreateProgramModal from './CreateProgramModal';
+
 import DataGridCustomToolbar from 'components/DataGridCustomToolbar';
 import { DataGrid } from '@mui/x-data-grid';
 import { useGetDeranaDaruwoProgramsQuery, useDeleteDeranaDaruwoProgramMutation } from 'state/api';
 import { UpdateCreateProgramModal } from './UpdateCreateProgramModal';
 import { useUpdateDeranDaruwoProgramMutation } from 'state/api';
+import ProgramModal from './ProgramModal';
+import { Delete, Edit } from "@mui/icons-material";
 
 export default function CreateProgramTab() {
   const theme = useTheme();
@@ -117,6 +120,7 @@ export default function CreateProgramTab() {
             <Button
               variant="contained"
               color="error"
+              endIcon={<Delete/>}
               onClick={() => handleDelete(params.row._id)}
             >
               Delete
@@ -135,6 +139,7 @@ export default function CreateProgramTab() {
             <Button
               variant="contained"
               color="info"
+              endIcon={<Edit/>}
               onClick={() => handleUpdateClick(params.row)}
             >
               Update
@@ -150,7 +155,10 @@ export default function CreateProgramTab() {
       <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
         <Buttons label={"Create Program"} onClick={handleOpenCreateModal} />
         {/* Render the CreateProgramModal component and pass necessary props */}
-        <CreateProgramModal openModal={openCreateModal} closeModal={handleCloseCreateModal} />
+        {/* <CreateProgramModal openModal={openCreateModal} closeModal={handleCloseCreateModal} /> */}
+        <ProgramModal
+         openModal={openCreateModal} closeModal={handleCloseCreateModal}
+        />
       </Box>
       {openUpdateModal && (
         <UpdateCreateProgramModal
