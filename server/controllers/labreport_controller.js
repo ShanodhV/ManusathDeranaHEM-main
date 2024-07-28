@@ -1,19 +1,28 @@
 import LabReport from "../models/LabReport.js";
+import Patient from "../models/Patient.js";
 
 // Add a new lab report
 export const addLabReport = async (req, res) => {
   try {
     const {
-      patientNIC,
+      patient,
+      gender,
       kidneySerum,
       sugarLevel,
       cholesterolLevel,
       bloodPressure,
     } = req.body;
 
+    // Check if the patient exists
+    const existingPatient = await Patient.findById(patient);
+    if (!existingPatient) {
+      return res.status(404).json({ error: "Patient not found" });
+    }
+
     // Create a new lab report instance
     const newLabReport = new LabReport({
-      patientNIC,
+      patient,
+      gender,
       kidneySerum,
       sugarLevel,
       cholesterolLevel,
@@ -26,14 +35,14 @@ export const addLabReport = async (req, res) => {
     res.status(201).json(savedLabReport); // Respond with the saved lab report
   } catch (error) {
     console.error("Error adding new lab report:", error);
-    res.status(500).json({ error: "Failed to add new lab report", error });
+    res.status(500).json({ error: "Failed to add new lab report", details: error });
   }
 };
 
 // Get all lab reports
 export const getLabReports = async (req, res) => {
   try {
-    const labReports = await LabReport.find(); // Fetching all lab reports
+    const labReports = await LabReport.find().populate("patient", "name NIC"); // Fetching all lab reports
     res.status(200).json(labReports);
   } catch (error) {
     res.status(404).json({ message: error.message });
@@ -44,7 +53,7 @@ export const getLabReports = async (req, res) => {
 export const getLabReport = async (req, res) => {
   try {
     const { id } = req.params;
-    const labReport = await LabReport.findById(id);
+    const labReport = await LabReport.findById(id).populate("patient", "name NIC");
     if (!labReport) {
       return res.status(404).json({ message: "Lab report not found" });
     }

@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
-  useAddPatientMutation,
   useUpdatePatientMutation,
-  useGetLastPatientQuery,
   useGetPatientsByCampQuery,
 } from "state/api";
 import {
@@ -21,13 +19,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useTheme } from "@mui/material/styles";
 import CustomTextField from "components/CustomTextField";
 
-const PatientRegistrationModal = ({
-  openModal,
-  closeModal,
-  currentPatient,
-  isUpdate = false,
-  campId,
-}) => {
+const PatientUpdateModal = ({ openModal, closeModal, currentPatient, campId }) => {
   const theme = useTheme();
   const [patientId, setPatientId] = useState("");
   const [name, setName] = useState("");
@@ -35,9 +27,7 @@ const PatientRegistrationModal = ({
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [emergencyPhone, setEmergencyPhone] = useState("");
-  const [addPatient] = useAddPatientMutation();
   const [updatePatient] = useUpdatePatientMutation();
-  const { data: lastPatient } = useGetLastPatientQuery();
   const { data: campPatients } = useGetPatientsByCampQuery(campId, { skip: !campId });
   const [loading, setLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({
@@ -48,23 +38,15 @@ const PatientRegistrationModal = ({
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    if (isUpdate && currentPatient) {
+    if (currentPatient) {
       setPatientId(currentPatient.patientId);
       setName(currentPatient.name);
       setNic(currentPatient.NIC);
       setPhone(currentPatient.phone);
       setAddress(currentPatient.address);
       setEmergencyPhone(currentPatient.emergencyPhone);
-    } else {
-      if (lastPatient) {
-        const idNumber = parseInt(lastPatient.patientId.split("-")[2], 10);
-        const nextIdNumber = (idNumber + 1).toString().padStart(6, "0");
-        setPatientId(`MD-PT-${nextIdNumber}`);
-      } else {
-        setPatientId("MD-PT-000001");
-      }
     }
-  }, [lastPatient, isUpdate, currentPatient]);
+  }, [currentPatient]);
 
   const validateNICFormat = (nic) => {
     const nicRegex = /^\d{9}[vVxX]$|^\d{12}$/; // Old and new NIC formats
@@ -78,7 +60,7 @@ const PatientRegistrationModal = ({
     if (!name) newErrors.name = "Name is required";
     if (!NIC) newErrors.NIC = "NIC is required";
     else if (!validateNICFormat(NIC)) newErrors.NIC = "NIC format is invalid";
-    else if (!isUpdate && campPatients && campPatients.some(p => p.NIC === NIC)) {
+    else if (campPatients && campPatients.some(p => p.NIC === NIC && p._id !== currentPatient._id)) {
       newErrors.NIC = "NIC already exists for this health camp";
     }
     if (!phone) newErrors.phone = "Phone number is required";
@@ -102,34 +84,35 @@ const PatientRegistrationModal = ({
       };
 
       try {
-        if (isUpdate) {
-          await updatePatient({ id: currentPatient._id, ...patientData }).unwrap();
-          setSnackbar({
-            open: true,
-            message: "Patient updated successfully",
-            severity: "success",
-          });
-        } else {
-          await addPatient(patientData).unwrap();
-          setSnackbar({
-            open: true,
-            message: "Patient created successfully",
-            severity: "success",
-          });
-        }
+        await updatePatient({ id: currentPatient._id, ...patientData }).unwrap();
+        setSnackbar({
+          open: true,
+          message: "Patient updated successfully",
+          severity: "success",
+        });
         closeModal();
-        setPatientId("");
-        setName("");
-        setNic("");
-        setPhone("");
-        setAddress("");
-        setEmergencyPhone("");
+        clearForm();
       } catch (error) {
-        setSnackbar({ open: true, message: "Error saving patient", severity: "error" });
+        setSnackbar({ open: true, message: "Error updating patient", severity: "error" });
       } finally {
         setLoading(false);
       }
     }
+  };
+
+  const clearForm = () => {
+    setPatientId("");
+    setName("");
+    setNic("");
+    setPhone("");
+    setAddress("");
+    setEmergencyPhone("");
+    setErrors({});
+  };
+
+  const handleClose = () => {
+    clearForm();
+    closeModal();
   };
 
   return (
@@ -137,17 +120,17 @@ const PatientRegistrationModal = ({
       <Dialog
         fullScreen
         open={openModal}
-        onClose={closeModal}
+        onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
         <DialogTitle sx={{ bgcolor: "#f0f0f0" }} id="form-dialog-title">
           <div style={{ color: "#d63333", fontWeight: "700", fontSize: "16px" }}>
-            {isUpdate ? "Update Patient" : "Register Patient"}
+            Update Patient
             <hr style={{ borderColor: "#d63333" }} />
           </div>
           <IconButton
             aria-label="close"
-            onClick={closeModal}
+            onClick={handleClose}
             sx={{ position: "absolute", right: 8, top: 8, color: theme.palette.grey[500] }}
           >
             <CloseIcon />
@@ -224,9 +207,9 @@ const PatientRegistrationModal = ({
             disabled={loading}
             endIcon={loading && <CircularProgress size={20} />}
           >
-            {isUpdate ? "Update Patient" : "Register Patient"}
+            Update Patient
           </Button>
-          <Button onClick={closeModal} variant="outlined" color="secondary">
+          <Button onClick={handleClose} variant="outlined" color="secondary">
             Cancel
           </Button>
         </DialogActions>
@@ -249,4 +232,4 @@ const PatientRegistrationModal = ({
   );
 };
 
-export default PatientRegistrationModal;
+export default PatientUpdateModal;

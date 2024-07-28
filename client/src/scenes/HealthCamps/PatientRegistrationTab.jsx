@@ -1,35 +1,39 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button, Snackbar } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardContent,
+  CardActions,
+  Button,
+  Typography,
+  Snackbar,
+  Alert,
+  TextField,
+  InputAdornment,
+  Tooltip,
+} from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 import { useTheme } from "@mui/material/styles";
-import PatientRegistrationModal from "./PatientRegistrationModal";
-import DataGridCustomToolbar from "components/DataGridCustomToolbar";
-import { DataGrid } from "@mui/x-data-grid";
-import { useGetPatientsQuery, useDeletePatientMutation } from "state/api";
-import ConfirmationDialog from "components/ConfirmationDialog"; // Import the confirmation dialog
-import { Delete } from "@mui/icons-material";
-import Buttons from "components/Buttons";
+import { useGetCampsQuery } from "state/api";
+import PatientListModal from "./PatientListModal";
 
 const PatientRegistrationTab = () => {
   const theme = useTheme();
+  const { data: camps, isLoading: isLoadingCamps, error: campError } = useGetCampsQuery();
+  const [selectedCamp, setSelectedCamp] = useState(null);
   const [openModal, setOpenModal] = useState(false);
-  const { data, isLoading, refetch, error } = useGetPatientsQuery();
-  const [deletePatient] = useDeletePatientMutation();
-  const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(20);
-  const [sort, setSort] = useState({});
-  const [search, setSearch] = useState("");
-  const [searchInput, setSearchInput] = useState("");
-  const [selectedPatient, setSelectedPatient] = useState(null);
-  const [openConfirm, setOpenConfirm] = useState(false);
-  const [toastOpen, setToastOpen] = useState(false);
+  const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    if (error) {
-      console.error("Error fetching patients:", error);
+    if (campError) {
+      console.error("Error fetching camps:", campError);
+      setSnackbar({ open: true, message: "Error fetching health camps", severity: "error" });
     }
-  }, [error]);
+  }, [campError]);
 
-  const handleOpenModal = () => {
+  const handleOpenModal = (camp) => {
+    setSelectedCamp(camp);
     setOpenModal(true);
   };
 
@@ -37,176 +41,85 @@ const PatientRegistrationTab = () => {
     setOpenModal(false);
   };
 
-  const handleDelete = (patientID) => {
-    setOpenConfirm(true);
-    setSelectedPatient(patientID);
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value.toLowerCase());
   };
 
-  const confirmDelete = () => {
-    deletePatient(selectedPatient)
-      .unwrap()
-      .then((response) => {
-        console.log("Patient deleted successfully");
-        setToastOpen(true);
-        refetch();
-      })
-      .catch((error) => {
-        console.error("Error deleting patient:", error);
-      });
-    setOpenConfirm(false);
+  const formatDate = (dateStr) => {
+    const options = { day: "2-digit", month: "long", year: "numeric" };
+    return new Intl.DateTimeFormat("en-GB", options).format(new Date(dateStr));
   };
 
-  const handleUpdateClick = (camp) => {
-    console.log("Update camp:", camp);
-    // Implement the update logic here
-    handleOpenModal(); // If you want to reuse the modal for update
-  };
-
-  const patientColumns = [
-    {
-      field: "name",
-      headerName: "Name",
-      flex: 1,
-    },
-    {
-      field: "NIC",
-      headerName: "NIC",
-      flex: 1,
-    },
-    {
-      field: "phone",
-      headerName: "Phone",
-      flex: 1,
-    },
-    {
-      field: "address",
-      headerName: "Address",
-      flex: 1,
-    },
-    {
-      field: "City",
-      headerName: "City",
-      flex: 1,
-    },
-    {
-      field: "actions",
-      headerName: "Actions",
-      flex: 1,
-      sortable: false,
-      filterable: false,
-      renderCell: (params) => (
-        <Box display="flex" justifyContent="space-around">
-          <Box
-            display="flex"
-            justifyContent="flex-end"
-            mr={2}
-            sx={{
-              "& button": {
-                backgroundColor: theme.palette.secondary[400],
-                color: "white",
-              },
-            }}
-          >
-            <Button
-              variant="contained"
-              color="error"
-              onClick={() => handleDelete(params.row._id)}
-            >
-              Delete
-            </Button>
-          </Box>
-          <Box
-            display="flex"
-            justifyContent="flex-end"
-            sx={{
-              "& button": {
-                backgroundColor: theme.palette.primary[700],
-                color: "white",
-              },
-            }}
-          >
-            <Button
-              variant="contained"
-              color="info"
-              onClick={() => handleUpdateClick(params.row)}
-            >
-              Update
-            </Button>
-          </Box>
-        </Box>
-      ),
-    },
-  ];
+  // Filter and sort camps
+  const filteredCamps = camps
+    ?.filter(
+      (camp) =>
+        camp.CampId.toLowerCase().includes(searchTerm) ||
+        camp.Town.toLowerCase().includes(searchTerm) ||
+        camp.District.toLowerCase().includes(searchTerm)
+    )
+    .sort((a, b) => new Date(b.Date) - new Date(a.Date)); // Sort by latest date
 
   return (
     <Box m="1.5rem 2.5rem">
-      <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
-        <Buttons label="Register Patient" onClick={handleOpenModal} />
-        <PatientRegistrationModal open={openModal} onClose={handleCloseModal} />
+      <Box sx={{ mb: 3, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <Typography variant="h4">Select Health Camps to Add Patient details</Typography>
+        <Tooltip title="Search by Camp ID, Town, or District" arrow>
+          <TextField
+            label="Search Camps"
+            variant="outlined"
+            size="small"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            sx={{ width: "300px" }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Tooltip>
       </Box>
-      <Box
-        mt="40px"
-        height="75vh"
-        sx={{
-          "& .MuiDataGrid-root": {
-            border: "none",
-          },
-          "& .MuiDataGrid-cell": {
-            borderBottom: "none",
-            color: theme.palette.secondary[100],
-          },
-          "& .MuiDataGrid-columnHeaders": {
-            backgroundColor: theme.palette.background.alt,
-            color: theme.palette.secondary[100],
-            borderBottom: "none",
-          },
-          "& .MuiDataGrid-virtualScroller": {
-            backgroundColor: theme.palette.primary.light,
-          },
-          "& .MuiDataGrid-footerContainer": {
-            backgroundColor: theme.palette.background.alt,
-            color: theme.palette.secondary[100],
-            borderTop: "none",
-          },
-          "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
-            color: `${theme.palette.secondary[200]} !important`,
-          },
-        }}
-      >
-        <DataGrid
-          loading={isLoading || !data}
-          getRowId={(row) => row._id}
-          rows={data || []}
-          columns={patientColumns}
-          rowCount={(data && data.total) || 0}
-          rowsPerPageOptions={[20, 50, 100]}
-          pagination
-          page={page}
-          pageSize={pageSize}
-          paginationMode="server"
-          sortingMode="server"
-          onPageChange={(newPage) => setPage(newPage)}
-          onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-          onSortModelChange={(newSortModel) => setSort(newSortModel)}
-          components={{ Toolbar: DataGridCustomToolbar }}
-          componentsProps={{
-            toolbar: { searchInput, setSearchInput, setSearch },
-          }}
-        />
+      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
+        {isLoadingCamps && <Typography>Loading camps...</Typography>}
+        {filteredCamps?.map((camp) => (
+          <Card key={camp._id} sx={{ width: 300 }}>
+            <CardContent>
+              <Typography variant="h5">{camp.CampId}</Typography>
+              <Typography variant="body2">
+                {camp.Town}, {camp.District}
+              </Typography>
+              <Typography variant="body2">{formatDate(camp.Date)}</Typography>
+            </CardContent>
+            <CardActions>
+              <Button size="small" color="secondary" onClick={() => handleOpenModal(camp)}>
+                View Patients
+              </Button>
+            </CardActions>
+          </Card>
+        ))}
       </Box>
-      <ConfirmationDialog
-        open={openConfirm}
-        onClose={() => setOpenConfirm(false)}
-        onConfirm={confirmDelete}
-        title="Confirm Delete"
-        description="Are you sure you want to delete this patient? This action cannot be undone."
-      />
+
+      {selectedCamp && (
+        <PatientListModal open={openModal} onClose={handleCloseModal} camp={selectedCamp} />
+      )}
+
       <Snackbar
-        open={toastOpen}
+        open={snackbar.open}
         autoHideDuration={6000}
-        onClose={() => setToastOpen(false)}
-        message="Patient deleted successfully"
-      />
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { Box, Button } from '@mui/material';
 import Buttons from 'components/Buttons';
-import StudentRegistrationModal from './StudentRegistrationModal';
+// import StudentRegistrationModal from './StudentRegistrationModal';
 import DataGridCustomToolbar from 'components/DataGridCustomToolbar';
 import { DataGrid } from '@mui/x-data-grid';
 import { useGetStudentsQuery, useDeleteStudentMutation } from 'state/api';
 import { UpdateStudentRegistationDetails } from './UpdateStudentRegistationDetails';
 import CustomHeader from './CustomerHead';
+import RegistrationModal from './RegistrationModal';
+import { Delete, Edit } from "@mui/icons-material";
 
 const StudentRegistrationTab = () => {
   const theme = useTheme();
@@ -131,6 +133,7 @@ const StudentRegistrationTab = () => {
             <Button
               variant="contained"
               color="error"
+              endIcon={<Delete/>}
               onClick={() => handleDelete(params.row._id)}
             >
               Delete
@@ -149,6 +152,7 @@ const StudentRegistrationTab = () => {
             <Button
               variant="contained"
               color="info"
+              endIcon={<Edit/>}
               onClick={() => handleUpdateClick(params.row)}
             >
               Update
@@ -163,7 +167,8 @@ const StudentRegistrationTab = () => {
     <Box m="1.5rem 2.5rem">
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
         <Buttons label="Register Student" onClick={handleOpenModal} />
-        <StudentRegistrationModal openModal={openModal} closeModal={handleCloseModal} newStudentData={selectedStudent} refetch={refetch}/>
+        {/* <StudentRegistrationModal openModal={openModal} closeModal={handleCloseModal} newStudentData={selectedStudent} refetch={refetch}/> */}
+        <RegistrationModal openModal={openModal} closeModal={handleCloseModal}/>
       </Box>
       <Box
         mt="40px"
