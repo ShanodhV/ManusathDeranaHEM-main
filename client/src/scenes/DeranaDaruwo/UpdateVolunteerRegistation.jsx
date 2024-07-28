@@ -1,59 +1,71 @@
 import { Dialog, Box, DialogContent, DialogTitle, DialogActions, IconButton, CircularProgress, Button, Snackbar, Alert, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useState, useEffect  } from 'react';
 import { useTheme } from "@mui/material/styles";
-import { useAddDonorVolunteerMutation, useGetDeranaDaruwoProgramsQuery, useGetStudentsQuery  } from 'state/api';
+import { useUpdateDonorVolunteerMutation,useGetDeranaDaruwoProgramsQuery, useGetStudentsQuery} from 'state/api';
 import CustomTextField from 'components/CustomTextField';
 import CloseIcon from "@mui/icons-material/Close";
-
-const DonorRegistrationModal = ({ openModal, closeModal }) => {
-
+const UpdateVolunteerRegistation = ({ openModal, closeModal, newDonorData }) => {
     const theme = useTheme();
-    const[donorID,setDonorID]=useState("");
     const[donorName,setDonorName]=useState("");
     const[donorAddress,setDonorAddress]=useState("");
     const[contactNumber,setContactNumber]=useState("");
     const[studentID,setStudentID]=useState("");
     const[programID,setProgramID]=useState("");
-    const [addDonor] =   useAddDonorVolunteerMutation();
+    const [updateDonors] =  useUpdateDonorVolunteerMutation();
     const { data: students, refetch, error } = useGetStudentsQuery();
     const { data: programs, isLoading, isError } = useGetDeranaDaruwoProgramsQuery();
     const [loading, setLoading] = useState(false);
     const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
 
-  const handleAddDonor = () => {
-    const donorData = {
-      donorID,
-      donorName,
-      donorAddress,
-      contactNumber,
-      studentID,
-      programID,
-    };
+    useEffect(() => {
+        if (newDonorData) {
+            setDonorName(newDonorData.donorName);
+            setDonorAddress(newDonorData.donorAddress);
+            setContactNumber(newDonorData.contactNumber);
+            setStudentID(newDonorData.studentID);
+            setProgramID(newDonorData.programID);
+        }
+      }, [newDonorData]);
+      const donorID = newDonorData ? newDonorData._id : "";
 
-    addDonor(donorData)
-      .then((response) => {
-        console.log("School added successfully:", response);
+      const handleUpdateDonor = () => {
+        updateDonors({
+            donorID,
+            donorName,
+            donorAddress,
+            contactNumber,
+            studentID,
+            programID,
+        })
+          .then((response) => {
+            console.log("Student updated successfully:", response);
+            // Clear form fields
+           
+            setDonorName("");
+            setDonorAddress("");
+            setContactNumber("");
+            setStudentID("");
+            setProgramID("");
+            closeModal();
+            refetch();
+            
+          })
+          .catch((error) => {
+            console.error("Error updating student:", error);
+          });
+      };
+      const handleCancel = () => {
         // Clear form fields
-        setDonorID("");
+        // setStudentID("");
         setDonorName("");
         setDonorAddress("");
         setContactNumber("");
         setStudentID("");
         setProgramID("");
+        // Close the dialog
         closeModal();
-       
-      })
-      .catch((error) => {
-        console.error("Error adding school:", error);
-      });
-  };
-  const labelStyle = {
-    fontWeight: "bold",
-    color: "black",
-    fontSize: "16px",
-    marginTop: "16px",
-  };
-
+        
+      };
   return (
     <>
     <Dialog
@@ -82,46 +94,37 @@ const DonorRegistrationModal = ({ openModal, closeModal }) => {
           </IconButton>
         </DialogTitle>
         <DialogContent>
-        <Box sx={{ mt: 6 }}>
-                        <CustomTextField
-                            label="Donor ID"
-                            variant="outlined"
-                            fullWidth
-                            value={donorID}
-                            onChange={(e) => setDonorID(e.target.value)}
-                        />
-                    </Box>
-                    <Box sx={{ mt: 6 }}>
-                        <CustomTextField
-                            label="Donor Name"
-                            variant="outlined"
-                            fullWidth
-                            value={donorName}
-                            onChange={(e) => setDonorName(e.target.value)}
-                        />
-                    </Box>
-                    <Box sx={{ mt: 6 }}>
-                        <CustomTextField
-                            label="Donor Address"
-                            variant="outlined"
-                            fullWidth
-                            value={donorAddress}
-                            onChange={(e) => setDonorAddress(e.target.value)}
-                        />
-                    </Box>
-                    <Box sx={{ mt: 6 }}>
-                        <CustomTextField
-                            label="Contact Number"
-                            variant="outlined"
-                            fullWidth
-                            value={contactNumber}
-                            onChange={(e) => setContactNumber(e.target.value)}
-                        />
-                    </Box>
-
-                    <h3>Assign Student ID</h3>
-                    <Box sx={{ mt: 6 }}>
-                    <FormControl fullWidth variant="outlined">
+        
+            <Box sx={{ mt: 6 }}>
+                <CustomTextField
+                    label="Donor Name"
+                    variant="outlined"
+                    fullWidth
+                    value={donorName}
+                    onChange={(e) => setDonorName(e.target.value)}
+                />
+            </Box>
+            <Box sx={{ mt: 6 }}>
+                <CustomTextField
+                    label="Donor Address"
+                    variant="outlined"
+                    fullWidth
+                    value={donorAddress}
+                    onChange={(e) => setDonorAddress(e.target.value)}
+                />
+            </Box>
+            <Box sx={{ mt: 6 }}>
+                <CustomTextField
+                    label="Contact Number"
+                    variant="outlined"
+                    fullWidth
+                    value={contactNumber}
+                    onChange={(e) => setContactNumber(e.target.value)}
+                />
+            </Box>
+            <h3>Assign Student ID</h3>
+            <Box sx={{ mt: 6 }}>
+            <FormControl fullWidth variant="outlined">
               <InputLabel>Select Student ID</InputLabel>
               <Select
                 value={studentID}
@@ -163,7 +166,7 @@ const DonorRegistrationModal = ({ openModal, closeModal }) => {
         </DialogContent>
         <DialogActions sx={{ bgcolor: "#f0f0f0" }}>
           <Button
-            onClick={handleAddDonor}
+            onClick={handleUpdateDonor}
             color="secondary"
             variant="contained"
             disabled={loading}
@@ -171,7 +174,7 @@ const DonorRegistrationModal = ({ openModal, closeModal }) => {
           >
             {"Register Donor"}
           </Button>
-          <Button onClick={closeModal} variant="outlined" color="secondary">
+          <Button onClick={handleCancel} variant="outlined" color="secondary">
             Cancel
           </Button>
         </DialogActions>
@@ -191,4 +194,4 @@ const DonorRegistrationModal = ({ openModal, closeModal }) => {
   )
 }
 
-export default DonorRegistrationModal
+export default UpdateVolunteerRegistation

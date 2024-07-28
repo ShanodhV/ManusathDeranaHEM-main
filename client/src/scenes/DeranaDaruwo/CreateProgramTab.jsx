@@ -1,16 +1,17 @@
-import { Box, Button } from '@mui/material';
+import { Box, Button, Snackbar, Alert } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 import Buttons from "components/Buttons";
-// import CreateProgramModal from './CreateProgramModal';
-
 import DataGridCustomToolbar from 'components/DataGridCustomToolbar';
 import { DataGrid } from '@mui/x-data-grid';
 import { useGetDeranaDaruwoProgramsQuery, useDeleteDeranaDaruwoProgramMutation } from 'state/api';
-import { UpdateCreateProgramModal } from './UpdateCreateProgramModal';
-import { useUpdateDeranDaruwoProgramMutation } from 'state/api';
+import UpdateProgramModel from './UpdateProgramModel';
 import ProgramModal from './ProgramModal';
 import { Delete, Edit } from "@mui/icons-material";
+import ConfirmationDialog from "components/ConfirmationDialog";
+
+
+
 
 export default function CreateProgramTab() {
   const theme = useTheme();
@@ -24,6 +25,9 @@ export default function CreateProgramTab() {
   const [sort, setSort] = useState({});
   const [search, setSearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+
 
   useEffect(() => {
     if (error) {
@@ -39,16 +43,9 @@ export default function CreateProgramTab() {
     setOpenCreateModal(false);
   };
 
-  const handleDelete = (eventID) => {
-    deleteTreeEvent(eventID)
-      .unwrap()
-      .then((response) => {
-        console.log("Event deleted successfully");
-        refetch();
-      })
-      .catch((error) => {
-        console.error("Error deleting event:", error);
-      });
+  const handleDelete = (programID) => {
+    setOpenConfirm(true);
+    setSelectedProgram(programID);
   };
 
   const handleUpdateClick = (program) => {
@@ -61,6 +58,22 @@ export default function CreateProgramTab() {
     setSelectedProgram(null);
     refetch();
   };
+
+  const confirmDelete = () => {
+    deleteTreeEvent(selectedProgram)
+      .unwrap()
+      .then((response) => {
+        console.log("Health Camp deleted successfully");
+        setSnackbar({ open: true, message: "Health Camp deleted successfully", severity: "success" });
+        refetch();
+      })
+      .catch((error) => {
+        console.error("Error deleting health camp:", error);
+        setSnackbar({ open: true, message: "Error deleting health camp", severity: "error" });
+      });
+    setOpenConfirm(false);
+  };
+
 
   const eventColumns = [
     {
@@ -161,7 +174,7 @@ export default function CreateProgramTab() {
         />
       </Box>
       {openUpdateModal && (
-        <UpdateCreateProgramModal
+        <UpdateProgramModel
           openModal={openUpdateModal}
           closeModal={handleCloseUpdateModal}
           newProgamDetails={selectedProgram}
@@ -217,6 +230,23 @@ export default function CreateProgramTab() {
           }}
         />
       </Box>
+      <ConfirmationDialog
+        open={openConfirm}
+        onClose={() => setOpenConfirm(false)}
+        onConfirm={confirmDelete}
+        title="Confirm Delete"
+        description="Are you sure you want to delete this health camp? This action cannot be undone."
+      />
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

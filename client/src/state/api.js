@@ -333,6 +333,10 @@ getLastCamp: build.query({
       }),
       invalidatesTags: ["DeranaDaruwoPrograms"],
     }),
+    getLastProgram: build.query({
+      query: () => `derana-daruwo/last`,
+      providesTags: ["DeranaDaruwoPrograms"],
+    }),
     
     // Students
     deleteStudent: build.mutation({
@@ -441,6 +445,29 @@ getLastCamp: build.query({
     getDonorVolunteer: build.query({
       query: (id) => `donor-volunteer/get/${id}`,
       providesTags: ["DonorVolunteers"],
+    }),
+
+    UpdateDonorVolunteer: build.mutation({
+      query: ({
+        donorID,
+          donorName,
+          donorAddress,
+          contactNumber,
+          studentID,
+          programID,
+      }) => ({
+        url: `donor-volunteer/update/${donorID}`,
+        method: "PUT",
+        body: {
+   
+          donorName,
+          donorAddress,
+          contactNumber,
+          studentID,
+          programID,
+        },
+      }),
+      invalidatesTags: ["DonorVolunteers"],
     }),
     // Volunteers
     deleteVolunteer: build.mutation({
@@ -574,6 +601,7 @@ export const {
   useGetDeranaDaruwoProgramsQuery,
   useGetDeranaDaruwoProgramQuery,
   useUpdateDeranDaruwoProgramMutation,
+  useGetLastProgramQuery,
   
 
   useDeleteStudentMutation,
@@ -587,6 +615,7 @@ export const {
   useAddDonorVolunteerMutation,
   useGetDonorVolunteersQuery,
   useGetDonorVolunteerQuery,
+  useUpdateDonorVolunteerMutation,
 
   useDeleteVolunteerMutation,
   useAddVolunteerMutation,

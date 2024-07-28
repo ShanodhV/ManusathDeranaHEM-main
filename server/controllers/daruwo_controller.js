@@ -96,3 +96,17 @@ export const updateDeranaDaruwoProgram = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+// Get Last ID
+export const getLastProgram = async (req, res) => {
+  try {
+    const lastProgram = await Camps.findOne().sort({ createdAt: -1 });
+    if (!lastProgram) {
+      return res.status(404).json({ message: "No health camps found" });
+    }
+    res.status(200).json(lastProgram);
+  } catch (error) {
+    console.error("Error fetching last health camp:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

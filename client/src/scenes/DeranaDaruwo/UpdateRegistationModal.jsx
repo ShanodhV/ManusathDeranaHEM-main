@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
-import { Dialog, Box, DialogContent, DialogTitle, DialogActions, IconButton, CircularProgress, Button, Snackbar, Alert, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
-import { useTheme } from "@mui/material/styles";
-import CustomTextField from 'components/CustomTextField';
-import { useAddStudentMutation, useGetDeranaDaruwoProgramsQuery } from 'state/api'; // Adjust the import according to your file structure
-import CloseIcon from "@mui/icons-material/Close";
+import { Dialog, Box, DialogContent, DialogTitle, DialogActions, IconButton, CircularProgress, Button, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 
-const RegistrationModal = ({ openModal, closeModal }) => {
-  const theme = useTheme();
-  const [studentID, setStudentID] = useState("");
+  import React, { useState, useEffect } from 'react';
+  import CustomTextField from 'components/CustomTextField';
+  import { useTheme } from "@mui/material/styles";
+  import { useUpdateStudentsMutation, useGetDeranaDaruwoProgramsQuery  } from "state/api";
+  import { Alert, Snackbar } from "@mui/material";
+  import CloseIcon from "@mui/icons-material/Close";
+
+const UpdateRegistationModal = ({ openModal, closeModal, newStudentData,refetch }) => {
+    const theme = useTheme();
   const [studentName, setStudentName] = useState("");
   const [studentAddress, setStudentAddress] = useState("");
   const [programID, setProgramID] = useState("");
@@ -15,13 +16,25 @@ const RegistrationModal = ({ openModal, closeModal }) => {
   const [parentContactDetails, setParentContactDetails] = useState("");
   const [bankAccountDetails, setBankAccountDetails] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
-  const [addStudent] = useAddStudentMutation();
+  const [updateStudents] = useUpdateStudentsMutation();
   const { data: programs, isLoading, isError } = useGetDeranaDaruwoProgramsQuery();
   const [loading, setLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
 
-  const handleAddStudent = () => {
-    const studentData = {
+  useEffect(() => {
+    if (newStudentData) {
+      setStudentName(newStudentData.studentName);
+      setStudentAddress(newStudentData.studentAddress);
+      setProgramID(newStudentData.programID);
+      setParentName(newStudentData.parentName);
+      setParentContactDetails(newStudentData.parentContactDetails);
+      setBankAccountDetails(newStudentData.bankAccountDetails);
+      setAccountNumber(newStudentData.accountNumber);
+    }
+  }, [newStudentData]);
+  const studentID = newStudentData ? newStudentData._id : "";
+  const handleUpdateStudent = () => {
+    updateStudents({
       studentID,
       studentName,
       studentAddress,
@@ -30,12 +43,11 @@ const RegistrationModal = ({ openModal, closeModal }) => {
       parentContactDetails,
       bankAccountDetails,
       accountNumber,
-    };
-
-    addStudent(studentData)
+    })
       .then((response) => {
-        console.log("Student added successfully: ", response);
-        setStudentID("");
+        console.log("Student updated successfully:", response);
+        // Clear form fields
+        // setStudentID("");
         setStudentName("");
         setStudentAddress("");
         setProgramID("");
@@ -43,13 +55,32 @@ const RegistrationModal = ({ openModal, closeModal }) => {
         setParentContactDetails("");
         setBankAccountDetails("");
         setAccountNumber("");
+        // Close the dialog
         closeModal();
+        // Refetch updated data
+        refetch();
+        
       })
       .catch((error) => {
-        console.error("Error adding student:", error);
+        console.error("Error updating student:", error);
       });
   };
+  
 
+  const handleCancel = () => {
+    // Clear form fields
+    // setStudentID("");
+    setStudentName("");
+    setStudentAddress("");
+    setProgramID("");
+    setParentName("");
+    setParentContactDetails("");
+    setBankAccountDetails("");
+    setAccountNumber("");
+    // Close the dialog
+    closeModal();
+    
+  };
   return (
     <>
       <Dialog
@@ -78,15 +109,7 @@ const RegistrationModal = ({ openModal, closeModal }) => {
           </IconButton>
         </DialogTitle>
         <DialogContent>
-          <Box sx={{ mt: 6 }}>
-            <CustomTextField
-              label="Student ID"
-              variant="outlined"
-              fullWidth
-              value={studentID}
-              onChange={(e) => setStudentID(e.target.value)}
-            />
-          </Box>
+          
           <Box sx={{ mt: 6 }}>
             <CustomTextField
               label="Student Name"
@@ -166,7 +189,7 @@ const RegistrationModal = ({ openModal, closeModal }) => {
         </DialogContent>
         <DialogActions sx={{ bgcolor: "#f0f0f0" }}>
           <Button
-            onClick={handleAddStudent}
+            onClick={handleUpdateStudent}
             color="secondary"
             variant="contained"
             disabled={loading}
@@ -174,7 +197,7 @@ const RegistrationModal = ({ openModal, closeModal }) => {
           >
             {"Register Student"}
           </Button>
-          <Button onClick={closeModal} variant="outlined" color="secondary">
+          <Button onClick={handleCancel} variant="outlined" color="secondary">
             Cancel
           </Button>
         </DialogActions>
@@ -191,7 +214,7 @@ const RegistrationModal = ({ openModal, closeModal }) => {
         </Alert>
       </Snackbar>
     </>
-  );
+  )
 }
 
-export default RegistrationModal;
+export default UpdateRegistationModal
