@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -16,11 +16,10 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { useTheme } from "@mui/material/styles";
 
-import Buttons from "components/Buttons";
 import CustomTextField from "components/CustomTextField"; // Import your custom TextField component
-import { useAddDonorVolunteerMutation } from "state/api"; // Adjust the import according to your file structure
+import { useUpdateDonorMutation } from "state/api"; // Adjust the import according to your file structure
 
-const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
+const UpdateDonorRegistrationModal = ({ openModal, handleCloseModal, donorData }) => {
   const [donorNIC, setDonorNIC] = useState("");
   const [donorName, setDonorName] = useState("");
   const [donorAddress, setDonorAddress] = useState("");
@@ -33,11 +32,24 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
   const [loading, setLoading] = useState(false);
 
-  const [addDonor] = useAddDonorVolunteerMutation();
+  const [updateDonor] = useUpdateDonorMutation();
+
+  useEffect(() => {
+    if (donorData) {
+      setDonorNIC(donorData.donorNIC);
+      setDonorName(donorData.donorName);
+      setDonorAddress(donorData.donorAddress);
+      setMobileNumber(donorData.mobileNumber);
+      setMonth(donorData.dateOfBirth?.month || "");
+      setDay(donorData.dateOfBirth?.day || "");
+      setYear(donorData.dateOfBirth?.year || "");
+      setOccupation(donorData.occupation);
+    }
+  }, [donorData]);
 
   const validatePhoneNumber = (number) => /^\d+$/.test(number);
 
-  const handleAddDonor = () => {
+  const handleUpdateDonor = () => {
     const newErrors = {};
 
     if (!donorNIC) newErrors.donorNIC = "NIC is required";
@@ -65,26 +77,17 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
       };
 
       setLoading(true);
-      addDonor(donorData)
+      updateDonor(donorData)
         .then((response) => {
-          console.log("Donor added successfully:", response);
-          // Clear form fields
-          setDonorNIC("");
-          setDonorName("");
-          setDonorAddress("");
-          setMonth("");
-          setDay("");
-          setYear("");
-          setMobileNumber("");
-          setOccupation("");
+          console.log("Donor updated successfully:", response);
           setErrors({});
-          setSnackbar({ open: true, message: "Donor added successfully!", severity: "success" });
+          setSnackbar({ open: true, message: "Donor updated successfully!", severity: "success" });
           setLoading(false);
           handleCloseModal();
         })
         .catch((error) => {
-          console.error("Error adding donor:", error);
-          setSnackbar({ open: true, message: "Failed to add donor. Please try again.", severity: "error" });
+          console.error("Error updating donor:", error);
+          setSnackbar({ open: true, message: "Failed to update donor. Please try again.", severity: "error" });
           setLoading(false);
         });
     }
@@ -112,7 +115,7 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
       >
         <DialogTitle sx={{ bgcolor: "#f0f0f0" }} id="modal-modal-title">
           <div style={{ color: "#d63333", fontWeight: '700', fontSize: '16px' }}>
-            Register Donor
+            Update Donor
             <hr style={{ borderColor: "#d63333" }} />
           </div>
           <IconButton
@@ -249,32 +252,33 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
         </DialogContent>
         <DialogActions sx={{ bgcolor: "#f0f0f0" }}>
           <Button
-            onClick={handleAddDonor}
+            onClick={handleUpdateDonor}
             color="secondary"
             variant="contained"
             disabled={loading}
             endIcon={loading && <CircularProgress size={20} />}
-          >
-            Register Donor
-          </Button>
-          <Button onClick={handleCloseModal} variant="outlined" color="secondary">
-            Cancel
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={6000}
-        onClose={() => setSnackbar({ ...snackbar, open: false })}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      >
-        <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} sx={{ width: '100%' }}>
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
-    </>
-  );
-};
-
-export default DonorRegistrationModal;
+            >
+              Update Donor
+            </Button>
+            <Button onClick={handleCloseModal} variant="outlined" color="secondary">
+              Cancel
+            </Button>
+          </DialogActions>
+        </Dialog>
+  
+        <Snackbar
+          open={snackbar.open}
+          autoHideDuration={6000}
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        >
+          <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} sx={{ width: '100%' }}>
+            {snackbar.message}
+          </Alert>
+        </Snackbar>
+      </>
+    );
+  };
+  
+  export default UpdateDonorRegistrationModal;
+  

@@ -40,9 +40,9 @@ export const getSchool = async (req, res) => {
   try {
     const { id } = req.params;
     const school = await School.findById(id);
-    if (!school) {
-      return res.status(404).json({ message: "School not found" });
-    }
+    // if (!school) {
+    //   return res.status(404).json({ message: "School not found" });
+    // }
     res.status(200).json(school);
   } catch (error) {
     res.status(404).json({ message: error.message });
@@ -60,7 +60,7 @@ export const deleteSchool = async (req, res) => {
     }
     res.json({ message: "School deleted successfully" });
   } catch (error) {
-    console.log("Error deleting school:" +error);
+    console.log("Error deleting school:" ,error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
@@ -74,13 +74,23 @@ export const updateSchool = async (req, res) => {
     // Find the school by ID in the database and update its information
     const updatedSchool = await School.findByIdAndUpdate(schoolId, updatedSchoolData, { new: true });
 
-    if (!updatedSchool) {
-      return res.status(404).json({ message: "School not found" });
-    }
-
     res.json(updatedSchool); // Send back the updated school object
   } catch (error) {
     console.error("Error updating school:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// Get Last Health Camp
+export const getLastSchool = async (req, res) => {
+  try {
+    const lastSchool = await Camps.findOne().sort({ createdAt: -1 });
+    if (!lastSchool) {
+      return res.status(404).json({ message: "No School found" });
+    }
+    res.status(200).json(lastSchool);
+  } catch (error) {
+    console.error("Error fetching last school:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
