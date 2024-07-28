@@ -1,11 +1,13 @@
 import { Box,Button } from '@mui/material';
 import React, { useState,useEffect } from 'react'
 import { useTheme } from '@mui/material/styles';
-import VolunteerDonorRegistrationModal from './VolunteerDonorRegistrationModal'
+// import VolunteerDonorRegistrationModal from './VolunteerDonorRegistrationModal'
 import Buttons from 'components/Buttons';
 import DataGridCustomToolbar from 'components/DataGridCustomToolbar';
 import { DataGrid } from '@mui/x-data-grid';
 import { useGetDonorVolunteersQuery,useDeleteDonorVolunteerMutation } from 'state/api';
+import DonorRegistrationModal from './DonorRegistrationModal';
+import { Delete, Edit } from "@mui/icons-material";
 
 const VolunteerDonorRegistrationTab = () => {
 
@@ -92,7 +94,7 @@ const eventColumns = [
     {
       field: "actions",
       headerName: "Actions",
-      flex: 1,
+      flex: 1.5,
       sortable: false,
       filterable: false,
       renderCell: (params) => (
@@ -111,6 +113,7 @@ const eventColumns = [
             <Button
               variant="contained"
               color="error"
+              endIcon={<Delete/>}
               onClick={() => handleDelete(params.row._id)}
             >
               Delete
@@ -129,6 +132,7 @@ const eventColumns = [
             <Button
               variant="contained"
               color="info"
+              endIcon={<Edit/>}
               onClick={() => handleUpdateClick(params.row)}
             >
               Update
@@ -145,7 +149,8 @@ const eventColumns = [
             <Buttons label={"Add Donor"} onClick={handleOpenModal} />
 
             {/* import StudentRegistrationModal component */}
-            <VolunteerDonorRegistrationModal openModal={openModal} closeModal={handleCloseModal}/>
+            {/* <VolunteerDonorRegistrationModal openModal={openModal} closeModal={handleCloseModal}/> */}
+            <DonorRegistrationModal openModal={openModal} closeModal={handleCloseModal}/>
         </Box>
         <Box
         mt="40px"

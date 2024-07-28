@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { Box, Tabs, Tab } from '@mui/material';
 import CreateProgramTab from './CreateProgramTab';
-import CreateProgramModal from './CreateProgramModal';
+// import CreateProgramModal from './CreateProgramModal';
 import StudentRegistrationTab from './StudentRegistrationTab';
 import VolunteerDonorRegistrationTab from './VolunteerDonorRegistrationTab';
-import VolunteerDonorRegistrationModal from './VolunteerDonorRegistrationModal';
+// import VolunteerDonorRegistrationModal from './VolunteerDonorRegistrationModal';
 import NextAreaPredictorTab from './NextAreaPredictorTab';
+import ProgramModal from './ProgramModal';
+import RegistrationModal from './RegistrationModal';
+import DonorRegistrationModal from './DonorRegistrationModal';
+
 
 const DeranaDaruwo = () => {
   const [activeTab, setActiveTab] = useState(0);
@@ -53,8 +57,8 @@ const DeranaDaruwo = () => {
       {activeTab === 2 && <VolunteerDonorRegistrationTab handleOpenModal={handleOpenVolunteerModal} />}
       {activeTab === 3 && <NextAreaPredictorTab />}
 
-      <CreateProgramModal open={openProgramModal} handleClose={handleCloseProgramModal} />
-      <VolunteerDonorRegistrationModal open={openVolunteerModal} handleClose={handleCloseVolunteerModal} />
+      <ProgramModal open={openProgramModal} handleClose={handleCloseProgramModal} />
+      <DonorRegistrationModal open={openVolunteerModal} handleClose={handleCloseVolunteerModal} />
     </Box>
   );
 };
