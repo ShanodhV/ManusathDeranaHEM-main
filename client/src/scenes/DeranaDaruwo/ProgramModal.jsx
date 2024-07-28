@@ -1,11 +1,11 @@
 import { Dialog, Box, DialogContent, DialogTitle, DialogActions, IconButton,
-    CircularProgress,Button, MenuItem, Grid } from '@mui/material';
+    CircularProgress, Button, MenuItem, Grid } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 import CustomTextField from 'components/CustomTextField';
 import { useTheme } from "@mui/material/styles";
 import { useAddDeranaDaruwoProgramMutation } from "state/api";
 import { Alert, Snackbar } from "@mui/material";
-
+import CloseIcon from "@mui/icons-material/Close";
 
 const sriLankanData = {
     "Western": {
@@ -65,6 +65,11 @@ const ProgramModal = ({ openModal, closeModal }) => {
   const [mobileNumber, setMobileNumber] = useState("");
   const [programIdError, setProgramIdError] = useState("");
   const [programNameError, setProgramNameError] = useState("");
+  const [provinceError, setProvinceError] = useState("");
+  const [districtError, setDistrictError] = useState("");
+  const [townError, setTownError] = useState("");
+  const [nameError, setNameError] = useState("");
+  const [mobileNumberError, setMobileNumberError] = useState("");
   const [loading, setLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
 
@@ -94,21 +99,50 @@ const ProgramModal = ({ openModal, closeModal }) => {
   const [addProgram] = useAddDeranaDaruwoProgramMutation();
 
   const validateProgramId = (id) => {
-    const alphanumericRegex = /^[a-zA-Z0-9]+$/;
     if (!id) {
       return "Program ID is required";
-    } else if (!alphanumericRegex.test(id)) {
-      return "Program ID must be alphanumeric";
     }
     return "";
   };
 
   const validateProgramName = (name) => {
-    const alphabeticRegex = /^[a-zA-Z]+$/;
     if (!name) {
       return "Program Name is required";
-    } else if (!alphabeticRegex.test(name)) {
-      return "Program Name must be alphabetic";
+    }
+    return "";
+  };
+
+  const validateProvince = (province) => {
+    if (!province) {
+      return "Province is required";
+    }
+    return "";
+  };
+
+  const validateDistrict = (district) => {
+    if (!district) {
+      return "District is required";
+    }
+    return "";
+  };
+
+  const validateTown = (town) => {
+    if (!town) {
+      return "Town is required";
+    }
+    return "";
+  };
+
+  const validateName = (name) => {
+    if (!name) {
+      return "Name is required";
+    }
+    return "";
+  };
+
+  const validateMobileNumber = (mobileNumber) => {
+    if (!mobileNumber) {
+      return "Mobile Number is required";
     }
     return "";
   };
@@ -116,15 +150,30 @@ const ProgramModal = ({ openModal, closeModal }) => {
   const handleAddProgram = () => {
     const programIdValidationError = validateProgramId(programId);
     const programNameValidationError = validateProgramName(programName);
+    const provinceValidationError = validateProvince(province);
+    const districtValidationError = validateDistrict(district);
+    const townValidationError = validateTown(town);
+    const nameValidationError = validateName(name);
+    const mobileNumberValidationError = validateMobileNumber(mobileNumber);
 
-    if (programIdValidationError || programNameValidationError) {
+    if (programIdValidationError || programNameValidationError || provinceValidationError || districtValidationError || townValidationError || nameValidationError || mobileNumberValidationError) {
       setProgramIdError(programIdValidationError);
       setProgramNameError(programNameValidationError);
+      setProvinceError(provinceValidationError);
+      setDistrictError(districtValidationError);
+      setTownError(townValidationError);
+      setNameError(nameValidationError);
+      setMobileNumberError(mobileNumberValidationError);
       return;
     }
 
     setProgramIdError(""); // Clear any previous error messages
     setProgramNameError(""); // Clear any previous error messages
+    setProvinceError("");
+    setDistrictError("");
+    setTownError("");
+    setNameError("");
+    setMobileNumberError("");
 
     const programData = {
       programId,
@@ -147,9 +196,11 @@ const ProgramModal = ({ openModal, closeModal }) => {
       setTown("");
       setName("");
       setMobileNumber("");
+      setSnackbar({ open: true, message: "Program added successfully", severity: "success" });
       closeModal();
     }).catch((error) => {
       console.error("Error adding program:", error);
+      setSnackbar({ open: true, message: "Error adding program", severity: "error" });
     });
   };
 
@@ -176,6 +227,7 @@ const ProgramModal = ({ openModal, closeModal }) => {
             color: theme.palette.grey[500],
           }}
         >
+           <CloseIcon />
         </IconButton>
       </DialogTitle>
       <DialogContent>
@@ -219,7 +271,12 @@ const ProgramModal = ({ openModal, closeModal }) => {
                 variant="outlined"
                 fullWidth
                 value={province}
-                onChange={(e) => setProvince(e.target.value)}
+                onChange={(e) => {
+                  setProvince(e.target.value);
+                  setProvinceError(validateProvince(e.target.value));
+                }}
+                error={!!provinceError}
+                helperText={provinceError}
               >
                 {Object.keys(sriLankanData).map((prov) => (
                   <MenuItem key={prov} value={prov}>
@@ -235,7 +292,12 @@ const ProgramModal = ({ openModal, closeModal }) => {
                 variant="outlined"
                 fullWidth
                 value={district}
-                onChange={handleDistrictChange}
+                onChange={(e) => {
+                  handleDistrictChange(e);
+                  setDistrictError(validateDistrict(e.target.value));
+                }}
+                error={!!districtError}
+                helperText={districtError}
                 disabled={!province}
               >
                 {province ? Object.keys(sriLankanData[province]).map((dist) => (
@@ -252,7 +314,12 @@ const ProgramModal = ({ openModal, closeModal }) => {
                 variant="outlined"
                 fullWidth
                 value={town}
-                onChange={(e) => setTown(e.target.value)}
+                onChange={(e) => {
+                  setTown(e.target.value);
+                  setTownError(validateTown(e.target.value));
+                }}
+                error={!!townError}
+                helperText={townError}
                 disabled={!district}
               >
                 {cities.map((c) => (
@@ -275,7 +342,12 @@ const ProgramModal = ({ openModal, closeModal }) => {
             variant="outlined"
             fullWidth
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => {
+              setName(e.target.value);
+              setNameError(validateName(e.target.value));
+            }}
+            error={!!nameError}
+            helperText={nameError}
           />
         </Box>
         <Box sx={{ mt: 2 }}>
@@ -284,7 +356,12 @@ const ProgramModal = ({ openModal, closeModal }) => {
             variant="outlined"
             fullWidth
             value={mobileNumber}
-            onChange={(e) => setMobileNumber(e.target.value)}
+            onChange={(e) => {
+              setMobileNumber(e.target.value);
+              setMobileNumberError(validateMobileNumber(e.target.value));
+            }}
+            error={!!mobileNumberError}
+            helperText={mobileNumberError}
           />
         </Box>
       </DialogContent>
@@ -296,7 +373,7 @@ const ProgramModal = ({ openModal, closeModal }) => {
             disabled={loading}
             endIcon={loading && <CircularProgress size={20} />}
           >
-            {"Create Health Camp"}
+            {"Create Program"}
           </Button>
           <Button onClick={closeModal}  variant="outlined" color="secondary">
             Cancel

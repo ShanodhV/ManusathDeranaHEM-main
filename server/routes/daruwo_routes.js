@@ -5,6 +5,7 @@ import {
   addDeranaDaruwo,
   deleteDeranaDaruwoProgram,
   updateDeranaDaruwoProgram,
+  getLastProgram
 } from "../controllers/daruwo_controller.js";
 
 const router = express.Router();
@@ -14,5 +15,6 @@ router.get("/get/:id", getDeranaDaruwoProgram);
 router.post("/add", addDeranaDaruwo);
 router.delete("/delete/:id", deleteDeranaDaruwoProgram);
 router.put("/update/:id", updateDeranaDaruwoProgram);
+router.get("/last", getLastProgram);
 
 export default router;
