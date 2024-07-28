@@ -95,7 +95,7 @@ const LabReportTab = () => {
       <Box sx={{padding:'10px'}}/>
       {/* Camp cards */}
       <Box sx={{ mb: 3, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <Typography variant="h4">Health Camps</Typography>
+        <Typography variant="h4" fontWeight="bold">Manage Lab Reports</Typography>
         <Tooltip title="Search by Camp ID, Town, or District" arrow>
           <TextField
             label="Search Camps"
@@ -127,10 +127,10 @@ const LabReportTab = () => {
                 {new Date(camp.Date).toLocaleDateString()}
               </Typography>
             </CardContent>
-            <Button size="small" color="secondary" onClick={() => handleOpenModal(camp)}>
+            <Button size="small" color="secondary" variant ="contained" onClick={() => handleOpenModal(camp)} sx={{marginRight:'10px', marginBottom:'10px'}}>
               Add Lab Report
             </Button>
-            <Button size="small" color="primary" onClick={() => handleOpenResultsModal(camp)}>
+            <Button size="small" color="secondary" variant ="outlined" onClick={() => handleOpenResultsModal(camp)}>
               View Patients & Results
             </Button>
           </Card>
