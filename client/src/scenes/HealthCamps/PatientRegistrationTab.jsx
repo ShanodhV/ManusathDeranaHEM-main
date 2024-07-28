@@ -7,8 +7,12 @@ import {
   Button,
   Typography,
   Snackbar,
-  Alert
+  Alert,
+  TextField,
+  InputAdornment,
+  Tooltip,
 } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 import { useTheme } from "@mui/material/styles";
 import { useGetCampsQuery } from "state/api";
 import PatientListModal from "./PatientListModal";
@@ -19,6 +23,7 @@ const PatientRegistrationTab = () => {
   const [selectedCamp, setSelectedCamp] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     if (campError) {
@@ -36,16 +41,50 @@ const PatientRegistrationTab = () => {
     setOpenModal(false);
   };
 
+  const handleSearchChange = (event) => {
+    setSearchTerm(event.target.value.toLowerCase());
+  };
+
   const formatDate = (dateStr) => {
     const options = { day: "2-digit", month: "long", year: "numeric" };
     return new Intl.DateTimeFormat("en-GB", options).format(new Date(dateStr));
   };
 
+  // Filter and sort camps
+  const filteredCamps = camps
+    ?.filter(
+      (camp) =>
+        camp.CampId.toLowerCase().includes(searchTerm) ||
+        camp.Town.toLowerCase().includes(searchTerm) ||
+        camp.District.toLowerCase().includes(searchTerm)
+    )
+    .sort((a, b) => new Date(b.Date) - new Date(a.Date)); // Sort by latest date
+
   return (
     <Box m="1.5rem 2.5rem">
+      <Box sx={{ mb: 3, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <Typography variant="h4">Select Health Camps to Add Patient details</Typography>
+        <Tooltip title="Search by Camp ID, Town, or District" arrow>
+          <TextField
+            label="Search Camps"
+            variant="outlined"
+            size="small"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            sx={{ width: "300px" }}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Tooltip>
+      </Box>
       <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2 }}>
         {isLoadingCamps && <Typography>Loading camps...</Typography>}
-        {camps?.map((camp) => (
+        {filteredCamps?.map((camp) => (
           <Card key={camp._id} sx={{ width: 300 }}>
             <CardContent>
               <Typography variant="h5">{camp.CampId}</Typography>

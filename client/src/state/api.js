@@ -180,42 +180,37 @@ getLastCamp: build.query({
   providesTags: ["Camps"],
 }),
 
-    // Lab Reports
-    deleteLabReport: build.mutation({
-      query: (labReportId) => ({
-        url: `labreport/delete/${labReportId}`,
-        method: "DELETE",
-      }),
-      invalidatesTags: ["LabReports"],
-    }),
-    addLabReport: build.mutation({
-      query: ({
-        patientNIC,
-        kidneySerum,
-        sugarLevel,
-        cholesterolLevel,
-        bloodPressure,
-      }) => ({
-        url: `labreport/add`,
-        method: "POST",
-        body: {
-          patientNIC,
-          kidneySerum,
-          sugarLevel,
-          cholesterolLevel,
-          bloodPressure,
-        },
-      }),
-      providesTags: ["LabReports"],
-    }),
-    getLabReports: build.query({
-      query: () => `labreport/gets`,
-      providesTags: ["LabReports"],
-    }),
-    getLabReport: build.query({
-      query: (id) => `labreport/get/${id}`,
-      providesTags: ["LabReports"],
-    }),
+//lab Report
+addLabReport: build.mutation({
+  query: ({ patient, gender, kidneySerum, sugarLevel, cholesterolLevel, bloodPressure }) => ({
+    url: "labreport/add",
+    method: "POST",
+    body: {
+      patient,
+      gender,
+      kidneySerum,
+      sugarLevel,
+      cholesterolLevel,
+      bloodPressure,
+    },
+  }),
+  invalidatesTags: ["LabReports"],
+}),
+deleteLabReport: build.mutation({
+  query: (labReportId) => ({
+    url: `labreport/delete/${labReportId}`,
+    method: "DELETE",
+  }),
+  invalidatesTags: ["LabReports"],
+}),
+getLabReports: build.query({
+  query: () => "labreport/gets",
+  providesTags: ["LabReports"],
+}),
+getLabReport: build.query({
+  query: (id) => `labreport/get/${id}`,
+  providesTags: ["LabReports"],
+}),
     // Schools
     deleteSchool: build.mutation({
       query: (schoolId) => ({
@@ -563,10 +558,10 @@ export const {
   useUpdateCampMutation,
   useGetLastCampQuery,
 
-  useDeleteLabReportMutation,
-  useGetLabReportQuery,
-  useGetLabReportsQuery,
   useAddLabReportMutation,
+  useDeleteLabReportMutation,
+  useGetLabReportsQuery,
+  useGetLabReportQuery,
 
   useDeleteSchoolMutation,
   useAddSchoolMutation,

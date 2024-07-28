@@ -17,6 +17,7 @@ import { useGetPatientsByCampQuery, useDeletePatientMutation } from "state/api";
 import ConfirmationDialog from "components/ConfirmationDialog";
 import { Delete, Edit } from "@mui/icons-material";
 import PatientRegistrationModal from "./PatientRegistrationModal";
+import PatientUpdateModal from "./PatientUpdateModal";
 
 const PatientListModal = ({ open, onClose, camp }) => {
   const theme = useTheme();
@@ -26,8 +27,8 @@ const PatientListModal = ({ open, onClose, camp }) => {
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
   const [openPatientModal, setOpenPatientModal] = useState(false);
+  const [openPatientUpdateModal, setOpenPatientUpdateModal] = useState(false);
   const [currentPatient, setCurrentPatient] = useState(null);
-  const [isUpdate, setIsUpdate] = useState(false);
 
   useEffect(() => {
     if (error) {
@@ -55,14 +56,24 @@ const PatientListModal = ({ open, onClose, camp }) => {
     setOpenConfirm(false);
   };
 
-  const handleOpenPatientModal = (patient = null) => {
-    setCurrentPatient(patient);
-    setIsUpdate(!!patient);
+  const handleOpenPatientModal = () => {
+    setCurrentPatient(null);
     setOpenPatientModal(true);
   };
 
   const handleClosePatientModal = () => {
     setOpenPatientModal(false);
+    refetch(); // Refresh the list after adding a new patient
+  };
+
+  const handleOpenPatientUpdateModal = (patient) => {
+    setCurrentPatient(patient);
+    setOpenPatientUpdateModal(true);
+  };
+
+  const handleClosePatientUpdateModal = () => {
+    setOpenPatientUpdateModal(false);
+    refetch(); // Refresh the list after updating a patient
   };
 
   const patientColumns = [
@@ -80,20 +91,20 @@ const PatientListModal = ({ open, onClose, camp }) => {
         <Box display="flex" justifyContent="space-around">
           <Button
             variant="contained"
+            color="info"
+            endIcon={<Edit />}
+            onClick={() => handleOpenPatientUpdateModal(params.row)}
+          >
+            Update
+          </Button>
+          <div style={{ padding: "2px" }}></div>
+          <Button
+            variant="contained"
             color="error"
             endIcon={<Delete />}
             onClick={() => handleDelete(params.row._id)}
           >
             Delete
-          </Button>
-          <div style={{ padding: "2px" }}></div>
-          <Button
-            variant="contained"
-            color="info"
-            endIcon={<Edit />}
-            onClick={() => handleOpenPatientModal(params.row)}
-          >
-            Update
           </Button>
         </Box>
       ),
@@ -134,7 +145,7 @@ const PatientListModal = ({ open, onClose, camp }) => {
         </DialogContent>
         <DialogActions sx={{ bgcolor: "#f0f0f0" }}>
           <Button
-            onClick={() => handleOpenPatientModal()}
+            onClick={handleOpenPatientModal}
             color="secondary"
             variant="contained"
           >
@@ -149,9 +160,14 @@ const PatientListModal = ({ open, onClose, camp }) => {
       <PatientRegistrationModal
         openModal={openPatientModal}
         closeModal={handleClosePatientModal}
+        campId={camp?._id}
+      />
+
+      <PatientUpdateModal
+        openModal={openPatientUpdateModal}
+        closeModal={handleClosePatientUpdateModal}
         currentPatient={currentPatient}
-        isUpdate={isUpdate}
-        campId={camp?._id} // Change CampId to _id for consistency
+        campId={camp?._id}
       />
 
       <ConfirmationDialog
