@@ -66,6 +66,22 @@ export const api = createApi({
       providesTags: ["Dashboard"],
     }),
 // Patients
+getPatients: build.query({
+  query: () => "patient/gets",
+  providesTags: ["Patients"],
+}),
+getPatient: build.query({
+  query: (id) => `patient/get/${id}`,
+  providesTags: ["Patients"],
+}),
+addPatient: build.mutation({
+  query: ({ patientId, name, NIC, phone, address, emergencyPhone, healthCamp }) => ({
+    url: "patient/add",
+    method: "POST",
+    body: { patientId, name, NIC, phone, address, emergencyPhone, healthCamp },
+  }),
+  invalidatesTags: ["Patients"],
+}),
 deletePatient: build.mutation({
   query: (patientId) => ({
     url: `patient/delete/${patientId}`,
@@ -73,28 +89,20 @@ deletePatient: build.mutation({
   }),
   invalidatesTags: ["Patients"],
 }),
-addPatient: build.mutation({
-  query: ({ name, NIC, phone, address, emergencyPhone, healthCamp }) => ({
-    url: `patient/add`,
-    method: "POST",
-    body: { name, NIC, phone, address, emergencyPhone, healthCamp },
+updatePatient: build.mutation({
+  query: ({ id, patientId, name, NIC, phone, address, emergencyPhone, healthCamp }) => ({
+    url: `patient/update/${id}`,
+    method: "PUT",
+    body: { patientId, name, NIC, phone, address, emergencyPhone, healthCamp },
   }),
-  providesTags: ["Patients"],
-}),
-getPatients: build.query({
-  query: () => `patient/gets`,
-  providesTags: ["Patients"],
-}),
-getPatient: build.query({
-  query: (id) => `patient/get/${id}`,
-  providesTags: ["Patients"],
+  invalidatesTags: ["Patients"],
 }),
 getLastPatient: build.query({
-  query: () => `patient/last`,
+  query: () => "patient/last",
   providesTags: ["Patients"],
 }),
 getPatientsByCamp: build.query({
-  query: (campId) => `patient/camp/${campId}`,  // Add this line
+  query: (campId) => `patient/camp/${campId}`,
   providesTags: ["Patients"],
 }),
 
@@ -172,42 +180,51 @@ getLastCamp: build.query({
   providesTags: ["Camps"],
 }),
 
-    // Lab Reports
-    deleteLabReport: build.mutation({
-      query: (labReportId) => ({
-        url: `labreport/delete/${labReportId}`,
-        method: "DELETE",
-      }),
-      invalidatesTags: ["LabReports"],
-    }),
-    addLabReport: build.mutation({
-      query: ({
-        patientNIC,
-        kidneySerum,
-        sugarLevel,
-        cholesterolLevel,
-        bloodPressure,
-      }) => ({
-        url: `labreport/add`,
-        method: "POST",
-        body: {
-          patientNIC,
-          kidneySerum,
-          sugarLevel,
-          cholesterolLevel,
-          bloodPressure,
-        },
-      }),
-      providesTags: ["LabReports"],
-    }),
-    getLabReports: build.query({
-      query: () => `labreport/gets`,
-      providesTags: ["LabReports"],
-    }),
-    getLabReport: build.query({
-      query: (id) => `labreport/get/${id}`,
-      providesTags: ["LabReports"],
-    }),
+//lab Report
+getLabReports: build.query({
+  query: () => 'labreport/gets',
+  providesTags: ['LabReports'],
+}),
+getLabReport: build.query({
+  query: (id) => `labreport/get/${id}`,
+  providesTags: ['LabReports'],
+}),
+getLabReportsByCamp: build.query({
+  query: (campId) => `labreport/gets/${campId}`,
+  providesTags: ['LabReports'],
+}),
+addLabReport: build.mutation({
+  query: ({ patient, gender, kidneySerum, sugarLevel, cholesterolLevel, bloodPressure, camp }) => ({
+    url: 'labreport/add',
+    method: 'POST',
+    body: { patient, gender, kidneySerum, sugarLevel, cholesterolLevel, bloodPressure, camp },
+  }),
+  invalidatesTags: ['LabReports'],
+}),
+deleteLabReport: build.mutation({
+  query: (labReportId) => ({
+    url: `labreport/delete/${labReportId}`,
+    method: 'DELETE',
+  }),
+  invalidatesTags: ['LabReports'],
+}),
+updateLabReport: build.mutation({
+  query: ({ id, data }) => ({
+    url: `labreport/update/${id}`,
+    method: 'PUT',
+    body: data,
+  }),
+  invalidatesTags: ['LabReports'],
+}),
+
+getHighKidneySerumByDistrict: build.query({
+  query: () => 'labreport/high-kidney-serum-by-district',
+  providesTags: ['LabReports'],
+}),
+getHighKidneySerumByTown: build.query({
+  query: () => 'labreport/high-kidney-serum-by-town',
+  providesTags: ['LabReports'],
+}),
     // Schools
     deleteSchool: build.mutation({
       query: (schoolId) => ({
@@ -566,10 +583,11 @@ export const {
   useGetUserPerformanceQuery,
   useGetDashboardQuery,
 
-  useDeletePatientMutation,
-  useGetPatientQuery,
   useGetPatientsQuery,
+  useGetPatientQuery,
   useAddPatientMutation,
+  useDeletePatientMutation,
+  useUpdatePatientMutation,
   useGetLastPatientQuery,
   useGetPatientsByCampQuery,
 
@@ -581,10 +599,14 @@ export const {
   useUpdateCampMutation,
   useGetLastCampQuery,
 
-  useDeleteLabReportMutation,
-  useGetLabReportQuery,
   useGetLabReportsQuery,
+  useGetLabReportQuery,
+  useGetLabReportsByCampQuery,
   useAddLabReportMutation,
+  useDeleteLabReportMutation,
+  useUpdateLabReportMutation,
+  useGetHighKidneySerumByDistrictQuery, 
+  useGetHighKidneySerumByTownQuery,
 
   useDeleteSchoolMutation,
   useAddSchoolMutation,

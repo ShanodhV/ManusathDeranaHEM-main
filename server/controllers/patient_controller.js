@@ -1,30 +1,17 @@
 import Patients from "../models/Patient.js";
 import Camps from "../models/Camps.js";
 
-// Generate the next patient ID
-const generateNextPatientId = async () => {
-  const lastPatient = await Patients.findOne().sort({ createdAt: -1 });
-  if (!lastPatient) return "MD-PT-000001";
-  
-  const idNumber = parseInt(lastPatient.patientId.split('-')[2], 10);
-  const nextIdNumber = (idNumber + 1).toString().padStart(6, '0');
-  return `MD-PT-${nextIdNumber}`;
-};
-
-// Add Patient
 export const addPatient = async (req, res) => {
   try {
-    const { name, NIC, phone, address, emergencyPhone, healthCamp } = req.body;
+    const { patientId, name, NIC, phone, address, emergencyPhone, healthCamp } = req.body;
 
-    // Validate the health camp
+    // Check if the health camp exists
     const campExists = await Camps.findById(healthCamp);
     if (!campExists) {
       return res.status(404).json({ error: "Health Camp not found" });
     }
 
-    const patientId = await generateNextPatientId();
-
-    // Create a new patient instance
+    // Create a new patient entry
     const newPatient = new Patients({
       patientId,
       name,
@@ -35,42 +22,93 @@ export const addPatient = async (req, res) => {
       healthCamp,
     });
 
-    // Save the patient to the database
+    // Save the new patient to the database
     const savedPatient = await newPatient.save();
 
-    res.status(201).json(savedPatient); // Respond with the saved patient
+    // Respond with the newly saved patient
+    res.status(201).json(savedPatient);
   } catch (error) {
     console.error("Error adding new patient:", error);
+
+    if (error.code === 11000) {
+      // Handle the case where NIC is duplicated for the same health camp
+      return res.status(400).json({ error: "NIC already exists for this health camp" });
+    }
+
+    // General server error
     res.status(500).json({ error: "Failed to add new patient" });
   }
 };
 
-// Get All Patients
+export const updatePatient = async (req, res) => {
+  try {
+    const patientId = req.params.id;
+    const updatedPatientData = req.body;
+
+    // Validate health camp
+    if (updatedPatientData.healthCamp) {
+      const campExists = await Camps.findById(updatedPatientData.healthCamp);
+      if (!campExists) {
+        return res.status(404).json({ error: "Health Camp not found" });
+      }
+    }
+
+    // Update the patient entry
+    const updatedPatient = await Patients.findByIdAndUpdate(
+      patientId,
+      updatedPatientData,
+      {
+        new: true,
+        runValidators: true,
+      }
+    ).populate("healthCamp");
+
+    if (!updatedPatient) {
+      return res.status(404).json({ error: "Patient not found" });
+    }
+
+    // Respond with the updated patient
+    res.json(updatedPatient);
+  } catch (error) {
+    console.error("Error updating patient:", error);
+
+    if (error.code === 11000) {
+      // Handle the case where NIC is duplicated for the same health camp
+      return res.status(400).json({ error: "NIC already exists for this health camp" });
+    }
+
+    // General server error
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
 export const getPatients = async (req, res) => {
   try {
-    const patients = await Patients.find().populate("healthCamp"); // Fetching all patients with health camp details
+    const patients = await Patients.find().populate("healthCamp");
     res.status(200).json(patients);
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
 };
 
-// Get Patient by ID
 export const getPatient = async (req, res) => {
   try {
     const { id } = req.params;
     const patient = await Patients.findById(id).populate("healthCamp");
+    if (!patient) {
+      return res.status(404).json({ message: "Patient not found" });
+    }
     res.status(200).json(patient);
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
 };
 
-// Delete Patient
 export const deletePatient = async (req, res) => {
   const { id } = req.params;
   try {
-    const deletedPatient = await Patients.findByIdAndDelete(id); // Deleting patient by ID using the Patient model
+    const deletedPatient = await Patients.findByIdAndDelete(id);
     if (!deletedPatient) {
       return res.status(404).json({ error: "Patient not found" });
     }
@@ -81,35 +119,6 @@ export const deletePatient = async (req, res) => {
   }
 };
 
-// Update Patient
-export const updatePatient = async (req, res) => {
-  try {
-    const patientId = req.params.id;
-    const updatedPatientData = req.body; // Updated patient data from the request body
-
-    // Validate the health camp if updated
-    if (updatedPatientData.healthCamp) {
-      const campExists = await Camps.findById(updatedPatientData.healthCamp);
-      if (!campExists) {
-        return res.status(404).json({ error: "Health Camp not found" });
-      }
-    }
-
-    // Find the patient by ID in the database and update its information
-    const updatedPatient = await Patients.findByIdAndUpdate(
-      patientId,
-      updatedPatientData,
-      { new: true }
-    ).populate("healthCamp");
-
-    res.json(updatedPatient); // Send back the updated patient object
-  } catch (error) {
-    console.error("Error updating patient:", error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-};
-
-// Get Last Patient
 export const getLastPatient = async (req, res) => {
   try {
     const lastPatient = await Patients.findOne().sort({ createdAt: -1 });
@@ -123,7 +132,6 @@ export const getLastPatient = async (req, res) => {
   }
 };
 
-//get Patients by camp
 export const getPatientsByCamp = async (req, res) => {
   try {
     const { campId } = req.params;
@@ -133,4 +141,4 @@ export const getPatientsByCamp = async (req, res) => {
     console.error("Error fetching patients by camp:", error);
     res.status(500).json({ message: "Internal server error" });
   }
-}
+};

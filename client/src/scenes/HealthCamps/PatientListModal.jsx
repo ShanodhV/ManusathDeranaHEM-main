@@ -14,9 +14,10 @@ import CloseIcon from "@mui/icons-material/Close";
 import { DataGrid } from "@mui/x-data-grid";
 import { useTheme } from "@mui/material/styles";
 import { useGetPatientsByCampQuery, useDeletePatientMutation } from "state/api";
-import PatientRegistrationModal from "./PatientRegistrationModal";
 import ConfirmationDialog from "components/ConfirmationDialog";
 import { Delete, Edit } from "@mui/icons-material";
+import PatientRegistrationModal from "./PatientRegistrationModal";
+import PatientUpdateModal from "./PatientUpdateModal";
 
 const PatientListModal = ({ open, onClose, camp }) => {
   const theme = useTheme();
@@ -26,8 +27,8 @@ const PatientListModal = ({ open, onClose, camp }) => {
   const [selectedPatient, setSelectedPatient] = useState(null);
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
   const [openPatientModal, setOpenPatientModal] = useState(false);
+  const [openPatientUpdateModal, setOpenPatientUpdateModal] = useState(false);
   const [currentPatient, setCurrentPatient] = useState(null);
-  const [isUpdate, setIsUpdate] = useState(false);
 
   useEffect(() => {
     if (error) {
@@ -55,14 +56,24 @@ const PatientListModal = ({ open, onClose, camp }) => {
     setOpenConfirm(false);
   };
 
-  const handleOpenPatientModal = (patient = null) => {
-    setCurrentPatient(patient);
-    setIsUpdate(!!patient);
+  const handleOpenPatientModal = () => {
+    setCurrentPatient(null);
     setOpenPatientModal(true);
   };
 
   const handleClosePatientModal = () => {
     setOpenPatientModal(false);
+    refetch(); // Refresh the list after adding a new patient
+  };
+
+  const handleOpenPatientUpdateModal = (patient) => {
+    setCurrentPatient(patient);
+    setOpenPatientUpdateModal(true);
+  };
+
+  const handleClosePatientUpdateModal = () => {
+    setOpenPatientUpdateModal(false);
+    refetch(); // Refresh the list after updating a patient
   };
 
   const patientColumns = [
@@ -80,20 +91,20 @@ const PatientListModal = ({ open, onClose, camp }) => {
         <Box display="flex" justifyContent="space-around">
           <Button
             variant="contained"
+            color="info"
+            endIcon={<Edit />}
+            onClick={() => handleOpenPatientUpdateModal(params.row)}
+          >
+            Update
+          </Button>
+          <div style={{ padding: "2px" }}></div>
+          <Button
+            variant="contained"
             color="error"
             endIcon={<Delete />}
             onClick={() => handleDelete(params.row._id)}
           >
             Delete
-          </Button>
-          <div style={{ padding: '2px' }}></div>
-          <Button
-            variant="contained"
-            color="info"
-            endIcon={<Edit />}
-            onClick={() => handleOpenPatientModal(params.row)}
-          >
-            Update
           </Button>
         </Box>
       ),
@@ -104,15 +115,15 @@ const PatientListModal = ({ open, onClose, camp }) => {
     <>
       <Dialog fullScreen open={open} onClose={onClose}>
         <DialogTitle sx={{ bgcolor: "#f0f0f0" }} id="form-dialog-title">
-          <div style={{ color: "#d63333", fontWeight: '700', fontSize: '16px' }}>
+          <div style={{ color: "#d63333", fontWeight: "700", fontSize: "16px" }}>
             Patients of {camp?.CampId}
-            <hr style={{ borderColor: "#d63333", }} />
+            <hr style={{ borderColor: "#d63333" }} />
           </div>
           <IconButton
             aria-label="close"
             onClick={onClose}
             sx={{
-              position: 'absolute',
+              position: "absolute",
               right: 8,
               top: 8,
               color: theme.palette.grey[500],
@@ -121,7 +132,7 @@ const PatientListModal = ({ open, onClose, camp }) => {
             <CloseIcon />
           </IconButton>
         </DialogTitle>
-        <DialogContent>
+        <DialogContent sx={{ marginTop: "10px" }}>
           <Box height="75vh">
             <DataGrid
               loading={isLoading}
@@ -133,7 +144,11 @@ const PatientListModal = ({ open, onClose, camp }) => {
           </Box>
         </DialogContent>
         <DialogActions sx={{ bgcolor: "#f0f0f0" }}>
-          <Button onClick={() => handleOpenPatientModal()} color="secondary" variant="contained">
+          <Button
+            onClick={handleOpenPatientModal}
+            color="secondary"
+            variant="contained"
+          >
             Register Patient
           </Button>
           <Button onClick={onClose} variant="outlined" color="secondary">
@@ -145,8 +160,14 @@ const PatientListModal = ({ open, onClose, camp }) => {
       <PatientRegistrationModal
         openModal={openPatientModal}
         closeModal={handleClosePatientModal}
+        campId={camp?._id}
+      />
+
+      <PatientUpdateModal
+        openModal={openPatientUpdateModal}
+        closeModal={handleClosePatientUpdateModal}
         currentPatient={currentPatient}
-        isUpdate={isUpdate}
+        campId={camp?._id}
       />
 
       <ConfirmationDialog
@@ -163,7 +184,11 @@ const PatientListModal = ({ open, onClose, camp }) => {
         onClose={() => setSnackbar({ ...snackbar, open: false })}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >
-        <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} sx={{ width: '100%' }}>
+        <Alert
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
+        >
           {snackbar.message}
         </Alert>
       </Snackbar>

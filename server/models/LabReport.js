@@ -2,10 +2,15 @@ import mongoose from "mongoose";
 
 const LabReportSchema = new mongoose.Schema(
   {
-    patientNIC: {
-      type: String,
+    patient: {
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: "Patient",  // Reference to the Patient model
+      ref: "Patient",
+    },
+    gender: {
+      type: String,
+      enum: ["Male", "Female", "Other"],
+      required: true,
     },
     kidneySerum: {
       type: Number,
