@@ -3,9 +3,9 @@ import mongoose from "mongoose";
 const LabReportSchema = new mongoose.Schema(
   {
     patient: {
-      type: mongoose.Schema.Types.ObjectId, // Reference by ObjectId
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: "Patient", // Reference to the Patient model
+      ref: "Patient",
     },
     gender: {
       type: String,
@@ -26,7 +26,7 @@ const LabReportSchema = new mongoose.Schema(
     },
     bloodPressure: {
       type: String,
-      required: false, // Optional field
+      required: true,
     },
   },
   { timestamps: true }

@@ -11,96 +11,110 @@ import {
   Snackbar,
   Alert,
   MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
+  TextField,
+  Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useTheme } from "@mui/material/styles";
-import { useGetPatientsByCampQuery, useAddLabReportMutation } from "state/api";
-import CustomTextField from "components/CustomTextField";
+import { useAddLabReportMutation, useGetPatientsByCampQuery, useGetLabReportsQuery } from "state/api";
 
 const LabReportModal = ({ open, onClose, camp }) => {
   const theme = useTheme();
-  const { data: patients, isLoading: isLoadingPatients, error: patientError } = useGetPatientsByCampQuery(camp?._id, { skip: !camp });
+  const [patient, setPatient] = useState("");
+  const [gender, setGender] = useState("");
+  const [kidneySerum, setKidneySerum] = useState("");
+  const [sugarLevel, setSugarLevel] = useState("");
+  const [cholesterolLevel, setCholesterolLevel] = useState("");
+  const [bloodPressure, setBloodPressure] = useState("");
   const [addLabReport] = useAddLabReportMutation();
-  const [selectedPatient, setSelectedPatient] = useState("");
-  const [reportValues, setReportValues] = useState({
-    gender: "",
-    kidneySerum: "",
-    sugarLevel: "",
-    cholesterolLevel: "",
-    bloodPressure: "",
-  });
-  const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
-  const [errors, setErrors] = useState({});
+  const { data: campPatients, isLoading: isLoadingPatients } = useGetPatientsByCampQuery(camp._id);
+  const { data: labReports } = useGetLabReportsQuery();
   const [loading, setLoading] = useState(false);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    if (patientError) {
-      console.error("Error fetching patients:", patientError);
-      setSnackbar({ open: true, message: "Error fetching patients", severity: "error" });
+    if (snackbar.open) {
+      const timer = setTimeout(() => setSnackbar({ ...snackbar, open: false }), 6000);
+      return () => clearTimeout(timer);
     }
-  }, [patientError]);
-
-  const handlePatientChange = (event) => {
-    setSelectedPatient(event.target.value);
-  };
-
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setReportValues({ ...reportValues, [name]: value });
-  };
+  }, [snackbar]);
 
   const handleSubmit = async () => {
     const newErrors = {};
-    if (!selectedPatient) newErrors.selectedPatient = "Patient is required";
-    if (!reportValues.gender) newErrors.gender = "Gender is required";
-    if (!reportValues.kidneySerum) newErrors.kidneySerum = "Kidney Serum is required";
-    if (!reportValues.sugarLevel) newErrors.sugarLevel = "Sugar Level is required";
-    if (!reportValues.cholesterolLevel) newErrors.cholesterolLevel = "Cholesterol Level is required";
-    // Blood pressure is optional, so no validation required
+    if (!patient) newErrors.patient = "Patient is required";
+    if (!gender) newErrors.gender = "Gender is required";
+    if (!kidneySerum) newErrors.kidneySerum = "Kidney Serum is required";
+    if (!sugarLevel) newErrors.sugarLevel = "Sugar Level is required";
+    if (!cholesterolLevel) newErrors.cholesterolLevel = "Cholesterol Level is required";
+    if (!bloodPressure) newErrors.bloodPressure = "Blood Pressure is required";
+
+    const existingReport = labReports?.find(report => report.patient === patient && report.camp === camp._id);
+
+    if (existingReport) {
+      newErrors.patient = "Lab report for this patient already exists in this camp";
+    }
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
     } else {
       setLoading(true);
+      const labReportData = {
+        patient,
+        gender,
+        kidneySerum,
+        sugarLevel,
+        cholesterolLevel,
+        bloodPressure,
+        camp: camp._id,
+      };
+
       try {
-        await addLabReport({
-          patient: selectedPatient,
-          ...reportValues,
-        }).unwrap();
-        setSnackbar({ open: true, message: "Lab report added successfully", severity: "success" });
-        handleClose();
+        await addLabReport(labReportData).unwrap();
+        setSnackbar({
+          open: true,
+          message: "Lab report created successfully",
+          severity: "success",
+        });
+        onClose();
+        setPatient("");
+        setGender("");
+        setKidneySerum("");
+        setSugarLevel("");
+        setCholesterolLevel("");
+        setBloodPressure("");
+        setErrors({});
       } catch (error) {
-        setSnackbar({ open: true, message: "Error adding lab report", severity: "error" });
+        setSnackbar({ open: true, message: error.data?.error || "Error saving lab report", severity: "error" });
       } finally {
         setLoading(false);
       }
     }
   };
 
-  const handleClose = () => {
-    setSelectedPatient("");
-    setReportValues({
-      gender: "",
-      kidneySerum: "",
-      sugarLevel: "",
-      cholesterolLevel: "",
-      bloodPressure: "",
-    });
-    setErrors({});
-    onClose();
-  };
-
   return (
     <>
-      <Dialog fullScreen open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+      <Dialog
+        fullScreen
+        open={open}
+        onClose={onClose}
+        aria-labelledby="form-dialog-title"
+      >
         <DialogTitle sx={{ bgcolor: "#f0f0f0" }} id="form-dialog-title">
           <div style={{ color: "#d63333", fontWeight: "700", fontSize: "16px" }}>
-            Add Lab Report for {camp.CampId}
+            Register Lab Report
             <hr style={{ borderColor: "#d63333" }} />
           </div>
           <IconButton
             aria-label="close"
-            onClick={handleClose}
+            onClick={onClose}
             sx={{ position: "absolute", right: 8, top: 8, color: theme.palette.grey[500] }}
           >
             <CloseIcon />
@@ -108,87 +122,88 @@ const LabReportModal = ({ open, onClose, camp }) => {
         </DialogTitle>
         <DialogContent>
           <Box sx={{ mt: 2 }}>
-            <CustomTextField
-              select
-              label="Select Patient"
-              fullWidth
-              value={selectedPatient}
-              onChange={handlePatientChange}
-              error={!!errors.selectedPatient}
-              helperText={errors.selectedPatient}
-              disabled={isLoadingPatients}
-            >
-              {patients?.map((patient) => (
-                <MenuItem key={patient._id} value={patient._id}>
-                  {patient.name} ({patient.NIC})
-                </MenuItem>
-              ))}
-            </CustomTextField>
+            <FormControl fullWidth>
+              <InputLabel>Patient</InputLabel>
+              <Select
+                value={patient}
+                onChange={(e) => setPatient(e.target.value)}
+                disabled={isLoadingPatients}
+                error={!!errors.patient}
+              >
+                {campPatients?.map((p) => (
+                  <MenuItem key={p._id} value={p._id}>
+                    {p.name} ({p.NIC})
+                  </MenuItem>
+                ))}
+              </Select>
+              {errors.patient && (
+                <Typography color="error" variant="caption">
+                  {errors.patient}
+                </Typography>
+              )}
+            </FormControl>
           </Box>
           <Box sx={{ mt: 2 }}>
-            <CustomTextField
-              select
-              label="Gender"
-              name="gender"
-              fullWidth
-              value={reportValues.gender}
-              onChange={handleInputChange}
-              error={!!errors.gender}
-              helperText={errors.gender}
-            >
-              <MenuItem value="Male">Male</MenuItem>
-              <MenuItem value="Female">Female</MenuItem>
-              <MenuItem value="Other">Other</MenuItem>
-            </CustomTextField>
+            <FormControl fullWidth>
+              <InputLabel>Gender</InputLabel>
+              <Select
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
+                error={!!errors.gender}
+              >
+                <MenuItem value="Male">Male</MenuItem>
+                <MenuItem value="Female">Female</MenuItem>
+                <MenuItem value="Other">Other</MenuItem>
+              </Select>
+              {errors.gender && (
+                <Typography color="error" variant="caption">
+                  {errors.gender}
+                </Typography>
+              )}
+            </FormControl>
           </Box>
           <Box sx={{ mt: 2 }}>
-            <CustomTextField
+            <TextField
               label="Kidney Serum"
-              name="kidneySerum"
               variant="outlined"
+              value={kidneySerum}
+              onChange={(e) => setKidneySerum(e.target.value)}
               fullWidth
-              type="number"
-              value={reportValues.kidneySerum}
-              onChange={handleInputChange}
               error={!!errors.kidneySerum}
               helperText={errors.kidneySerum}
             />
           </Box>
           <Box sx={{ mt: 2 }}>
-            <CustomTextField
+            <TextField
               label="Sugar Level"
-              name="sugarLevel"
               variant="outlined"
+              value={sugarLevel}
+              onChange={(e) => setSugarLevel(e.target.value)}
               fullWidth
-              type="number"
-              value={reportValues.sugarLevel}
-              onChange={handleInputChange}
               error={!!errors.sugarLevel}
               helperText={errors.sugarLevel}
             />
           </Box>
           <Box sx={{ mt: 2 }}>
-            <CustomTextField
+            <TextField
               label="Cholesterol Level"
-              name="cholesterolLevel"
               variant="outlined"
+              value={cholesterolLevel}
+              onChange={(e) => setCholesterolLevel(e.target.value)}
               fullWidth
-              type="number"
-              value={reportValues.cholesterolLevel}
-              onChange={handleInputChange}
               error={!!errors.cholesterolLevel}
               helperText={errors.cholesterolLevel}
             />
           </Box>
           <Box sx={{ mt: 2 }}>
-            <CustomTextField
+            <TextField
               label="Blood Pressure"
-              name="bloodPressure"
               variant="outlined"
+              value={bloodPressure}
+              onChange={(e) => setBloodPressure(e.target.value)}
               fullWidth
-              value={reportValues.bloodPressure}
-              onChange={handleInputChange}
-              helperText="Optional"
+              error={!!errors.bloodPressure}
+              helperText={errors.bloodPressure}
             />
           </Box>
         </DialogContent>
@@ -200,9 +215,9 @@ const LabReportModal = ({ open, onClose, camp }) => {
             disabled={loading}
             endIcon={loading && <CircularProgress size={20} />}
           >
-            Add Report
+            Register Lab Report
           </Button>
-          <Button onClick={handleClose} variant="outlined" color="secondary">
+          <Button onClick={onClose} variant="outlined" color="secondary">
             Cancel
           </Button>
         </DialogActions>

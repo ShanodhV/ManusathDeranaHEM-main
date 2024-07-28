@@ -1,5 +1,6 @@
 import LabReport from "../models/LabReport.js";
-import Patient from "../models/Patient.js";
+import Patients from "../models/Patient.js";
+import Camps from "../models/Camps.js";
 
 // Add a new lab report
 export const addLabReport = async (req, res) => {
@@ -11,12 +12,19 @@ export const addLabReport = async (req, res) => {
       sugarLevel,
       cholesterolLevel,
       bloodPressure,
+      camp,
     } = req.body;
 
     // Check if the patient exists
-    const existingPatient = await Patient.findById(patient);
+    const existingPatient = await Patients.findById(patient);
     if (!existingPatient) {
       return res.status(404).json({ error: "Patient not found" });
+    }
+
+    // Check for existing lab report for the same patient in the same camp
+    const existingReport = await LabReport.findOne({ patient, camp });
+    if (existingReport) {
+      return res.status(400).json({ error: "Lab report for this patient already exists in this camp" });
     }
 
     // Create a new lab report instance
@@ -27,6 +35,7 @@ export const addLabReport = async (req, res) => {
       sugarLevel,
       cholesterolLevel,
       bloodPressure,
+      camp,
     });
 
     // Save the lab report to the database
@@ -99,5 +108,124 @@ export const updateLabReport = async (req, res) => {
   } catch (error) {
     console.error("Error updating lab report:", error);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// Get all lab reports by camp ID
+export const getLabReportsByCamp = async (req, res) => {
+  const { campId } = req.params;
+  try {
+    // Fetch all lab reports for the specified camp
+    const labReports = await LabReport.find({ camp: campId });
+
+    if (!labReports) {
+      return res.status(404).json({ message: "Lab reports not found" });
+    }
+
+    // Get a list of patient IDs from the lab reports
+    const patientIds = labReports.map(report => report.patient);
+
+    // Fetch the patients related to those lab reports
+    const patients = await Patients.find({ _id: { $in: patientIds } });
+
+    // Create a map of patient IDs to patient details
+    const patientMap = patients.reduce((map, patient) => {
+      map[patient._id] = patient;
+      return map;
+    }, {});
+
+    // Merge patient details into lab reports
+    const labReportsWithPatientDetails = labReports.map(report => {
+      const patientDetails = patientMap[report.patient];
+      return {
+        ...report._doc,
+        patientName: patientDetails ? patientDetails.name : null,
+        NIC: patientDetails ? patientDetails.NIC : null,
+      };
+    });
+
+    res.status(200).json(labReportsWithPatientDetails);
+  } catch (error) {
+    console.error("Error fetching lab reports by camp:", error);
+    res.status(500).json({ error: "Failed to fetch lab reports", details: error });
+  }
+};
+
+// ***************************
+// Fetch counts of patients with high kidney serum by district
+export const getHighKidneySerumByDistrict = async (req, res) => {
+  try {
+    const results = await LabReport.aggregate([
+      { $match: { kidneySerum: { $gt: 1.3 } } }, // Adjust the value based on gender if needed
+      {
+        $lookup: {
+          from: "patients",
+          localField: "patient",
+          foreignField: "_id",
+          as: "patientDetails"
+        }
+      },
+      { $unwind: "$patientDetails" },
+      {
+        $lookup: {
+          from: "camps",
+          localField: "patientDetails.healthCamp",
+          foreignField: "_id",
+          as: "campDetails"
+        }
+      },
+      { $unwind: "$campDetails" },
+      {
+        $group: {
+          _id: "$campDetails.District",
+          count: { $sum: 1 }
+        }
+      },
+      { $sort: { _id: 1 } } // Sort by district name
+    ]);
+
+    res.status(200).json(results);
+  } catch (error) {
+    console.error("Error fetching high kidney serum by district:", error);
+    res.status(500).json({ error: "Failed to fetch data", details: error });
+  }
+};
+
+// Fetch counts of patients with high kidney serum by town
+export const getHighKidneySerumByTown = async (req, res) => {
+  try {
+    const results = await LabReport.aggregate([
+      { $match: { kidneySerum: { $gt: 1.3 } } }, // Adjust the value based on gender if needed
+      {
+        $lookup: {
+          from: "patients",
+          localField: "patient",
+          foreignField: "_id",
+          as: "patientDetails"
+        }
+      },
+      { $unwind: "$patientDetails" },
+      {
+        $lookup: {
+          from: "camps",
+          localField: "patientDetails.healthCamp",
+          foreignField: "_id",
+          as: "campDetails"
+        }
+      },
+      { $unwind: "$campDetails" },
+      {
+        $group: {
+          _id: "$campDetails.Town",
+          count: { $sum: 1 }
+        }
+      },
+      { $sort: { _id: 1 } } // Sort by town name
+    ]);
+
+    res.status(200).json(results);
+  } catch (error) {
+    console.error("Error fetching high kidney serum by town:", error);
+    res.status(500).json({ error: "Failed to fetch data", details: error });
   }
 };

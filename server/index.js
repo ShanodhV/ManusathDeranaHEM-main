@@ -31,7 +31,7 @@ import Transaction from "./models/Transaction.js";
 import OverallStat from "./models/OverallStat.js";
 import AffiliateStat from "./models/AffiliateStat.js";
 import {
-  healthCamps,
+  labReports,
 } from "./data/index.js";
 
 /* CONFIGURATION */
@@ -80,6 +80,12 @@ mongoose
     // User.insertMany(dataUser);
     // Patients.insertMany(dataPatient);
     //Inserting healthCamps data into MongoDB
-
+    // LabReport.insertMany(labReports)
+    //   .then(docs => {
+    //     console.log('Data inserted:', docs);
+    //   })
+    //   .catch(err => {
+    //     console.error('Insert error:', err);
+    //   });
   })
   .catch((error) => console.log(`${error} did not connect`));

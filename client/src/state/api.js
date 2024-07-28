@@ -181,35 +181,49 @@ getLastCamp: build.query({
 }),
 
 //lab Report
+getLabReports: build.query({
+  query: () => 'labreport/gets',
+  providesTags: ['LabReports'],
+}),
+getLabReport: build.query({
+  query: (id) => `labreport/get/${id}`,
+  providesTags: ['LabReports'],
+}),
+getLabReportsByCamp: build.query({
+  query: (campId) => `labreport/gets/${campId}`,
+  providesTags: ['LabReports'],
+}),
 addLabReport: build.mutation({
-  query: ({ patient, gender, kidneySerum, sugarLevel, cholesterolLevel, bloodPressure }) => ({
-    url: "labreport/add",
-    method: "POST",
-    body: {
-      patient,
-      gender,
-      kidneySerum,
-      sugarLevel,
-      cholesterolLevel,
-      bloodPressure,
-    },
+  query: ({ patient, gender, kidneySerum, sugarLevel, cholesterolLevel, bloodPressure, camp }) => ({
+    url: 'labreport/add',
+    method: 'POST',
+    body: { patient, gender, kidneySerum, sugarLevel, cholesterolLevel, bloodPressure, camp },
   }),
-  invalidatesTags: ["LabReports"],
+  invalidatesTags: ['LabReports'],
 }),
 deleteLabReport: build.mutation({
   query: (labReportId) => ({
     url: `labreport/delete/${labReportId}`,
-    method: "DELETE",
+    method: 'DELETE',
   }),
-  invalidatesTags: ["LabReports"],
+  invalidatesTags: ['LabReports'],
 }),
-getLabReports: build.query({
-  query: () => "labreport/gets",
-  providesTags: ["LabReports"],
+updateLabReport: build.mutation({
+  query: ({ id, data }) => ({
+    url: `labreport/update/${id}`,
+    method: 'PUT',
+    body: data,
+  }),
+  invalidatesTags: ['LabReports'],
 }),
-getLabReport: build.query({
-  query: (id) => `labreport/get/${id}`,
-  providesTags: ["LabReports"],
+
+getHighKidneySerumByDistrict: build.query({
+  query: () => 'labreport/high-kidney-serum-by-district',
+  providesTags: ['LabReports'],
+}),
+getHighKidneySerumByTown: build.query({
+  query: () => 'labreport/high-kidney-serum-by-town',
+  providesTags: ['LabReports'],
 }),
     // Schools
     deleteSchool: build.mutation({
@@ -558,10 +572,14 @@ export const {
   useUpdateCampMutation,
   useGetLastCampQuery,
 
-  useAddLabReportMutation,
-  useDeleteLabReportMutation,
   useGetLabReportsQuery,
   useGetLabReportQuery,
+  useGetLabReportsByCampQuery,
+  useAddLabReportMutation,
+  useDeleteLabReportMutation,
+  useUpdateLabReportMutation,
+  useGetHighKidneySerumByDistrictQuery, 
+  useGetHighKidneySerumByTownQuery,
 
   useDeleteSchoolMutation,
   useAddSchoolMutation,
