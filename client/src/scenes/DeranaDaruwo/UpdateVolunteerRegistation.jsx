@@ -90,7 +90,7 @@ const UpdateVolunteerRegistation = ({ openModal, closeModal, newDonorData }) => 
             }}
           >
             {/* Add your icon component here */}
-            <CloseIcon/>
+            <CloseIcon/> 
           </IconButton>
         </DialogTitle>
         <DialogContent>
