@@ -336,7 +336,7 @@ const UpdateProgramModel = ({ openModal, closeModal, refetch, newProgamDetails }
 
           <Snackbar
               open={snackbar.open}
-              autoHideDuration={6000}
+              autoHideDuration={6000} 
               onClose={() => setSnackbar({ ...snackbar, open: false })}
               anchorOrigin={{ vertical: "top", horizontal: "right" }}
           >
