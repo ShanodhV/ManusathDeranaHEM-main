@@ -20,6 +20,7 @@ import CustomTextField from "components/CustomTextField"; // Import your custom 
 import { useUpdateDonorMutation } from "state/api"; // Adjust the import according to your file structure
 
 const UpdateDonorRegistrationModal = ({ openModal, handleCloseModal, donorData }) => {
+  const theme = useTheme();
   const [donorNIC, setDonorNIC] = useState("");
   const [donorName, setDonorName] = useState("");
   const [donorAddress, setDonorAddress] = useState("");

@@ -3,14 +3,18 @@ import School from "../models/School.js";
 // Add a new school registration
 export const addSchool = async (req, res) => {
   try {
-    const { schoolID, schoolName, schoolAddress, location, schoolMobileNumber, principalContact } = req.body;
+    const { schoolID, schoolName, schoolAddress,  Province,
+      District,
+      Town, schoolMobileNumber, principalContact } = req.body;
 
     // Create a new school instance
     const newSchool = new School({
       schoolID,
       schoolName,
       schoolAddress,
-      location,
+       Province,
+      District,
+      Town,
       schoolMobileNumber,
       principalContact,
     });
@@ -21,7 +25,7 @@ export const addSchool = async (req, res) => {
     res.status(201).json(savedSchool); // Respond with the saved school
   } catch (error) {
     console.error("Error adding new school:", error);
-    res.status(500).json({ error: "Failed to add new school",error });
+    res.status(500).json({ error: "Failed to add new school" });
   }
 };
 

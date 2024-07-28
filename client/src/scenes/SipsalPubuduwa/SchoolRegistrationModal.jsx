@@ -13,16 +13,66 @@ import {
   Snackbar,
   Alert,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import CloseIcon from "@mui/icons-material/Close";
 import CustomTextField from "components/CustomTextField";
-import { useAddSchoolMutation } from "state/api";
+import { useAddSchoolMutation , useGetLastSchoolQuery} from "state/api";
+
+const generateNextId = (lastId) => {
+  const idNumber = parseInt(lastId.split('-')[2], 10);
+  const nextIdNumber = (idNumber + 1).toString().padStart(6, '0');
+  return `MD-SHL-${nextIdNumber}`;
+};
 
 const sriLankanData = {
-  // Your data here
+  "Western": {
+    "Colombo": ["Colombo 1", "Colombo 2", "Colombo 3", "Colombo 4", "Colombo 5", "Colombo 6", "Colombo 7", "Colombo 8", "Colombo 9", "Colombo 10", "Colombo 11", "Colombo 12", "Colombo 13", "Colombo 14", "Colombo 15"],
+    "Gampaha": ["Negombo", "Gampaha", "Veyangoda", "Wattala", "Minuwangoda", "Ja-Ela", "Kadawatha", "Ragama", "Divulapitiya", "Nittambuwa", "Kiribathgoda"],
+    "Kalutara": ["Kalutara", "Panadura", "Horana", "Beruwala", "Aluthgama", "Matugama", "Wadduwa", "Bandaragama", "Ingiriya"]
+  },
+  "Central": {
+    "Kandy": ["Kandy", "Gampola", "Nawalapitiya", "Peradeniya", "Akurana", "Kadugannawa", "Katugastota"],
+    "Matale": ["Matale", "Dambulla", "Sigiriya", "Nalanda", "Ukuwela", "Rattota"],
+    "Nuwara Eliya": ["Nuwara Eliya", "Hatton", "Nanu Oya", "Talawakele", "Bandarawela", "Welimada"]
+  },
+  "Southern": {
+    "Galle": ["Galle", "Hikkaduwa", "Ambalangoda", "Elpitiya", "Bentota", "Baddegama"],
+    "Matara": ["Matara", "Weligama", "Mirissa", "Akurugoda", "Hakmana", "Devinuwara"],
+    "Hambantota": ["Hambantota", "Tangalle", "Tissamaharama", "Ambalantota", "Beliatta", "Weeraketiya"]
+  },
+  "Northern": {
+    "Jaffna": ["Jaffna", "Nallur", "Chavakachcheri", "Point Pedro", "Karainagar", "Velanai"],
+    "Kilinochchi": ["Kilinochchi", "Pallai", "Paranthan", "Poonakary"],
+    "Mannar": ["Mannar", "Nanattan", "Madhu", "Pesalai"],
+    "Vavuniya": ["Vavuniya", "Nedunkeni", "Settikulam", "Vavuniya South"],
+    "Mullaitivu": ["Mullaitivu", "Oddusuddan", "Puthukudiyiruppu", "Weli Oya"]
+  },
+  "Eastern": {
+    "Trincomalee": ["Trincomalee", "Kinniya", "Mutur", "Kuchchaveli"],
+    "Batticaloa": ["Batticaloa", "Kaluwanchikudy", "Valachchenai", "Eravur"],
+    "Ampara": ["Ampara", "Akkaraipattu", "Kalmunai", "Sainthamaruthu", "Pottuvil"]
+  },
+  "North Western": {
+    "Kurunegala": ["Kurunegala", "Kuliyapitiya", "Narammala", "Wariyapola", "Pannala", "Melsiripura"],
+    "Puttalam": ["Puttalam", "Chilaw", "Wennappuwa", "Anamaduwa", "Nattandiya", "Dankotuwa"]
+  },
+  "North Central": {
+    "Anuradhapura": ["Anuradhapura", "Kekirawa", "Thambuttegama", "Eppawala", "Medawachchiya"],
+    "Polonnaruwa": ["Polonnaruwa", "Kaduruwela", "Medirigiriya", "Hingurakgoda"]
+  },
+  "Uva": {
+    "Badulla": ["Badulla", "Bandarawela", "Haputale", "Welimada", "Mahiyanganaya", "Passara"],
+    "Monaragala": ["Monaragala", "Bibile", "Wellawaya", "Medagama", "Buttala"]
+  },
+  "Sabaragamuwa": {
+    "Ratnapura": ["Ratnapura", "Embilipitiya", "Balangoda", "Pelmadulla", "Eheliyagoda", "Kuruwita"],
+    "Kegalle": ["Kegalle", "Mawanella", "Warakapola", "Rambukkana", "Galigamuwa"]
+  }
 };
 
 const SchoolRegistrationModal = ({ openModal, handleCloseModal }) => {
-  const [schoolID, setSchoolID] = useState("");
+  const theme = useTheme();
+  const [schoolId, setSchoolId] = useState("");
   const [schoolName, setSchoolName] = useState("");
   const [schoolAddress, setSchoolAddress] = useState("");
   const [schoolMobileNumber, setSchoolMobileNumber] = useState("");
@@ -37,8 +87,17 @@ const SchoolRegistrationModal = ({ openModal, handleCloseModal }) => {
 
   const [districts, setDistricts] = useState([]);
   const [towns, setTowns] = useState([]);
+  const { data: lastSchool, isSuccess } = useGetLastSchoolQuery();
 
   const [addSchool] = useAddSchoolMutation();
+
+  useEffect(() => {
+    if (isSuccess && lastSchool) {
+      setSchoolId(generateNextId(lastSchool.schoolId));
+    } else {
+      setSchoolId("MD-SHL-000001");
+    }
+  }, [lastSchool, isSuccess]);
 
   useEffect(() => {
     if (province) {
@@ -63,7 +122,7 @@ const SchoolRegistrationModal = ({ openModal, handleCloseModal }) => {
 
   const handleAddSchool = () => {
     const schoolData = {
-      schoolID,
+      schoolId,
       schoolName,
       schoolAddress,
       location: {
@@ -79,7 +138,7 @@ const SchoolRegistrationModal = ({ openModal, handleCloseModal }) => {
     };
 
     const newErrors = {};
-    if (!schoolID) newErrors.schoolID = "School ID is required";
+    if (!schoolId) newErrors.schoolId = "School ID is required";
     if (!schoolName) newErrors.schoolName = "School Name is required";
     if (!schoolAddress) newErrors.schoolAddress = "School Address is required";
     if (!province) newErrors.province = "Province is required";
@@ -99,7 +158,7 @@ const SchoolRegistrationModal = ({ openModal, handleCloseModal }) => {
         .then((response) => {
           console.log("School added successfully:", response);
           // Clear form fields
-          setSchoolID("");
+          setSchoolId("");
           setSchoolName("");
           setSchoolAddress("");
           setProvince("");
@@ -142,7 +201,7 @@ const SchoolRegistrationModal = ({ openModal, handleCloseModal }) => {
               position: 'absolute',
               right: 8,
               top: 8,
-              color: 'grey',
+              color: theme.palette.grey[500],
             }}
           >
             <CloseIcon />
@@ -154,10 +213,10 @@ const SchoolRegistrationModal = ({ openModal, handleCloseModal }) => {
               label="School ID"
               variant="outlined"
               fullWidth
-              value={schoolID}
-              onChange={(e) => setSchoolID(e.target.value)}
-              error={!!errors.schoolID}
-              helperText={errors.schoolID}
+              value={schoolId}
+              onChange={(e) => setSchoolId(e.target.value)}
+              error={!!errors.schoolId}
+              helperText={errors.schoolId}
             />
           </Box>
           <Box sx={{ mt: 2 }}>
@@ -272,61 +331,60 @@ const SchoolRegistrationModal = ({ openModal, handleCloseModal }) => {
               }}
               htmlFor="Principal Info"
             >
-              Principal's Information
+             Principal's Information
             </label>
           </Box>
           <Box sx={{ mt: 2 }}>
             <CustomTextField
-                            label="Principal Name"
-                            variant="outlined"
-                            fullWidth
-                            value={principalName}
-                            onChange={(e) => setPrincipalName(e.target.value)}
-                            error={!!errors.principalName}
-                            helperText={errors.principalName}
-                          />
-                        </Box>
-                        <Box sx={{ mt: 2 }}>
-                          <CustomTextField
-                            label="Principal Mobile Number"
-                            variant="outlined"
-                            fullWidth
-                            value={principalMobileNumber}
-                            onChange={(e) => setPrincipalMobileNumber(e.target.value)}
-                            error={!!errors.principalMobileNumber}
-                            helperText={errors.principalMobileNumber}
-                          />
-                        </Box>
-                      </DialogContent>
-                      <DialogActions sx={{ bgcolor: "#f0f0f0" }}>
-                        <Button
-                          onClick={handleAddSchool}
-                          color="secondary"
-                          variant="contained"
-                          disabled={loading}
-                          endIcon={loading && <CircularProgress size={20} />}
-                        >
-                          Register School
-                        </Button>
-                        <Button onClick={handleCloseModal} variant="outlined" color="secondary">
-                          Cancel
-                        </Button>
-                      </DialogActions>
-                    </Dialog>
-              
-                    <Snackbar
-                      open={snackbar.open}
-                      autoHideDuration={6000}
-                      onClose={() => setSnackbar({ ...snackbar, open: false })}
-                      anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                    >
-                      <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} sx={{ width: '100%' }}>
-                        {snackbar.message}
-                      </Alert>
-                    </Snackbar>
-                  </>
-                );
-              };
-              
-              export default SchoolRegistrationModal;
-              
+              label="Principal Name"
+              variant="outlined"
+              fullWidth
+              value={principalName}
+              onChange={(e) => setPrincipalName(e.target.value)}
+              error={!!errors.principalName}
+              helperText={errors.principalName}
+            />
+          </Box>
+          <Box sx={{ mt: 2 }}>
+            <CustomTextField
+              label="Principal Mobile Number"
+              variant="outlined"
+              fullWidth
+              value={principalMobileNumber}
+              onChange={(e) => setPrincipalMobileNumber(e.target.value)}
+              error={!!errors.principalMobileNumber}
+              helperText={errors.principalMobileNumber}
+            />
+          </Box>
+        </DialogContent>
+        <DialogActions sx={{ bgcolor: "#f0f0f0" }}>
+          <Button
+            onClick={handleAddSchool}
+            color="secondary"
+            variant="contained"
+            disabled={loading}
+            endIcon={loading && <CircularProgress size={20} />}
+          >
+            Register School
+          </Button>
+          <Button onClick={handleCloseModal} variant="outlined" color="secondary">
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
+  
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
+    </>
+  );
+};
+
+export default SchoolRegistrationModal;
