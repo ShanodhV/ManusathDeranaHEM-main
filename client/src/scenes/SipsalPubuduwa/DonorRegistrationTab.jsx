@@ -16,12 +16,12 @@ const DonorRegistrationTab = () => {
   const [deleteDonor] = useDeleteDonorVolunteerMutation();
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(20);
-  const [sort, setSort] = useState({});
+  const [sort, setSort] = useState([]);
   const [search, setSearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
-  const [selectedDonor, setSelectedDonor] = useState(null); // State to manage selected donor for update
-  const [openConfirm, setOpenConfirm] = useState(false); // State to manage confirmation dialog
-  const [donorToDelete, setDonorToDelete] = useState(null); // State to store the donor to delete
+  const [selectedDonor, setSelectedDonor] = useState(null);
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [donorToDelete, setDonorToDelete] = useState(null);
 
   useEffect(() => {
     if (error) {
@@ -83,6 +83,7 @@ const DonorRegistrationTab = () => {
       field: "dateOfBirth",
       headerName: "Date of Birth",
       flex: 1,
+      valueFormatter: ({ value }) => value ? `${value.month}/${value.day}/${value.year}` : ""
     },
     {
       field: "occupation",
@@ -96,44 +97,21 @@ const DonorRegistrationTab = () => {
       sortable: false,
       filterable: false,
       renderCell: (params) => (
-        <Box display="flex" justifyContent="space-around">
-          <Box
-            display="flex"
-            justifyContent="flex-end"
-            mr={2}
-            sx={{
-              "& button": {
-                backgroundColor: theme.palette.secondary[400],
-                color: "white",
-              },
-            }}
+        <Box display="flex" justifyContent="space-around" gap={1}>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={() => handleDelete(params.row.donorId)}
           >
-            <Button
-              variant="contained"
-              color="error"
-              onClick={() => handleDelete(params.row.donorId)}
-            >
-              Delete
-            </Button>
-          </Box>
-          <Box
-            display="flex"
-            justifyContent="flex-end"
-            sx={{
-              "& button": {
-                backgroundColor: theme.palette.primary[700],
-                color: "white",
-              },
-            }}
+            Delete
+          </Button>
+          <Button
+            variant="contained"
+            color="info"
+            onClick={() => handleOpenModal(params.row)}
           >
-            <Button
-              variant="contained"
-              color="info"
-              onClick={() => handleOpenModal(params.row)}
-            >
-              Update
-            </Button>
-          </Box>
+            Update
+          </Button>
         </Box>
       ),
     },
@@ -141,9 +119,9 @@ const DonorRegistrationTab = () => {
 
   return (
     <Box>
-      <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
-        <Buttons label={"Register Donor"} onClick={() => handleOpenModal()} />
-      </Box>
+    <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
+      <Buttons label="Register Donor" onClick={() => handleOpenModal()} />
+    </Box>
       <DonorRegistrationModal
         openModal={openModal}
         handleCloseModal={handleCloseModal}
@@ -172,14 +150,15 @@ const DonorRegistrationTab = () => {
             color: theme.palette.secondary[100],
             borderTop: "none",
           },
-        }}
+        }
+      }
       >
         <DataGrid
           loading={isLoading || !data}
           getRowId={(row) => row.donorId}
-          rows={data || []}
+          rows={data?.items || []}
           columns={donorColumns}
-          rowCount={(data && data.total) || 0}
+          rowCount={data?.total || 0}
           rowsPerPageOptions={[20, 50, 100]}
           pagination
           page={page}

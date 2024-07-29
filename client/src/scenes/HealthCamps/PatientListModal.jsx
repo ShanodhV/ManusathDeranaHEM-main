@@ -114,24 +114,40 @@ const PatientListModal = ({ open, onClose, camp }) => {
   return (
     <>
       <Dialog fullScreen open={open} onClose={onClose}>
-        <DialogTitle sx={{ bgcolor: "#f0f0f0" }} id="form-dialog-title">
-          <div style={{ color: "#d63333", fontWeight: "700", fontSize: "16px" }}>
-            Patients of {camp?.CampId}
-            <hr style={{ borderColor: "#d63333" }} />
-          </div>
+      <DialogTitle sx={{ bgcolor: "#f0f0f0" }} id="form-dialog-title">
+      <div
+        style={{
+          color: "#d63333",
+          fontWeight: "700",
+          fontSize: "16px",
+          display: "flex",
+          justifyContent: "space-between", // Align children with space between
+          alignItems: "center", // Align items vertically
+        }}
+      >
+        <div>Patients of {camp?.CampId}</div>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <Button
+            onClick={handleOpenPatientModal}
+            color="secondary"
+            variant="contained"
+            style={{ marginRight: "8px" }} // Add some margin between button and icon
+          >
+            Register Patient
+          </Button>
           <IconButton
             aria-label="close"
             onClick={onClose}
             sx={{
-              position: "absolute",
-              right: 8,
-              top: 8,
               color: theme.palette.grey[500],
             }}
           >
             <CloseIcon />
           </IconButton>
-        </DialogTitle>
+        </div>
+      </div>
+      <hr style={{ borderColor: "#d63333", marginTop: "8px" }} />
+    </DialogTitle>
         <DialogContent sx={{ marginTop: "10px" }}>
           <Box height="75vh">
             <DataGrid

@@ -63,7 +63,7 @@ const PatientRegistrationTab = () => {
   return (
     <Box m="1.5rem 2.5rem">
       <Box sx={{ mb: 3, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <Typography variant="h4">Select Health Camps to Add Patient details</Typography>
+        <Typography variant="h4" fontWeight="bold">Manage Ptients</Typography>
         <Tooltip title="Search by Camp ID, Town, or District" arrow>
           <TextField
             label="Search Camps"
@@ -94,7 +94,7 @@ const PatientRegistrationTab = () => {
               <Typography variant="body2">{formatDate(camp.Date)}</Typography>
             </CardContent>
             <CardActions>
-              <Button size="small" color="secondary" onClick={() => handleOpenModal(camp)}>
+              <Button size="small" color="secondary" variant="outlined" onClick={() => handleOpenModal(camp)}>
                 View Patients
               </Button>
             </CardActions>

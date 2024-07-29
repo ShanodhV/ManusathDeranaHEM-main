@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
-import { Box, Button } from '@mui/material';
+import { Box, Button, Snackbar, Alert  } from '@mui/material';
 import Buttons from 'components/Buttons';
-// import StudentRegistrationModal from './StudentRegistrationModal';
 import DataGridCustomToolbar from 'components/DataGridCustomToolbar';
 import { DataGrid } from '@mui/x-data-grid';
 import { useGetStudentsQuery, useDeleteStudentMutation } from 'state/api';
-import { UpdateStudentRegistationDetails } from './UpdateStudentRegistationDetails';
+import UpdateRegistationModal from './UpdateRegistationModal';
 import CustomHeader from './CustomerHead';
 import RegistrationModal from './RegistrationModal';
 import { Delete, Edit } from "@mui/icons-material";
+import ConfirmationDialog from "components/ConfirmationDialog";
+
 
 const StudentRegistrationTab = () => {
   const theme = useTheme();
   const [openModal, setOpenModal] = useState(false);
   const { data, isLoading, refetch, error } = useGetStudentsQuery();
-  const [deleteTreeEvent] = useDeleteStudentMutation();
+  const [deleteStuddent] = useDeleteStudentMutation();
   const [showUpdateForm, setShowUpdateForm] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [page, setPage] = useState(0);
@@ -23,6 +24,9 @@ const StudentRegistrationTab = () => {
   const [sort, setSort] = useState({});
   const [search, setSearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+
 
   useEffect(() => {
     if (error) {
@@ -39,16 +43,10 @@ const StudentRegistrationTab = () => {
   };
 
   const handleDelete = (studentID) => {
-    deleteTreeEvent(studentID)
-      .unwrap()
-      .then((response) => {
-        console.log("Event deleted successfully");
-        refetch();
-      })
-      .catch((error) => {
-        console.error("Error deleting event:", error);
-      });
+    setOpenConfirm(true);
+    setSelectedStudent(studentID);
   };
+
 
   const handleUpdateClick = (student) => {
     setSelectedStudent(student);
@@ -59,6 +57,21 @@ const StudentRegistrationTab = () => {
     setShowUpdateForm(false);
     setSelectedStudent(null);
     refetch();
+  };
+
+  const confirmDelete = () => {
+    deleteStuddent(selectedStudent)
+      .unwrap()
+      .then((response) => {
+        console.log("Health Camp deleted successfully");
+        setSnackbar({ open: true, message: "Health Camp deleted successfully", severity: "success" });
+        refetch();
+      })
+      .catch((error) => {
+        console.error("Error deleting health camp:", error);
+        setSnackbar({ open: true, message: "Error deleting health camp", severity: "error" });
+      });
+    setOpenConfirm(false);
   };
 
   const eventColumns = [
@@ -221,13 +234,31 @@ const StudentRegistrationTab = () => {
       </Box>
 
       {showUpdateForm && (
-        <UpdateStudentRegistationDetails
+        <UpdateRegistationModal
           openModal={showUpdateForm}
           closeModal={handleCloseUpdateForm}
           newStudentData={selectedStudent}
           refetch={refetch}
         />
       )}
+
+<ConfirmationDialog
+        open={openConfirm}
+        onClose={() => setOpenConfirm(false)}
+        onConfirm={confirmDelete}
+        title="Confirm Delete"
+        description="Are you sure you want to delete this health camp? This action cannot be undone."
+      />
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

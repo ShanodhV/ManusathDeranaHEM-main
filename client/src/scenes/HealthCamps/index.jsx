@@ -54,7 +54,7 @@ const HealthCamps = () => {
         <Tab label="Lab Report" />
         <Tab label="Data Viewer" />
         <Tab label="Camp Predictor" />
-        <Tab label="Patient Data Analyzer" />
+        {/* <Tab label="Patient Data Analyzer" /> */}
       </Tabs>
 
       {/* Render tab content based on active tab */}
@@ -63,7 +63,7 @@ const HealthCamps = () => {
       {activeTab === 2 && <LabReportTab />}
       {activeTab === 3 && <DataViewerTab />}
       {activeTab === 4 && <CampPredictorTab />}
-      {activeTab === 5 && <PatientDataAnalyzerTab />}
+      {/* {activeTab === 5 && <PatientDataAnalyzerTab />} */}
 
       {/* Create Modal */}
       <CreateHealthCampModal openModal={openCreateModal} closeModal={handleCloseCreateModal} />

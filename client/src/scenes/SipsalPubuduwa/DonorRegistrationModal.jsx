@@ -15,12 +15,11 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useTheme } from "@mui/material/styles";
-
-import Buttons from "components/Buttons";
-import CustomTextField from "components/CustomTextField"; // Import your custom TextField component
+import CustomTextField from "components/CustomTextField"; // Adjust the import according to your file structure
 import { useAddDonorVolunteerMutation } from "state/api"; // Adjust the import according to your file structure
 
 const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
+  const theme = useTheme();
   const [donorNIC, setDonorNIC] = useState("");
   const [donorName, setDonorName] = useState("");
   const [donorAddress, setDonorAddress] = useState("");
@@ -110,7 +109,7 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <DialogTitle sx={{ bgcolor: "#f0f0f0" }} id="modal-modal-title">
+        <DialogTitle sx={{ bgcolor: "#f0f0f0", position: 'relative' }} id="modal-modal-title">
           <div style={{ color: "#d63333", fontWeight: '700', fontSize: '16px' }}>
             Register Donor
             <hr style={{ borderColor: "#d63333" }} />
@@ -122,7 +121,7 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
               position: 'absolute',
               right: 8,
               top: 8,
-              color: 'grey',
+              color: theme.palette.grey[500],
             }}
           >
             <CloseIcon />
@@ -278,3 +277,4 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
 };
 
 export default DonorRegistrationModal;
+

@@ -1,96 +1,79 @@
-import { Box,Button } from '@mui/material';
-import React, { useState,useEffect } from 'react'
-import { useTheme } from '@mui/material/styles';
-// import VolunteerDonorRegistrationModal from './VolunteerDonorRegistrationModal'
+import React, { useState, useEffect } from 'react';
+import { Box, Button, useTheme, Snackbar, Alert } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
+import { Delete, Edit } from '@mui/icons-material';
 import Buttons from 'components/Buttons';
 import DataGridCustomToolbar from 'components/DataGridCustomToolbar';
-import { DataGrid } from '@mui/x-data-grid';
-import { useGetDonorVolunteersQuery,useDeleteDonorVolunteerMutation } from 'state/api';
+import { useGetDonorVolunteersQuery, useDeleteDonorVolunteerMutation } from 'state/api';
 import DonorRegistrationModal from './DonorRegistrationModal';
-import { Delete, Edit } from "@mui/icons-material";
+import UpdateVolunteerRegistation from './UpdateVolunteerRegistation';
+import ConfirmationDialog from "components/ConfirmationDialog";
 
 const VolunteerDonorRegistrationTab = () => {
-
-  
-    const theme = useTheme();
-    const[openModal,setOpenModal]=useState(false);
-    const { data, isLoading, refetch, error } = useGetDonorVolunteersQuery();
-    const [deleteTreeEvent] = useDeleteDonorVolunteerMutation();
-    const [showUpdateForm, setShowUpdateForm] = useState(false);
-    const [selectedEvent, setSelectedEvent] = useState(null);
-    const [page, setPage] = useState(0);
-    const [pageSize, setPageSize] = useState(20);
-    const [sort, setSort] = useState({});
-    const [search, setSearch] = useState("");
-    const [searchInput, setSearchInput] = useState("");
-
-
-    useEffect(() => {
-      if (error) {
-        console.error("Error fetching events:", error);
-      }
-    }, [error]);
+  const theme = useTheme();
+  const [openModal, setOpenModal] = useState(false);
+  const [showUpdateForm, setShowUpdateForm] = useState(false);
+  const [selectedDonor, setSelectedDonor] = useState(null);
+  const { data, isLoading, refetch, error } = useGetDonorVolunteersQuery();
+  const [deleteDonorVolunteer] = useDeleteDonorVolunteerMutation();
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(20);
+  const [sort, setSort] = useState({});
+  const [search, setSearch] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
 
 
-    const handleOpenModal=()=>{
-        setOpenModal(true);
+  useEffect(() => {
+    if (error) {
+      console.error("Error fetching donors:", error);
     }
+  }, [error]);
 
-    
-  const handleCloseModal = () => {
-    setOpenModal(false);
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
+  
+  const handleDelete = (DonorID) => {
+    setOpenConfirm(true);
+    setSelectedDonor(DonorID);
   };
 
-  const handleDelete = (eventID) => {
-    deleteTreeEvent(eventID)
-      .unwrap()
-      .then((response) => {
-        console.log("Event deleted successfully");
-        refetch();
-      })
-      .catch((error) => {
-        console.error("Error deleting event:", error);
-      });
-  };
 
-  const handleUpdateClick = (event) => {
-    setSelectedEvent(event);
+  const handleUpdateClick = (donor) => {
+    console.log("Donor selected for update:", donor); // Debug log
+    setSelectedDonor(donor);
     setShowUpdateForm(true);
   };
 
-const eventColumns = [
-    {
-      field: "donorID",
-      headerName: "Donor ID",
-      flex: 0.5,
-      
-    },
-    {
-      field: "donorName",
-      headerName: "Donor Name",
-      flex: 1,
-    },
-    {
-      field: "donorAddress",
-      headerName: "Donor Address ",
-      flex: 1,
-    },
-    {
-      field: "contactNumber",
-      headerName: "Contact Number",
-      flex: 0.7,
-    },
-    {
-      field: "studentID",
-      headerName: "Student ID",
-      flex: 1,
-    },
-    {
-      field: "programID",
-      headerName: "program ID",
-      flex: 1,
-    },
-    
+  const handleCloseUpdateForm = () => {
+    setShowUpdateForm(false);
+    setSelectedDonor(null);
+    refetch();
+  };
+
+  const confirmDelete = () => {
+    deleteDonorVolunteer(selectedDonor)
+      .unwrap()
+      .then((response) => {
+        console.log("Health Camp deleted successfully");
+        setSnackbar({ open: true, message: "Health Camp deleted successfully", severity: "success" });
+        refetch();
+      })
+      .catch((error) => {
+        console.error("Error deleting health camp:", error);
+        setSnackbar({ open: true, message: "Error deleting health camp", severity: "error" });
+      });
+    setOpenConfirm(false);
+  };
+
+  const donorColumns = [
+    { field: "donorID", headerName: "Donor ID", flex: 0.5 },
+    { field: "donorName", headerName: "Donor Name", flex: 1 },
+    { field: "donorAddress", headerName: "Donor Address", flex: 1 },
+    { field: "contactNumber", headerName: "Contact Number", flex: 0.7 },
+    { field: "studentID", headerName: "Student ID", flex: 1 },
+    { field: "programID", headerName: "Program ID", flex: 1 },
     {
       field: "actions",
       headerName: "Actions",
@@ -99,92 +82,64 @@ const eventColumns = [
       filterable: false,
       renderCell: (params) => (
         <Box display="flex" justifyContent="space-around">
-          <Box
-            display="flex"
-            justifyContent="flex-end"
-            mr={2}
-            sx={{
-              "& button": {
-                backgroundColor: theme.palette.secondary[400],
-                color: "white",
-              },
-            }}
+          <Button
+            variant="contained"
+            color="error"
+            endIcon={<Delete />}
+            onClick={() => handleDelete(params.row._id)}
           >
-            <Button
-              variant="contained"
-              color="error"
-              endIcon={<Delete/>}
-              onClick={() => handleDelete(params.row._id)}
-            >
-              Delete
-            </Button>
-          </Box>
-          <Box
-            display="flex"
-            justifyContent="flex-end"
-            sx={{
-              "& button": {
-                backgroundColor: theme.palette.primary[700],
-                color: "white",
-              },
-            }}
+            Delete
+          </Button>
+          <Button
+            variant="contained"
+            color="info"
+            endIcon={<Edit />}
+            onClick={() => handleUpdateClick(params.row)}
           >
-            <Button
-              variant="contained"
-              color="info"
-              endIcon={<Edit/>}
-              onClick={() => handleUpdateClick(params.row)}
-            >
-              Update
-            </Button>
-          </Box>
+            Update
+          </Button>
         </Box>
       ),
     },
   ];
+
   return (
     <Box>
-        <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
-            {/* imports Buttuons component from Component folder */}
-            <Buttons label={"Add Donor"} onClick={handleOpenModal} />
-
-            {/* import StudentRegistrationModal component */}
-            {/* <VolunteerDonorRegistrationModal openModal={openModal} closeModal={handleCloseModal}/> */}
-            <DonorRegistrationModal openModal={openModal} closeModal={handleCloseModal}/>
-        </Box>
-        <Box
-        mt="40px"
-        height="75vh"
-        sx={{
-          "& .MuiDataGrid-root": {
-            border: "none",
-          },
-          "& .MuiDataGrid-cell": {
-            borderBottom: "none",
-          },
-          "& .MuiDataGrid-columnHeaders": {
-            backgroundColor: theme.palette.background.alt,
-            color: theme.palette.secondary[100],
-            borderBottom: "none",
-          },
-          "& .MuiDataGrid-virtualScroller": {
-            backgroundColor: theme.palette.primary.light,
-          },
-          "& .MuiDataGrid-footerContainer": {
-            backgroundColor: theme.palette.background.alt,
-            color: theme.palette.secondary[100],
-            borderTop: "none",
-          },
-          "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
-            color: `${theme.palette.secondary[200]} !important`,
-          },
-        }}
+      <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
+        <Buttons label={"Add Donor"} onClick={handleOpenModal} />
+        <DonorRegistrationModal openModal={openModal} closeModal={handleCloseModal} />
+      </Box>
+      <Box mt="40px" height="75vh" 
+      sx={{
+        "& .MuiDataGrid-root": {
+          border: "none",
+        },
+        "& .MuiDataGrid-cell": {
+          borderBottom: "none",
+        },
+        "& .MuiDataGrid-columnHeaders": {
+          backgroundColor: theme.palette.background.alt,
+          color: theme.palette.secondary[100],
+          borderBottom: "none",
+        },
+        "& .MuiDataGrid-virtualScroller": {
+          backgroundColor: theme.palette.primary.light,
+        },
+        "& .MuiDataGrid-footerContainer": {
+          backgroundColor: theme.palette.background.alt,
+          color: theme.palette.secondary[100],
+          borderTop: "none",
+        },
+        "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
+          color: `${theme.palette.secondary[200]} !important`,
+        },
+      }}
       >
         <DataGrid
           loading={isLoading || !data}
           getRowId={(row) => row._id}
           rows={data || []}
-          columns={eventColumns}
+          columns={donorColumns}
           rowCount={(data && data.total) || 0}
           rowsPerPageOptions={[20, 50, 100]}
           pagination
@@ -201,8 +156,34 @@ const eventColumns = [
           }}
         />
       </Box>
-    </Box>
-  )
-}
+      {showUpdateForm && (
+        <UpdateVolunteerRegistation
+          openModal={showUpdateForm}
+          closeModal={handleCloseUpdateForm}
+          newDonorData={selectedDonor}
+          refetch={refetch}
+        />
+      )}
 
-export default VolunteerDonorRegistrationTab
+<ConfirmationDialog
+        open={openConfirm}
+        onClose={() => setOpenConfirm(false)}
+        onConfirm={confirmDelete}
+        title="Confirm Delete"
+        description="Are you sure you want to delete this health camp? This action cannot be undone."
+      />
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
+    </Box>
+  );
+};
+
+export default VolunteerDonorRegistrationTab;
