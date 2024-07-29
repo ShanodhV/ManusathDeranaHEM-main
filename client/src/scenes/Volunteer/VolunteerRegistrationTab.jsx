@@ -1,33 +1,38 @@
-
+import { Delete, Edit } from "@mui/icons-material";
 import { Box } from "@mui/material";
-import Buttons from "components/Buttons";
-import { useState } from "react";
-
 import { useTheme } from "@mui/material/styles";
-import Button from "components/Buttons";
-import { useEffect } from "react";
-
 import { DataGrid } from "@mui/x-data-grid";
+import Button from "components/Buttons";
 import DataGridCustomToolbar from "components/DataGridCustomToolbar";
-import { useDeleteVolunteerMutation, useGetVolunteersQuery } from "state/api"; // Adjust imports according to your file structure
+import { useEffect, useState } from "react";
+import { useDeleteVolunteerMutation, useGetVolunteersQuery } from "state/api";
 import VolunteerRegistrationModal from "./VolunteerRegistrationModal"; // Import the VolunteerRegistrationModal component
 
-const VolunteerRegistrationTab = () => {
+const VolunteerRegistrationTab = ({ handleOpenCreateModal, handleOpenUpdateModal }) => {
   const theme = useTheme();
   const [openModal, setOpenModal] = useState(false);
-  const { data, isLoading, refetch, error } = useGetVolunteersQuery(); // Adjust to use the appropriate hook for fetching volunteer data
-  const [deleteVolunteer] = useDeleteVolunteerMutation(); // Adjust to use the appropriate mutation for deleting volunteers
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(20);
   const [sort, setSort] = useState({});
+  const [sortModel, setSortModel] = useState([]); // Update sort state to an array
   const [search, setSearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
+  const { data, isLoading, refetch, error } = useGetVolunteersQuery();
+  const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+
+  const [deleteVolunteer] = useDeleteVolunteerMutation();
 
   useEffect(() => {
     if (error) {
       console.error("Error fetching volunteers:", error);
+      setSnackbar({ open: true, message: "Error fetching volunteer", severity: "error" });
     }
-  }, [error]);
+
+    // Debugging: Log the fetched data
+    if (data) {
+      console.log("Fetched volunteer data:", data);
+    }
+  }, [error, data]);
 
   const handleOpenModal = () => {
     setOpenModal(true);
@@ -40,7 +45,7 @@ const VolunteerRegistrationTab = () => {
   const handleDelete = (volunteerID) => {
     deleteVolunteer(volunteerID)
       .unwrap()
-      .then((response) => {
+      .then(() => {
         console.log("Volunteer deleted successfully");
         refetch();
       })
@@ -49,6 +54,7 @@ const VolunteerRegistrationTab = () => {
       });
   };
 
+  // Define columns for the data grid
   const volunteerColumns = [
     {
       field: "name",
@@ -83,43 +89,23 @@ const VolunteerRegistrationTab = () => {
       filterable: false,
       renderCell: (params) => (
         <Box display="flex" justifyContent="space-around">
-          <Box
-            display="flex"
-            justifyContent="flex-end"
-            mr={2}
-            sx={{
-              "& button": {
-                backgroundColor: theme.palette.secondary[400],
-                color: "white",
-              },
-            }}
+          <Button
+            variant="contained"
+            color="error"
+            endIcon={<Delete />}
+            onClick={() => handleDelete(params.row._id)}
           >
-            <Button
-              variant="contained"
-              color="error"
-              onClick={() => handleDelete(params.row._id)}
-            >
-              Delete
-            </Button>
-          </Box>
-          <Box
-            display="flex"
-            justifyContent="flex-end"
-            sx={{
-              "& button": {
-                backgroundColor: theme.palette.primary[700],
-                color: "white",
-              },
-            }}
+            Delete
+          </Button>
+          <div style={{ padding: "2px" }}></div>
+          <Button
+            variant="contained"
+            color="info"
+            endIcon={<Edit />}
+            onClick={() => handleOpenUpdateModal(params.row)}
           >
-            <Button
-              variant="contained"
-              color="info"
-              onClick={() => console.log("Update functionality not implemented")}
-            >
-              Update
-            </Button>
-          </Box>
+            Update
+          </Button>
         </Box>
       ),
     },
@@ -128,9 +114,6 @@ const VolunteerRegistrationTab = () => {
   return (
     <Box m="1.5rem 2.5rem">
       <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
-
-        <Buttons label={"Register"} onClick={handleOpenModal} />
-
         <Button label="Register Volunteer" onClick={handleOpenModal} />
         <VolunteerRegistrationModal openModal={openModal} handleCloseModal={handleCloseModal} />
       </Box>
@@ -143,6 +126,7 @@ const VolunteerRegistrationTab = () => {
           },
           "& .MuiDataGrid-cell": {
             borderBottom: "none",
+            color: theme.palette.secondary[100],
           },
           "& .MuiDataGrid-columnHeaders": {
             backgroundColor: theme.palette.background.alt,
@@ -165,7 +149,7 @@ const VolunteerRegistrationTab = () => {
         <DataGrid
           loading={isLoading || !data}
           getRowId={(row) => row._id}
-          rows={data || []}
+          rows={data?.volunteers || []} // Use the correct path to access volunteer data
           columns={volunteerColumns}
           rowCount={(data && data.total) || 0}
           rowsPerPageOptions={[20, 50, 100]}
@@ -182,7 +166,6 @@ const VolunteerRegistrationTab = () => {
             toolbar: { searchInput, setSearchInput, setSearch },
           }}
         />
-
       </Box>
     </Box>
   );
