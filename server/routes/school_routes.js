@@ -12,6 +12,7 @@ const router = express.Router();
 
 router.get("/gets", getSchools);
 router.get("/get/:id", getSchool);
+router.get("/getLast", getLastSchool); // Added route to get the last school
 router.post("/add", addSchool);
 router.delete("/delete/:id", deleteSchool);
 router.put("/update/:id", updateSchool);
