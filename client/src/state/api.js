@@ -226,42 +226,73 @@ getHighKidneySerumByTown: build.query({
   providesTags: ['LabReports'],
 }),
     // Schools
+    // deleteSchool: build.mutation({
+    //   query: (schoolId) => ({
+    //     url: `school/delete/${schoolId}`,
+    //     method: "DELETE",
+    //   }),
+    //   invalidatesTags: ["Schools"],
+    // }),
+    // addSchool: build.mutation({
+    //   query: ({
+    //     schoolID,
+    //     schoolName,
+    //     schoolAddress,
+    //     location,
+    //     schoolMobileNumber,
+    //     principalContact,
+    //   }) => ({
+    //     url: `school/add`,
+    //     method: "POST",
+    //     body: {
+    //       schoolID,
+    //       schoolName,
+    //       schoolAddress,
+    //       location,
+    //       schoolMobileNumber,
+    //       principalContact,
+    //     },
+    //   }),
+    //   providesTags: ["Schools"],
+    // }),
+    // getSchools: build.query({
+    //   query: () => `school/gets`,
+    //   providesTags: ["Schools"],
+    // }),
+    // getSchool: build.query({
+    //   query: (id) => `school/get/${id}`,
+    //   providesTags: ["Schools"],
+    // }),
+    // getLastSchool: build.query({
+    //   query: () => `school/last`,
+    //   providesTags: ["Schools"],
+    // }),
     deleteSchool: build.mutation({
-      query: (schoolId) => ({
-        url: `school/delete/${schoolId}`,
-        method: "DELETE",
+      query: (schoolID) => ({
+        url: `school/delete/${schoolID}`,
+        method: 'DELETE',
       }),
-      invalidatesTags: ["Schools"],
+      invalidatesTags: ['Schools'],
     }),
     addSchool: build.mutation({
-      query: ({
-        schoolID,
-        schoolName,
-        schoolAddress,
-        location,
-        schoolMobileNumber,
-        principalContact,
-      }) => ({
+      query: (newSchool) => ({
         url: `school/add`,
-        method: "POST",
-        body: {
-          schoolID,
-          schoolName,
-          schoolAddress,
-          location,
-          schoolMobileNumber,
-          principalContact,
-        },
+        method: 'POST',
+        body: newSchool,
       }),
-      providesTags: ["Schools"],
+      invalidatesTags: ['Schools'],
     }),
     getSchools: build.query({
       query: () => `school/gets`,
-      providesTags: ["Schools"],
+      providesTags: ['Schools'],
     }),
     getSchool: build.query({
       query: (id) => `school/get/${id}`,
-      providesTags: ["Schools"],
+      providesTags: ['Schools'],
+    }),
+    getLastSchool: build.query({
+      query: () => `school/last`,
+      providesTags: ['Schools'],
     }),
     // Donors
     deleteDonor: build.mutation({
@@ -612,6 +643,7 @@ export const {
   useAddSchoolMutation,
   useGetSchoolsQuery,
   useGetSchoolQuery,
+  useGetLastSchoolQuery,
 
   useDeleteDonorMutation,
   useAddDonorMutation,

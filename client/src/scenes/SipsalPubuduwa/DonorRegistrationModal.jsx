@@ -109,7 +109,7 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <DialogTitle sx={{ bgcolor: "#f0f0f0" }} id="modal-modal-title">
+        <DialogTitle sx={{ bgcolor: "#f0f0f0", position: 'relative' }} id="modal-modal-title">
           <div style={{ color: "#d63333", fontWeight: '700', fontSize: '16px' }}>
             Register Donor
             <hr style={{ borderColor: "#d63333" }} />
@@ -277,3 +277,4 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
 };
 
 export default DonorRegistrationModal;
+

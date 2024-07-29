@@ -7,6 +7,7 @@ import { useTheme } from "@mui/material/styles";
 import DataGridCustomToolbar from "components/DataGridCustomToolbar";
 import { useGetSchoolsQuery, useDeleteSchoolMutation } from "state/api";
 import ConfirmationDialog from "components/ConfirmationDialog"; // Import the ConfirmationDialog component
+import { Delete, Edit } from "@mui/icons-material";
 
 const SchoolRegistrationTab = () => {
   const theme = useTheme();
@@ -38,9 +39,9 @@ const SchoolRegistrationTab = () => {
     setSelectedSchool(null); // Clear the selected school on modal close
   };
 
-  const handleDelete = (schoolID) => {
+  const handleDelete = (schoolId) => {
     setOpenConfirm(true);
-    setSchoolToDelete(schoolID);
+    setSchoolToDelete(schoolId);
   };
 
   const confirmDelete = () => {
@@ -59,7 +60,7 @@ const SchoolRegistrationTab = () => {
 
   const schoolColumns = [
     {
-      field: "schoolID",
+      field: "schoolId",
       headerName: "School ID",
       flex: 1,
     },
@@ -81,6 +82,11 @@ const SchoolRegistrationTab = () => {
     {
       field: "location",
       headerName: "Location",
+      flex: 1,
+    },
+    {
+      field: "PrincipalName",
+      headerName: "Principal Name",
       flex: 1,
     },
     {
@@ -110,7 +116,7 @@ const SchoolRegistrationTab = () => {
             <Button
               variant="contained"
               color="error"
-              onClick={() => handleDelete(params.row.schoolID)}
+              onClick={() => handleDelete(params.row.schoolId)}
             >
               Delete
             </Button>
@@ -176,7 +182,7 @@ const SchoolRegistrationTab = () => {
       >
         <DataGrid
           loading={isLoading || !data}
-          getRowId={(row) => row.schoolID}
+          getRowId={(row) => row.schoolId}
           rows={data || []}
           columns={schoolColumns}
           rowCount={(data && data.total) || 0}
