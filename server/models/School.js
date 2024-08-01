@@ -32,7 +32,7 @@ const SchoolSchema = new mongoose.Schema(
       },
     },
     schoolMobileNumber: {
-      type: String, // Assuming mobile number is stored as string
+      type: String,
       required: true,
     },
     principalContact: {
@@ -41,7 +41,7 @@ const SchoolSchema = new mongoose.Schema(
         required: true,
       },
       mobileNumber: {
-        type: String, // Assuming mobile number is stored as string
+        type: String,
         required: true,
       },
     },
