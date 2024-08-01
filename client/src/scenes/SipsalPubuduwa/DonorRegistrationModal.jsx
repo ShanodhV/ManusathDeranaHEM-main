@@ -24,17 +24,46 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
   const [donorName, setDonorName] = useState("");
   const [donorAddress, setDonorAddress] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
-  const [month, setMonth] = useState("");
-  const [day, setDay] = useState("");
-  const [year, setYear] = useState("");
   const [occupation, setOccupation] = useState("");
   const [errors, setErrors] = useState({});
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
   const [loading, setLoading] = useState(false);
+  
+  const formatDate = (value) => {
+    const digits = value.replace(/\D/g, '');
+    const day = digits.slice(0, 2);
+    const month = digits.slice(2, 4);
+    const year = digits.slice(4, 8);
+    return `${day}${day && month ? '/' : ''}${month}${month && year ? '/' : ''}${year}`;
+  };
+  
+  const isValidDate = (value) => {
+    const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+    return dateRegex.test(value);
+  };
+
+  const [date, setDate] = useState('');
+  const handleDateChange = (e) => {
+    const { value } = e.target;
+    const formattedValue = formatDate(value);
+    setDate(formattedValue);
+
+    if (!isValidDate(formattedValue)) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        date: "Invalid date format. Use DD/MM/YYYY.",
+      }));
+    } else {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        date: "",
+      }));
+    }
+  };
 
   const [addDonor] = useAddDonorVolunteerMutation();
 
-  const validatePhoneNumber = (number) => /^\d+$/.test(number);
+  const validatePhoneNumber = (number) => /^\d{10}$/.test(number);
 
   const handleAddDonor = () => {
     const newErrors = {};
@@ -42,7 +71,7 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
     if (!donorNIC) newErrors.donorNIC = "NIC is required";
     if (!donorName) newErrors.donorName = "Name is required";
     if (!donorAddress) newErrors.donorAddress = "Address is required";
-    if (!month || !day || !year) newErrors.dateOfBirth = "Date of Birth is required";
+    if (!date) newErrors.date = "Date is required";
     if (!mobileNumber) newErrors.mobileNumber = "Mobile number is required";
     else if (!validatePhoneNumber(mobileNumber)) newErrors.mobileNumber = "Mobile number must contain only numbers";
     if (!occupation) newErrors.occupation = "Occupation is required";
@@ -54,11 +83,7 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
         donorNIC,
         donorName,
         donorAddress,
-        dateOfBirth: {
-          month,
-          day,
-          year,
-        },
+        date,
         mobileNumber,
         occupation,
       };
@@ -71,9 +96,7 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
           setDonorNIC("");
           setDonorName("");
           setDonorAddress("");
-          setMonth("");
-          setDay("");
-          setYear("");
+          setDate("");
           setMobileNumber("");
           setOccupation("");
           setErrors({});
@@ -173,66 +196,17 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
             />
           </Box>
 
-          <Box sx={{ mt: 4 }}>
-            <label style={labelStyle} htmlFor="Date Of Birth">
-              Date of Birth
-            </label>
-            <Grid container spacing={2} sx={{ mt: 0 }}>
-              <Grid item xs={4}>
-                <CustomTextField
-                  select
-                  label="Month"
-                  variant="outlined"
-                  fullWidth
-                  value={month}
-                  onChange={(e) => setMonth(e.target.value)}
-                  error={!!errors.dateOfBirth}
-                  helperText={errors.dateOfBirth}
-                >
-                  {months.map((m) => (
-                    <MenuItem key={m} value={m}>
-                      {m}
-                    </MenuItem>
-                  ))}
-                </CustomTextField>
-              </Grid>
-              <Grid item xs={4}>
-                <CustomTextField
-                  select
-                  label="Day"
-                  variant="outlined"
-                  fullWidth
-                  value={day}
-                  onChange={(e) => setDay(e.target.value)}
-                  error={!!errors.dateOfBirth}
-                  helperText={errors.dateOfBirth}
-                >
-                  {days.map((d) => (
-                    <MenuItem key={d} value={d}>
-                      {d}
-                    </MenuItem>
-                  ))}
-                </CustomTextField>
-              </Grid>
-              <Grid item xs={4}>
-                <CustomTextField
-                  select
-                  label="Year"
-                  variant="outlined"
-                  fullWidth
-                  value={year}
-                  onChange={(e) => setYear(e.target.value)}
-                  error={!!errors.dateOfBirth}
-                  helperText={errors.dateOfBirth}
-                >
-                  {years.map((y) => (
-                    <MenuItem key={y} value={y}>
-                      {y}
-                    </MenuItem>
-                  ))}
-                </CustomTextField>
-              </Grid>
-            </Grid>
+          <Box sx={{ mt: 2 }}>
+            <CustomTextField
+              label="Date"
+              value={date}
+              onChange={handleDateChange}
+              fullWidth
+              error={!!errors.date}
+              helperText={errors.date || "Enter date as DD/MM/YYYY"}
+              placeholder="DD/MM/YYYY"
+              inputProps={{ pattern: "[0-9]*" }}
+            />
           </Box>
           <Box sx={{ mt: 2 }}>
             <CustomTextField

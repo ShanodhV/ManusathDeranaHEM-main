@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Box, Avatar, Button } from "@mui/material";
+import {Box, Button, Snackbar, Alert } from "@mui/material";
 import Buttons from "components/Buttons";
+import CustomButton from "components/Buttons";
 import SchoolRegistrationModal from "./SchoolRegistrationModal"; // Import the SchoolRegistrationModal component
 import { DataGrid } from "@mui/x-data-grid";
 import { useTheme } from "@mui/material/styles";
@@ -9,8 +10,9 @@ import { useGetSchoolsQuery, useDeleteSchoolMutation } from "state/api";
 import ConfirmationDialog from "components/ConfirmationDialog"; // Import the ConfirmationDialog component
 import { Delete, Edit } from "@mui/icons-material";
 
-const SchoolRegistrationTab = () => {
+const SchoolRegistrationTab = ({ handleOpenUpdateModal}) => {
   const theme = useTheme();
+  const [currentSchool, setCurrentSchool] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const { data, isLoading, refetch, error } = useGetSchoolsQuery();
   const [deleteSchool] = useDeleteSchoolMutation();
@@ -22,6 +24,7 @@ const SchoolRegistrationTab = () => {
   const [selectedSchool, setSelectedSchool] = useState(null); // State to manage selected school for update
   const [openConfirm, setOpenConfirm] = useState(false); // State to manage confirmation dialog
   const [schoolToDelete, setSchoolToDelete] = useState(null); // State to store the school to delete
+  const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
 
   useEffect(() => {
     if (error) {
@@ -102,43 +105,23 @@ const SchoolRegistrationTab = () => {
       filterable: false,
       renderCell: (params) => (
         <Box display="flex" justifyContent="space-around">
-          <Box
-            display="flex"
-            justifyContent="flex-end"
-            mr={2}
-            sx={{
-              "& button": {
-                backgroundColor: theme.palette.secondary[400],
-                color: "white",
-              },
-            }}
+          <Button
+            variant="contained"
+            color="error"
+            endIcon={<Delete/>}
+            onClick={() => handleDelete(params.row._id)}
           >
-            <Button
-              variant="contained"
-              color="error"
-              onClick={() => handleDelete(params.row.schoolId)}
-            >
-              Delete
-            </Button>
-          </Box>
-          <Box
-            display="flex"
-            justifyContent="flex-end"
-            sx={{
-              "& button": {
-                backgroundColor: theme.palette.primary[700],
-                color: "white",
-              },
-            }}
+            Delete
+          </Button>
+          <div style={{padding:'2px'}}></div>
+          <Button
+            variant="contained"
+            color="info"
+            endIcon={<Edit/>}
+            onClick={() => handleOpenUpdateModal(params.row)}
           >
-            <Button
-              variant="contained"
-              color="info"
-              onClick={() => handleOpenModal(params.row)}
-            >
-              Update
-            </Button>
-          </Box>
+            Update
+          </Button>
         </Box>
       ),
     },
@@ -147,8 +130,9 @@ const SchoolRegistrationTab = () => {
   return (
     <Box>
       <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
-        <Buttons label={"Register School"} onClick={() => handleOpenModal()} />
+        <CustomButton label="Register School" onClick={handleOpenModal} />
       </Box>
+      
       {/* Render the SchoolRegistrationModal component and pass necessary props */}
       <SchoolRegistrationModal
         openModal={openModal}
@@ -159,30 +143,17 @@ const SchoolRegistrationTab = () => {
         mt="40px"
         height="75vh"
         sx={{
-          "& .MuiDataGrid-root": {
-            border: "none",
-          },
-          "& .MuiDataGrid-cell": {
-            borderBottom: "none",
-          },
-          "& .MuiDataGrid-columnHeaders": {
-            backgroundColor: theme.palette.background.alt,
-            color: theme.palette.secondary[100],
-            borderBottom: "none",
-          },
-          "& .MuiDataGrid-virtualScroller": {
-            backgroundColor: theme.palette.primary.light,
-          },
-          "& .MuiDataGrid-footerContainer": {
-            backgroundColor: theme.palette.background.alt,
-            color: theme.palette.secondary[100],
-            borderTop: "none",
-          },
+          "& .MuiDataGrid-root": { border: "none" },
+          "& .MuiDataGrid-cell": { borderBottom: "none", color: theme.palette.secondary[100] },
+          "& .MuiDataGrid-columnHeaders": { backgroundColor: theme.palette.background.alt, color: theme.palette.secondary[100], borderBottom: "none" },
+          "& .MuiDataGrid-virtualScroller": { backgroundColor: theme.palette.primary.light },
+          "& .MuiDataGrid-footerContainer": { backgroundColor: theme.palette.background.alt, color: theme.palette.secondary[100], borderTop: "none" },
+          "& .MuiDataGrid-toolbarContainer .MuiButton-text": { color: `${theme.palette.secondary[200]} !important` },
         }}
       >
         <DataGrid
           loading={isLoading || !data}
-          getRowId={(row) => row.schoolId}
+          getRowId={(row) => row._id}
           rows={data || []}
           columns={schoolColumns}
           rowCount={(data && data.total) || 0}
@@ -208,6 +179,16 @@ const SchoolRegistrationTab = () => {
         title="Confirm Delete"
         description="Are you sure you want to delete this school? This action cannot be undone."
       />
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
