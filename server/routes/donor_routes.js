@@ -5,7 +5,7 @@ import {
   addDonor,
   deleteDonor,
   updateDonor,
-} from "../controllers/doner_controller.js";
+} from "../controllers/donor_controller.js";
 
 const router = express.Router();
 

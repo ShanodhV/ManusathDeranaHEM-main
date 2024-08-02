@@ -5,8 +5,6 @@ import {
   DialogContent,
   DialogActions,
   Box,
-  Grid,
-  MenuItem,
   Button,
   IconButton,
   CircularProgress,
@@ -16,7 +14,11 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { useTheme } from "@mui/material/styles";
 import CustomTextField from "components/CustomTextField"; // Adjust the import according to your file structure
-import { useAddDonorVolunteerMutation } from "state/api"; // Adjust the import according to your file structure
+import {useDeleteDonorMutation,
+  useAddDonorMutation,
+  useGetDonorsQuery,
+  useGetDonorQuery,
+  useUpdateDonorMutation,  } from "state/api"; // Adjust the import according to your file structure
 
 const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
   const theme = useTheme();
@@ -28,6 +30,12 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
   const [errors, setErrors] = useState({});
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
   const [loading, setLoading] = useState(false);
+
+  //const [addDonor] = useAddDonorMutation();
+  const [updateDonor] = useUpdateDonorMutation();
+
+  
+
   
   const formatDate = (value) => {
     const digits = value.replace(/\D/g, '');
@@ -61,7 +69,7 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
     }
   };
 
-  const [addDonor] = useAddDonorVolunteerMutation();
+  const [addDonor] = useAddDonorMutation();
 
   const validatePhoneNumber = (number) => /^\d{10}$/.test(number);
 

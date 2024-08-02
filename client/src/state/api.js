@@ -332,6 +332,15 @@ getHighKidneySerumByTown: build.query({
       query: (id) => `donor/get/${id}`,
       providesTags: ["Donors"],
     }),
+    updateDonor: build.mutation({
+      query: ({ donorId, donorData }) => ({
+        url: `donor/update/${donorId}`,
+        method: 'PUT',
+        body: donorData,
+      }),
+      invalidatesTags: ['Donors'],
+    }),
+    
     // Derana Daruwo Programs
     deleteDeranaDaruwoProgram: build.mutation({
       query: (programId) => ({
@@ -649,6 +658,7 @@ export const {
   useAddDonorMutation,
   useGetDonorsQuery,
   useGetDonorQuery,
+  useUpdateDonorMutation,
 
   useDeleteDeranaDaruwoProgramMutation,
   useAddDeranaDaruwoProgramMutation,
