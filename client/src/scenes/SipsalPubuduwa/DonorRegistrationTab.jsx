@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Snackbar, Alert } from "@mui/material";
 import Buttons from "components/Buttons";
+import CustomButton from "components/Buttons";
 import DonorRegistrationModal from "./DonorRegistrationModal";
 import { DataGrid } from "@mui/x-data-grid";
 import { useGetDonorVolunteersQuery, useDeleteDonorVolunteerMutation } from "state/api";
 import { useTheme } from "@mui/material/styles";
 import DataGridCustomToolbar from "components/DataGridCustomToolbar";
 import ConfirmationDialog from "components/ConfirmationDialog"; // Import the ConfirmationDialog component
+import { Delete, Edit } from "@mui/icons-material";
 
 const DonorRegistrationTab = () => {
   const theme = useTheme();
-
   const [openModal, setOpenModal] = useState(false);
   const { data, isLoading, refetch, error } = useGetDonorVolunteersQuery();
   const [deleteDonor] = useDeleteDonorVolunteerMutation();
@@ -22,6 +23,8 @@ const DonorRegistrationTab = () => {
   const [selectedDonor, setSelectedDonor] = useState(null);
   const [openConfirm, setOpenConfirm] = useState(false);
   const [donorToDelete, setDonorToDelete] = useState(null);
+  const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+
 
   useEffect(() => {
     if (error) {
@@ -97,17 +100,20 @@ const DonorRegistrationTab = () => {
       sortable: false,
       filterable: false,
       renderCell: (params) => (
-        <Box display="flex" justifyContent="space-around" gap={1}>
+        <Box display="flex" justifyContent="space-around">
           <Button
             variant="contained"
             color="error"
-            onClick={() => handleDelete(params.row.donorId)}
+            endIcon={<Delete/>}
+            onClick={() => handleDelete(params.row._id)}
           >
             Delete
           </Button>
+          <div style={{padding:'2px'}}></div>
           <Button
             variant="contained"
             color="info"
+            endIcon={<Edit/>}
             onClick={() => handleOpenModal(params.row)}
           >
             Update
@@ -119,9 +125,10 @@ const DonorRegistrationTab = () => {
 
   return (
     <Box>
-    <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
-      <Buttons label="Register Donor" onClick={() => handleOpenModal()} />
-    </Box>
+      <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
+        <CustomButton label="Register Donor" onClick={handleOpenModal} />
+      </Box>
+
       <DonorRegistrationModal
         openModal={openModal}
         handleCloseModal={handleCloseModal}
@@ -131,31 +138,17 @@ const DonorRegistrationTab = () => {
         mt="40px"
         height="75vh"
         sx={{
-          "& .MuiDataGrid-root": {
-            border: "none",
-          },
-          "& .MuiDataGrid-cell": {
-            borderBottom: "none",
-          },
-          "& .MuiDataGrid-columnHeaders": {
-            backgroundColor: theme.palette.background.alt,
-            color: theme.palette.secondary[100],
-            borderBottom: "none",
-          },
-          "& .MuiDataGrid-virtualScroller": {
-            backgroundColor: theme.palette.primary.light,
-          },
-          "& .MuiDataGrid-footerContainer": {
-            backgroundColor: theme.palette.background.alt,
-            color: theme.palette.secondary[100],
-            borderTop: "none",
-          },
-        }
-      }
+          "& .MuiDataGrid-root": { border: "none" },
+          "& .MuiDataGrid-cell": { borderBottom: "none", color: theme.palette.secondary[100] },
+          "& .MuiDataGrid-columnHeaders": { backgroundColor: theme.palette.background.alt, color: theme.palette.secondary[100], borderBottom: "none" },
+          "& .MuiDataGrid-virtualScroller": { backgroundColor: theme.palette.primary.light },
+          "& .MuiDataGrid-footerContainer": { backgroundColor: theme.palette.background.alt, color: theme.palette.secondary[100], borderTop: "none" },
+          "& .MuiDataGrid-toolbarContainer .MuiButton-text": { color: `${theme.palette.secondary[200]} !important` },
+        }}
       >
         <DataGrid
           loading={isLoading || !data}
-          getRowId={(row) => row.donorId}
+          getRowId={(row) => row._id}
           rows={data?.items || []}
           columns={donorColumns}
           rowCount={data?.total || 0}
@@ -181,6 +174,16 @@ const DonorRegistrationTab = () => {
         title="Confirm Delete"
         description="Are you sure you want to delete this donor? This action cannot be undone."
       />
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

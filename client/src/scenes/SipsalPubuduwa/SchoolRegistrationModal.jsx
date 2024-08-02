@@ -16,7 +16,7 @@ import {
 import { useTheme } from "@mui/material/styles";
 import CloseIcon from "@mui/icons-material/Close";
 import CustomTextField from "components/CustomTextField";
-import { useAddSchoolMutation , useGetLastSchoolQuery} from "state/api";
+import { useAddSchoolMutation, useGetLastSchoolQuery } from "state/api";
 
 const generateNextId = (lastId) => {
   const idNumber = parseInt(lastId.split('-')[2], 10);
@@ -158,7 +158,7 @@ const SchoolRegistrationModal = ({ openModal, handleCloseModal }) => {
         .then((response) => {
           console.log("School added successfully:", response);
           // Clear form fields
-          setSchoolId("");
+          setSchoolId(generateNextId(schoolId)); // Generate next ID based on the current ID
           setSchoolName("");
           setSchoolAddress("");
           setProvince("");
@@ -312,27 +312,14 @@ const SchoolRegistrationModal = ({ openModal, handleCloseModal }) => {
                   error={!!errors.town}
                   helperText={errors.town}
                 >
-                  {towns.map((townItem) => (
-                    <MenuItem key={townItem} value={townItem}>
-                      {townItem}
+                  {towns.map((t) => (
+                    <MenuItem key={t} value={t}>
+                      {t}
                     </MenuItem>
                   ))}
                 </CustomTextField>
               </Grid>
             </Grid>
-          </Box>
-          <Box sx={{ mt: 4 }}>
-            <label
-              style={{
-                fontWeight: "bold",
-                color: "black",
-                fontSize: "16px",
-                marginTop: "16px"
-              }}
-              htmlFor="Principal Info"
-            >
-             Principal's Information
-            </label>
           </Box>
           <Box sx={{ mt: 2 }}>
             <CustomTextField
@@ -357,29 +344,33 @@ const SchoolRegistrationModal = ({ openModal, handleCloseModal }) => {
             />
           </Box>
         </DialogContent>
-        <DialogActions sx={{ bgcolor: "#f0f0f0" }}>
+        <DialogActions sx={{ p: 2 }}>
           <Button
             onClick={handleAddSchool}
-            color="secondary"
             variant="contained"
+            sx={{
+              bgcolor: "#d63333",
+              color: "white",
+              "&:hover": {
+                bgcolor: "#a30000",
+              },
+            }}
             disabled={loading}
-            endIcon={loading && <CircularProgress size={20} />}
           >
-            Register School
-          </Button>
-          <Button onClick={handleCloseModal} variant="outlined" color="secondary">
-            Cancel
+            {loading ? <CircularProgress size={24} color="inherit" /> : "Register"}
           </Button>
         </DialogActions>
       </Dialog>
-  
       <Snackbar
         open={snackbar.open}
         autoHideDuration={6000}
         onClose={() => setSnackbar({ ...snackbar, open: false })}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >
-        <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} sx={{ width: '100%' }}>
+        <Alert
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
+        >
           {snackbar.message}
         </Alert>
       </Snackbar>
