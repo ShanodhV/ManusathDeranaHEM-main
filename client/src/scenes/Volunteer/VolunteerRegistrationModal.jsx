@@ -1,10 +1,11 @@
-import { Box, Grid, Modal } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
+import { Alert, Box, Dialog, DialogContent, DialogTitle, Grid, IconButton, Snackbar } from "@mui/material";
 import Buttons from "components/Buttons";
 import CustomTextField from "components/CustomTextField"; // Import your custom TextField component
 import { useState } from "react";
 import { useAddVolunteerMutation } from "state/api"; // Adjust the import according to your file structure
 
-const VolunteerRegistrationModal = ({ openModal, handleCloseModal }) => {
+const VolunteerRegistrationModal = ({ openModal, handleCloseModal,onVolunteerAdded  }) => {
   const [volunteerNIC, setVolunteerNIC] = useState("");
   const [volunteerName, setVolunteerName] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState({ month: "", day: "", year: "" });
@@ -13,10 +14,64 @@ const VolunteerRegistrationModal = ({ openModal, handleCloseModal }) => {
   const [location, setLocation] = useState({ province: "", district: "", town: "" });
   const [occupation, setOccupation] = useState("");
   const [status, setStatus] = useState("");
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+
+  // State for handling errors
+  const [errors, setErrors] = useState({
+    nic: "",
+    mobile: "",
+  });
 
   const [addVolunteer] = useAddVolunteerMutation();
 
+  // Function to verify NIC
+  const verifyNIC = (nic) => {
+    // Regular expression for NIC verification
+    const nicPattern = /^(\d{9}[Vv]|\d{12})$/; // Matches 9 digits followed by 'V' or 'v' or 12 digits
+    return nicPattern.test(nic);
+  };
+
+  // Function to verify mobile number
+  const verifyMobileNumber = (number) => {
+    // Regular expression for mobile number verification
+    const mobilePattern = /^\d{10}$/; // Matches exactly 10 digits
+    return mobilePattern.test(number);
+  };
+
+  // Function to check if NIC is already used
+  const isNICUsed = (nic) => {
+    // Mock data - replace with actual API call or state check
+    const existingNICs = ["123456789V", "987654321V", "123456789012"];
+    return existingNICs.includes(nic);
+  };
+
   const handleAddVolunteer = () => {
+    const newErrors = {
+      nic: "",
+      mobile: "",
+    };
+
+    // Validate NIC
+    if (!verifyNIC(volunteerNIC)) {
+      newErrors.nic = "Invalid NIC format. Use 9 digits followed by 'V' or 12 digits without 'V'.";
+    } else if (isNICUsed(volunteerNIC)) {
+      newErrors.nic = "This NIC is already used.";
+    }
+
+    // Validate Mobile Number
+    if (!verifyMobileNumber(contactNumber)) {
+      newErrors.mobile = "Invalid mobile number format. Use exactly 10 digits.";
+    }
+
+    // Update errors state with accumulated errors
+    setErrors(newErrors);
+
+    // Check if there are any errors
+    if (newErrors.nic || newErrors.mobile) {
+      return; // Exit early if there are validation errors
+    }
+
+    // Call API to add volunteer
     addVolunteer({
       volunteerNIC,
       volunteerName,
@@ -38,6 +93,13 @@ const VolunteerRegistrationModal = ({ openModal, handleCloseModal }) => {
         setLocation({ province: "", district: "", town: "" });
         setOccupation("");
         setStatus("");
+
+        // Show success message
+        setOpenSnackbar(true);
+
+        if (onVolunteerAdded) {
+          onVolunteerAdded();
+        }
       })
       .catch((error) => {
         console.error("Error adding Volunteer:", error);
@@ -68,6 +130,10 @@ const VolunteerRegistrationModal = ({ openModal, handleCloseModal }) => {
     setLocation({ ...location, town: event.target.value });
   };
 
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
+
   const labelStyle = {
     fontWeight: "bold",
     color: "black",
@@ -76,181 +142,215 @@ const VolunteerRegistrationModal = ({ openModal, handleCloseModal }) => {
   };
 
   return (
-    <Modal
-      open={openModal}
-      onClose={handleCloseModal}
-      aria-labelledby="modal-modal-titel"
-      aria-describedby="model-model-description"
-    >
-      <Box
-        sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: 700,
-          height: 600,
-          bgcolor: "#fff",
-          borderRadius: "20px",
-          boxShadow: 24,
-          p: 4,
-          overflowY: "auto",
-        }}
+    <>
+      {/* Full-screen Dialog for volunteer registration */}
+      <Dialog
+        fullScreen
+        open={openModal}
+        onClose={handleCloseModal}
+        aria-labelledby="form-dialog-title"
+        aria-describedby="form-dialog-description"
       >
-        <h2 id="modal-modal-titel">Volunteer Registration</h2>
-
-        <Box sx={{ mt: 6 }}>
-          <CustomTextField
-            label="Volunteer’s NIC"
-            variant="outlined"
-            fullWidth
-            value={volunteerNIC}
-            onChange={(e) => setVolunteerNIC(e.target.value)}
-          />
-        </Box>
-        <Box sx={{ mt: 6 }}>
-          <CustomTextField
-            label="Volunteer’s Name"
-            variant="outlined"
-            fullWidth
-            value={volunteerName}
-            onChange={(e) => setVolunteerName(e.target.value)}
-          />
-        </Box>
-        
-        <Box sx={{ mt: 4 }}>
-          <label style={labelStyle} htmlFor="Date Of Birth">
-            Date of Birth
-          </label>
-          <Grid container spacing={2} sx={{ mt: 0 }}>
-            <Grid item xs={2.5}>
-              <CustomTextField
-                select
-                label="Month"
-                variant="outlined"
-                fullWidth
-                value={dateOfBirth.month}
-                onChange={handleMonthChange}
-              >
-                {/* Month options */}
-              </CustomTextField>
-            </Grid>
-            <Grid item xs={2.5}>
-              <CustomTextField
-                select
-                label="Day"
-                variant="outlined"
-                fullWidth
-                value={dateOfBirth.day}
-                onChange={handleDayChange}
-              >
-                {/* Day options */}
-              </CustomTextField>
-            </Grid>
-            <Grid item xs={2.5}>
-              <CustomTextField
-                select
-                label="Year"
-                variant="outlined"
-                fullWidth
-                value={dateOfBirth.year}
-                onChange={handleYearChange}
-              >
-                {/* Year options */}
-              </CustomTextField>
-            </Grid>
-          </Grid>
-        </Box>
-
-        <Box sx={{ mt: 6 }}>
-          <CustomTextField
-            label="Contact Number"
-            variant="outlined"
-            fullWidth
-            value={contactNumber}
-            onChange={(e) => setContactNumber(e.target.value)}
-          />
-        </Box>
-        <Box sx={{ mt: 6 }}>
-          <CustomTextField
-            label="Volunteer’s Address"
-            variant="outlined"
-            fullWidth
-            value={volunteerAddress}
-            onChange={(e) => setVolunteerAddress(e.target.value)}
-          />
-        </Box>
-
-        <Box sx={{ mt: 4 }}>
-          <label style={labelStyle} htmlFor="Add Location name">
-            Add Location Name
-          </label>
-          <Grid container spacing={2} sx={{ mt: 0 }}>
-            <Grid item xs={2.5}>
-              <CustomTextField
-                select
-                label="Province"
-                variant="outlined"
-                fullWidth
-                value={location.province}
-                onChange={handleProvinceChange}
-              >
-                {/* Province options */}
-              </CustomTextField>
-            </Grid>
-            <Grid item xs={2.5}>
-              <CustomTextField
-                select
-                label="District"
-                variant="outlined"
-                fullWidth
-                value={location.district}
-                onChange={handleDistrictChange}
-              >
-                {/* District options */}
-              </CustomTextField>
-            </Grid>
-            <Grid item xs={2.5}>
-              <CustomTextField
-                select
-                label="Town"
-                variant="outlined"
-                fullWidth
-                value={location.town}
-                onChange={handleTownChange}
-              >
-                {/* Town options */}
-              </CustomTextField>
-            </Grid>
-          </Grid>
-        </Box>
-       
-        <Box sx={{ mt: 6 }}>
-          <CustomTextField
-            label="Occupation"
-            variant="outlined"
-            fullWidth
-            value={occupation}
-            onChange={(e) => setOccupation(e.target.value)}
-          />
-        </Box>
-        <Box sx={{ mt: 3 }}>
-          <CustomTextField
-            label="Status"
-            variant="outlined"
-            fullWidth
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
+        <DialogTitle sx={{ bgcolor: "#f0f0f0" }} id="form-dialog-title">
+          <div style={{ color: "#d63333", fontWeight: '700', fontSize: '16px' }}>
+            {"Volunteer Registration"}
+            <hr style={{ borderColor: "#d63333" }} />
+          </div>
+          <IconButton
+            aria-label="close"
+            onClick={handleCloseModal}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: 'grey.500',
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+  
+        <DialogContent>
+          <Box
+            sx={{
+              mt: 4,
+              width: '100%',
+              maxWidth: 900,
+              mx: 'auto',
+            }}
+          >
+            <CustomTextField
+              label="Volunteer’s NIC"
+              variant="outlined"
+              fullWidth
+              value={volunteerNIC}
+              onChange={(e) => setVolunteerNIC(e.target.value)}
+              error={!!errors.nic}
+              helperText={errors.nic}
             />
+  
+            <Box sx={{ mt: 4 }}>
+              <CustomTextField
+                label="Volunteer’s Name"
+                variant="outlined"
+                fullWidth
+                value={volunteerName}
+                onChange={(e) => setVolunteerName(e.target.value)}
+              />
+            </Box>
+  
+            <Box sx={{ mt: 4 }}>
+              <label style={{ fontWeight: 'bold', fontSize: '16px' }} htmlFor="Date Of Birth">
+                Date of Birth
+              </label>
+              <Grid container spacing={2} sx={{ mt: 0 }}>
+                <Grid item xs={4}>
+                  <CustomTextField
+                    select
+                    label="Month"
+                    variant="outlined"
+                    fullWidth
+                    value={dateOfBirth.month}
+                    onChange={handleMonthChange}
+                  >
+                    {/* Month options */}
+                  </CustomTextField>
+                </Grid>
+                <Grid item xs={4}>
+                  <CustomTextField
+                    select
+                    label="Day"
+                    variant="outlined"
+                    fullWidth
+                    value={dateOfBirth.day}
+                    onChange={handleDayChange}
+                  >
+                    {/* Day options */}
+                  </CustomTextField>
+                </Grid>
+                <Grid item xs={4}>
+                  <CustomTextField
+                    select
+                    label="Year"
+                    variant="outlined"
+                    fullWidth
+                    value={dateOfBirth.year}
+                    onChange={handleYearChange}
+                  >
+                    {/* Year options */}
+                  </CustomTextField>
+                </Grid>
+              </Grid>
+            </Box>
+  
+            <Box sx={{ mt: 4 }}>
+              <CustomTextField
+                label="Contact Number"
+                variant="outlined"
+                fullWidth
+                value={contactNumber}
+                onChange={(e) => setContactNumber(e.target.value)}
+                error={!!errors.mobile}
+                helperText={errors.mobile}
+              />
+            </Box>
+  
+            <Box sx={{ mt: 4 }}>
+              <CustomTextField
+                label="Volunteer’s Address"
+                variant="outlined"
+                fullWidth
+                value={volunteerAddress}
+                onChange={(e) => setVolunteerAddress(e.target.value)}
+              />
+            </Box>
+  
+            <Box sx={{ mt: 4 }}>
+              <label style={{ fontWeight: 'bold', fontSize: '16px' }} htmlFor="Add Location name">
+                Add Location Name
+              </label>
+              <Grid container spacing={2} sx={{ mt: 0 }}>
+                <Grid item xs={4}>
+                  <CustomTextField
+                    select
+                    label="Province"
+                    variant="outlined"
+                    fullWidth
+                    value={location.province}
+                    onChange={handleProvinceChange}
+                  >
+                    {/* Province options */}
+                  </CustomTextField>
+                </Grid>
+                <Grid item xs={4}>
+                  <CustomTextField
+                    select
+                    label="District"
+                    variant="outlined"
+                    fullWidth
+                    value={location.district}
+                    onChange={handleDistrictChange}
+                  >
+                    {/* District options */}
+                  </CustomTextField>
+                </Grid>
+                <Grid item xs={4}>
+                  <CustomTextField
+                    select
+                    label="Town"
+                    variant="outlined"
+                    fullWidth
+                    value={location.town}
+                    onChange={handleTownChange}
+                  >
+                    {/* Town options */}
+                  </CustomTextField>
+                </Grid>
+              </Grid>
+            </Box>
+  
+            <Box sx={{ mt: 4 }}>
+              <CustomTextField
+                label="Occupation"
+                variant="outlined"
+                fullWidth
+                value={occupation}
+                onChange={(e) => setOccupation(e.target.value)}
+              />
+            </Box>
+  
+            <Box sx={{ mt: 4 }}>
+              <CustomTextField
+                label="Status"
+                variant="outlined"
+                fullWidth
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+              />
+            </Box>
+  
+            <Box sx={{ mt: 6, display: "flex", justifyContent: "center" }}>
+              <Buttons onClick={handleAddVolunteer} label="Register" />
+            </Box>
           </Box>
-  
-          <Box sx={{ mt: 6, display: "flex", justifyContent: "center" }}>
-            <Buttons onClick={handleAddVolunteer} label="Register" />
-          </Box>
-        </Box>
-      </Modal>
-    );
-  };
-  
-  export default VolunteerRegistrationModal;
-  
+        </DialogContent>
+      </Dialog>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <Alert onClose={handleCloseSnackbar} severity="success"
+          sx={{
+            backgroundColor: 'black',
+            color: 'white',
+          }}>
+          Event successfully added
+        </Alert>
+      </Snackbar>
+    </>
+  );
+};
+
+export default VolunteerRegistrationModal;
