@@ -87,7 +87,7 @@ const LabReportTab = () => {
               />
             </Box>
           </CardContent>
-          <Button size="small" color="secondary" onClick={() => handleOpenGraphModal("district")}>
+          <Button size="small" color="secondary" variant="contained" onClick={() => handleOpenGraphModal("district")}>
             View Full Graph
           </Button>
         </Card>
