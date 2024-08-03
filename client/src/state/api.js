@@ -189,10 +189,13 @@ getLastCamp: build.query({
       providesTags: ["Camps"],
     }),
     getPatientsByCampdv: build.query({
-      query: ({ campId, infected }) => ({
+      query: ({ campIds, infected }) => ({
         url: "camp/patients-camp",
         method: "GET",
-        params: { campId, infected },
+        params: {
+          campIds,   // Ensure this is correctly passed as a string of comma-separated values
+          infected,
+        },
       }),
       providesTags: ["Patients"],
     }),

@@ -1,63 +1,58 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { TextField, Button } from '@mui/material';
+import { styled } from '@mui/material/styles';
+
+const LoginForm = styled('form')(({ theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  maxWidth: 300,
+  margin: 'auto',
+  padding: theme.spacing(2),
+  boxShadow: theme.shadows[2],
+}));
 
 const Login = () => {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Email validation
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(email)) {
-      setError('Invalid email format.');
-      return;
+    try {
+      const response = await fetch('/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+      const result = await response.text();
+      alert(result);
+    } catch (err) {
+      console.error('Error:', err);
     }
-
-    // Password validation
-    const passwordPattern = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
-    if (!passwordPattern.test(password)) {
-      setError('Password must be at least 8 characters long, contain an uppercase letter and a number.');
-      return;
-    }
-
-    // Handle login logic here
-    console.log('Logging in with', email, password);
-    // On successful login, redirect to dashboard or home
-    navigate('/dashboard');
   };
 
   return (
-    <div className="auth-container">
-      <h2>Login</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <form onSubmit={handleLogin}>
-        <div className="form-group">
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit">Login</button>
-      </form>
-    </div>
+    <LoginForm onSubmit={handleSubmit}>
+      <TextField
+        label="Username"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        margin="normal"
+        fullWidth
+      />
+      <TextField
+        label="Password"
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        margin="normal"
+        fullWidth
+      />
+      <Button type="submit" variant="contained" color="primary">
+        Login
+      </Button>
+    </LoginForm>
   );
 };
 
