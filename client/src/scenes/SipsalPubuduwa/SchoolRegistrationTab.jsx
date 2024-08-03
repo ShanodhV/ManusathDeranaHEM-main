@@ -89,16 +89,37 @@ const SchoolRegistrationTab = ({ handleOpenUpdateModal}) => {
       headerName: "Location",
       flex: 1,
     },
+
     {
-      field: "PrincipalName",
-      headerName: "Principal Name",
+      field: 'principalContact',
+      headerName: 'Principal Contact',
       flex: 1,
+      renderCell: (params) => {
+        const { value } = params;
+        if (!value || !Array.isArray(value)) return null;
+        
+        return (
+          <div>
+            {value.map((contact, index) => (
+              <div key={index}>
+                <strong>{contact.pname}</strong> - {contact.pnumber}
+              </div>
+            ))}
+          </div>
+        );
+      },
     },
-    {
-      field: "principalContact",
-      headerName: "Principal Contact",
-      flex: 1,
-    },
+
+    // {
+    //   field: "PrincipalName",
+    //   headerName: "Principal Name",
+    //   flex: 1,
+    // },
+    // {
+    //   field: "principalContact",
+    //   headerName: "Principal Contact",
+    //   flex: 1,
+    // },
     {
       field: "actions",
       headerName: "Actions",
