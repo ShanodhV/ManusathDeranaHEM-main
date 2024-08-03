@@ -1,8 +1,9 @@
 import { Delete, Edit } from "@mui/icons-material";
-import { Box } from "@mui/material";
+import { Alert, Box, Button, Snackbar } from "@mui/material"; // Import Snackbar and Alert
 import { useTheme } from "@mui/material/styles";
 import { DataGrid } from "@mui/x-data-grid";
-import Button from "components/Buttons";
+import CustomButton from "components/Buttons";
+import ConfirmationDialog from "components/ConfirmationDialog"; // Import ConfirmationDialog component
 import DataGridCustomToolbar from "components/DataGridCustomToolbar";
 import { useEffect, useState } from "react";
 import { useDeleteVolunteerMutation, useGetVolunteersQuery } from "state/api";
@@ -22,17 +23,15 @@ const VolunteerRegistrationTab = ({ handleOpenCreateModal, handleOpenUpdateModal
 
   const [deleteVolunteer] = useDeleteVolunteerMutation();
 
+  const [openConfirm, setOpenConfirm] = useState(false); // State for confirmation dialog
+  const [selectedVolunteer, setSelectedVolunteer] = useState(null); // State for selected volunteer
+
   useEffect(() => {
     if (error) {
       console.error("Error fetching volunteers:", error);
       setSnackbar({ open: true, message: "Error fetching volunteer", severity: "error" });
     }
-
-    // Debugging: Log the fetched data
-    if (data) {
-      console.log("Fetched volunteer data:", data);
-    }
-  }, [error, data]);
+  }, [error]);
 
   const handleOpenModal = () => {
     setOpenModal(true);
@@ -42,43 +41,60 @@ const VolunteerRegistrationTab = ({ handleOpenCreateModal, handleOpenUpdateModal
     setOpenModal(false);
   };
 
-  const handleDelete = (volunteerID) => {
-    deleteVolunteer(volunteerID)
+  const handleDeleteClick = (volunteerID) => {
+    setSelectedVolunteer(volunteerID); // Set selected volunteer
+    setOpenConfirm(true); // Open confirmation dialog
+  };
+
+  const handleConfirmDelete = () => {
+    deleteVolunteer(selectedVolunteer)
       .unwrap()
       .then(() => {
         console.log("Volunteer deleted successfully");
-        refetch();
+        setSnackbar({
+          open: true,
+          message: "Volunteer deleted successfully",
+          severity: "success",
+        });
+        refetch(); // Refetch data after successful deletion
       })
       .catch((error) => {
         console.error("Error deleting volunteer:", error);
+        setSnackbar({
+          open: true,
+          message: "Error deleting volunteer",
+          severity: "error",
+        });
+      })
+      .finally(() => {
+        setOpenConfirm(false); // Close confirmation dialog
       });
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar({ open: false, message: "", severity: "success" }); // Close snackbar
   };
 
   // Define columns for the data grid
   const volunteerColumns = [
     {
-      field: "name",
+      field: "volunteerName",
       headerName: "Name",
       flex: 1,
     },
     {
-      field: "NIC",
+      field: "volunteerNIC",
       headerName: "NIC",
       flex: 1,
     },
     {
-      field: "phone",
-      headerName: "Phone",
+      field: "contactNumber",
+      headerName: "Phone Number",
       flex: 1,
     },
     {
-      field: "address",
+      field: "volunteerAddress",
       headerName: "Address",
-      flex: 1,
-    },
-    {
-      field: "city",
-      headerName: "City",
       flex: 1,
     },
     {
@@ -93,7 +109,7 @@ const VolunteerRegistrationTab = ({ handleOpenCreateModal, handleOpenUpdateModal
             variant="contained"
             color="error"
             endIcon={<Delete />}
-            onClick={() => handleDelete(params.row._id)}
+            onClick={() => handleDeleteClick(params.row._id)} // Trigger confirmation
           >
             Delete
           </Button>
@@ -101,8 +117,8 @@ const VolunteerRegistrationTab = ({ handleOpenCreateModal, handleOpenUpdateModal
           <Button
             variant="contained"
             color="info"
-            endIcon={<Edit />}
-            onClick={() => handleOpenUpdateModal(params.row)}
+            endIcon={<Edit/>}
+            onClick={() => handleOpenUpdateModal(params.row)} // Open update modal
           >
             Update
           </Button>
@@ -114,7 +130,7 @@ const VolunteerRegistrationTab = ({ handleOpenCreateModal, handleOpenUpdateModal
   return (
     <Box m="1.5rem 2.5rem">
       <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
-        <Button label="Register Volunteer" onClick={handleOpenModal} />
+        <CustomButton label="Register Volunteer" onClick={handleOpenModal} />
         <VolunteerRegistrationModal openModal={openModal} handleCloseModal={handleCloseModal} />
       </Box>
       <Box
@@ -149,7 +165,7 @@ const VolunteerRegistrationTab = ({ handleOpenCreateModal, handleOpenUpdateModal
         <DataGrid
           loading={isLoading || !data}
           getRowId={(row) => row._id}
-          rows={data?.volunteers || []} // Use the correct path to access volunteer data
+          rows={data || []} // Use the correct path to access volunteer data
           columns={volunteerColumns}
           rowCount={(data && data.total) || 0}
           rowsPerPageOptions={[20, 50, 100]}
@@ -167,6 +183,31 @@ const VolunteerRegistrationTab = ({ handleOpenCreateModal, handleOpenUpdateModal
           }}
         />
       </Box>
+
+      {/* Confirmation Dialog for Delete Action */}
+      <ConfirmationDialog
+        open={openConfirm}
+        onClose={() => setOpenConfirm(false)}
+        onConfirm={handleConfirmDelete}
+        title="Confirm Delete"
+        description="Are you sure you want to delete this volunteer? This action cannot be undone."
+      />
+
+      {/* Snackbar for Success/Error Messages */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity={snackbar.severity}
+          sx={{ width: "100%" }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };
