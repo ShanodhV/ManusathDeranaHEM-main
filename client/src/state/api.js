@@ -294,6 +294,15 @@ getHighKidneySerumByTown: build.query({
       query: () => `school/last`,
       providesTags: ['Schools'],
     }),
+    updateSchool: build.mutation({
+      query: ({ schoolId, schoolData }) => ({
+        url: `school/${schoolId}`,
+        method: 'PUT',
+        body: schoolData,
+      }),
+      invalidatesTags: ['Schools'],
+    }),
+    
     // Donors
     deleteDonor: build.mutation({
       query: (donorId) => ({
@@ -653,6 +662,7 @@ export const {
   useGetSchoolsQuery,
   useGetSchoolQuery,
   useGetLastSchoolQuery,
+  useUpdateSchoolMutation,
 
   useDeleteDonorMutation,
   useAddDonorMutation,
