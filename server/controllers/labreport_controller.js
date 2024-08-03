@@ -229,3 +229,64 @@ export const getHighKidneySerumByTown = async (req, res) => {
     res.status(500).json({ error: "Failed to fetch data", details: error });
   }
 };
+
+// ********Prediction**********
+// Get districts and towns with the most patients identified
+export const getNextCampLocationsByPatients = async (req, res) => {
+  try {
+    const results = await LabReport.aggregate([
+      {
+        $lookup: {
+          from: "patients",
+          localField: "patient",
+          foreignField: "_id",
+          as: "patientDetails"
+        }
+      },
+      { $unwind: "$patientDetails" },
+      {
+        $lookup: {
+          from: "camps",
+          localField: "patientDetails.healthCamp",
+          foreignField: "_id",
+          as: "campDetails"
+        }
+      },
+      { $unwind: "$campDetails" },
+      {
+        $group: {
+          _id: { district: "$campDetails.District", town: "$campDetails.Town" },
+          count: { $sum: 1 }
+        }
+      },
+      { $sort: { count: -1 } },
+      { $limit: 5 } // Get top 5 districts and towns
+    ]);
+
+    res.status(200).json(results);
+  } catch (error) {
+    console.error("Error fetching next camp locations by patients:", error);
+    res.status(500).json({ error: "Failed to fetch data", details: error });
+  }
+};
+
+// Get districts and towns with the least number of health camps
+export const getNextCampLocationsByCamps = async (req, res) => {
+  try {
+    const results = await Camps.aggregate([
+      {
+        $group: {
+          _id: { district: "$District", town: "$Town" },
+          count: { $sum: 1 }
+        }
+      },
+      { $sort: { count: 1 } },
+      { $limit: 5 } // Get top 5 districts and towns with least health camps
+    ]);
+
+    res.status(200).json(results);
+  } catch (error) {
+    console.error("Error fetching next camp locations by camps:", error);
+    res.status(500).json({ error: "Failed to fetch data", details: error });
+  }
+};

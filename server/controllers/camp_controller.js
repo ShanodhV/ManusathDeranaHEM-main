@@ -1,4 +1,6 @@
 import Camps from "../models/Camps.js";
+import Patients from "../models/Patient.js";
+import LabReport from "../models/LabReport.js";
 
 // Add Health Camp
 export const addCamp = async (req, res) => {
@@ -92,3 +94,71 @@ export const getLastCamp = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+//Filter
+
+
+// Get camps with filter options
+export const getFilteredCamps = async (req, res) => {
+  try {
+    const { province, district, town } = req.query;
+
+    let filter = {};
+    if (province) filter.Province = province;
+    if (district) filter.District = district;
+    if (town) filter.Town = town;
+
+    const camps = await Camps.find(filter);
+    res.status(200).json(camps);
+  } catch (error) {
+    console.error("Error fetching filtered camps:", error);
+    res.status(500).json({ message: "Failed to fetch filtered camps" });
+  }
+};
+
+//***************************************************
+import mongoose from "mongoose";
+
+export const getPatientsByCampdv = async (req, res) => {
+  try {
+    const { campIds, infected } = req.query;
+    console.log("Received query parameters:", req.query);
+
+    if (!campIds) {
+      return res.status(400).json({ message: "campIds parameter is required" });
+    }
+
+    const campObjectIds = campIds.split(',').map(id => mongoose.Types.ObjectId(id));
+    const patients = await Patients.find({ healthCamp: { $in: campObjectIds } }).lean();
+
+    if (!patients.length) {
+      return res.status(404).json({ message: "No patients found for the specified camps." });
+    }
+
+    const patientIds = patients.map(patient => mongoose.Types.ObjectId(patient._id));
+    const labReports = await LabReport.find({ patient: { $in: patientIds } }).lean();
+
+    const patientsWithInfectionStatus = patients.map(patient => {
+      const labReport = labReports.find(report => report.patient.equals(patient._id));
+      return {
+        ...patient,
+        infected: labReport ? labReport.kidneySerum > 1.3 : false
+      };
+    });
+
+    const filteredPatients = infected !== undefined && infected.trim() !== '' 
+      ? patientsWithInfectionStatus.filter(patient => patient.infected === (infected === 'true'))
+      : patientsWithInfectionStatus;
+
+    res.status(200).json(filteredPatients);
+  } catch (error) {
+    console.error("Error fetching patients by camp:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+
+
+
+

@@ -47,14 +47,18 @@ const LabReportModal = ({ open, onClose, camp }) => {
     }
   }, [snackbar]);
 
+  const validateKidneySerum = (value) => /^(\d|\d\.\d)$/.test(value);
+  const validateNumeric = (value) => /^\d+(\.\d+)?$/.test(value);
+  const validateBloodPressure = (value) => /^\d{2,3}\/\d{2,3}$/.test(value);
+
   const handleSubmit = async () => {
     const newErrors = {};
     if (!patient) newErrors.patient = "Patient is required";
     if (!gender) newErrors.gender = "Gender is required";
-    if (!kidneySerum) newErrors.kidneySerum = "Kidney Serum is required";
-    if (!sugarLevel) newErrors.sugarLevel = "Sugar Level is required";
-    if (!cholesterolLevel) newErrors.cholesterolLevel = "Cholesterol Level is required";
-    if (!bloodPressure) newErrors.bloodPressure = "Blood Pressure is required";
+    if (!kidneySerum || !validateKidneySerum(kidneySerum)) newErrors.kidneySerum = "Valid Kidney Serum is required";
+    if (!sugarLevel || !validateNumeric(sugarLevel)) newErrors.sugarLevel = "Valid Sugar Level is required";
+    if (!cholesterolLevel || !validateNumeric(cholesterolLevel)) newErrors.cholesterolLevel = "Valid Cholesterol Level is required";
+    if (!bloodPressure || !validateBloodPressure(bloodPressure)) newErrors.bloodPressure = "Valid Blood Pressure is required";
 
     const existingReport = labReports?.find(report => report.patient === patient && report.camp === camp._id);
 
@@ -83,14 +87,16 @@ const LabReportModal = ({ open, onClose, camp }) => {
           message: "Lab report created successfully",
           severity: "success",
         });
-        onClose();
-        setPatient("");
-        setGender("");
-        setKidneySerum("");
-        setSugarLevel("");
-        setCholesterolLevel("");
-        setBloodPressure("");
-        setErrors({});
+        setTimeout(() => {
+          onClose();
+          setPatient("");
+          setGender("");
+          setKidneySerum("");
+          setSugarLevel("");
+          setCholesterolLevel("");
+          setBloodPressure("");
+          setErrors({});
+        }, 1500); // Delay to show the snackbar before closing the modal
       } catch (error) {
         setSnackbar({ open: true, message: error.data?.error || "Error saving lab report", severity: "error" });
       } finally {

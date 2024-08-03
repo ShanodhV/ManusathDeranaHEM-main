@@ -179,6 +179,23 @@ getLastCamp: build.query({
   query: () => `camp/last`,
   providesTags: ["Camps"],
 }),
+    // New endpoints for fetching filtered camps and patients by camp
+    getFilteredCamps: build.query({
+      query: ({ province, district, town }) => ({
+        url: "camp/filtered",
+        method: "GET",
+        params: { province, district, town },
+      }),
+      providesTags: ["Camps"],
+    }),
+    getPatientsByCampdv: build.query({
+      query: ({ campId, infected }) => ({
+        url: "camp/patients-camp",
+        method: "GET",
+        params: { campId, infected },
+      }),
+      providesTags: ["Patients"],
+    }),
 
 //lab Report
 getLabReports: build.query({
@@ -225,6 +242,17 @@ getHighKidneySerumByTown: build.query({
   query: () => 'labreport/high-kidney-serum-by-town',
   providesTags: ['LabReports'],
 }),
+
+//Lab-prediction
+getNextCampLocationsByPatients: build.query({
+  query: () => "labreport/next-camp-locations-by-patients",
+  providesTags: ["Camps"],
+}),
+getNextCampLocationsByCamps: build.query({
+  query: () => "labreport/next-camp-locations-by-camps",
+  providesTags: ["Camps"],
+}),
+
     // Schools
     // deleteSchool: build.mutation({
     //   query: (schoolId) => ({
@@ -600,6 +628,8 @@ getHighKidneySerumByTown: build.query({
       query: (id) => `volunteer-event/get/${id}`,
       providesTags: ["VolunteerEvents"],
     }),
+
+
   }),
 });
 
@@ -630,6 +660,9 @@ export const {
   useUpdateCampMutation,
   useGetLastCampQuery,
 
+  useLazyGetFilteredCampsQuery,
+  useLazyGetPatientsByCampdvQuery,
+
   useGetLabReportsQuery,
   useGetLabReportQuery,
   useGetLabReportsByCampQuery,
@@ -638,6 +671,9 @@ export const {
   useUpdateLabReportMutation,
   useGetHighKidneySerumByDistrictQuery, 
   useGetHighKidneySerumByTownQuery,
+  useGetNextCampLocationsByPatientsQuery,
+  useGetNextCampLocationsByCampsQuery,
+
 
   useDeleteSchoolMutation,
   useAddSchoolMutation,

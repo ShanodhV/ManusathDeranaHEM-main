@@ -5,7 +5,7 @@ const LabReportSchema = new mongoose.Schema(
     patient: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: "Patient",
+      ref: "Patients",
     },
     gender: {
       type: String,
