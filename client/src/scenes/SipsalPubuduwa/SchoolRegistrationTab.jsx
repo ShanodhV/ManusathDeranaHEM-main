@@ -9,6 +9,7 @@ import DataGridCustomToolbar from "components/DataGridCustomToolbar";
 import { useGetSchoolsQuery, useDeleteSchoolMutation } from "state/api";
 import ConfirmationDialog from "components/ConfirmationDialog"; // Import the ConfirmationDialog component
 import { Delete, Edit } from "@mui/icons-material";
+import UpdateSchoolRegistrationModal from "./UpdateSchoolRegistrationModal";
 
 const SchoolRegistrationTab = ({ handleOpenUpdateModal}) => {
   const theme = useTheme();
@@ -52,13 +53,14 @@ const SchoolRegistrationTab = ({ handleOpenUpdateModal}) => {
       .unwrap()
       .then((response) => {
         console.log("School deleted successfully");
-        setOpenConfirm(false);
+        setSnackbar({ open: true, message: "Health Camp deleted successfully", severity: "success" });
         refetch();
       })
       .catch((error) => {
         console.error("Error deleting school:", error);
-        setOpenConfirm(false);
+        setSnackbar({ open: true, message: "Error deleting health camp", severity: "error" });
       });
+    setOpenConfirm(false);
   };
 
   const schoolColumns = [
@@ -87,16 +89,37 @@ const SchoolRegistrationTab = ({ handleOpenUpdateModal}) => {
       headerName: "Location",
       flex: 1,
     },
+
     {
-      field: "PrincipalName",
-      headerName: "Principal Name",
+      field: 'principalContact',
+      headerName: 'Principal Contact',
       flex: 1,
+      renderCell: (params) => {
+        const { value } = params;
+        if (!value || !Array.isArray(value)) return null;
+        
+        return (
+          <div>
+            {value.map((contact, index) => (
+              <div key={index}>
+                <strong>{contact.pname}</strong> - {contact.pnumber}
+              </div>
+            ))}
+          </div>
+        );
+      },
     },
-    {
-      field: "principalContact",
-      headerName: "Principal Contact",
-      flex: 1,
-    },
+
+    // {
+    //   field: "PrincipalName",
+    //   headerName: "Principal Name",
+    //   flex: 1,
+    // },
+    // {
+    //   field: "principalContact",
+    //   headerName: "Principal Contact",
+    //   flex: 1,
+    // },
     {
       field: "actions",
       headerName: "Actions",
