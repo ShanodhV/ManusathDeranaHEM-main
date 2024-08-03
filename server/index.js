@@ -13,7 +13,7 @@ import patientRoutes from "./routes/patient_routes.js";
 import campRoutes from "./routes/camp_routes.js";
 import labreportRoutes from "./routes/labreport_routes.js";
 import schoolRoutes from "./routes/school_routes.js";
-import donerRoutes from "./routes/doner_routes.js";
+import donerRoutes from "./routes/donor_routes.js";
 import daruwoRoutes from "./routes/daruwo_routes.js";
 import studentRoutes from "./routes/student_routes.js";
 import donerVolunteerRoutes from "./routes/donorVolunteer_routes.js";

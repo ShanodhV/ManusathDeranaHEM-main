@@ -322,6 +322,15 @@ getNextCampLocationsByCamps: build.query({
       query: () => `school/last`,
       providesTags: ['Schools'],
     }),
+    updateSchool: build.mutation({
+      query: ({ schoolId, schoolData }) => ({
+        url: `school/${schoolId}`,
+        method: 'PUT',
+        body: schoolData,
+      }),
+      invalidatesTags: ['Schools'],
+    }),
+    
     // Donors
     deleteDonor: build.mutation({
       query: (donorId) => ({
@@ -360,6 +369,15 @@ getNextCampLocationsByCamps: build.query({
       query: (id) => `donor/get/${id}`,
       providesTags: ["Donors"],
     }),
+    updateDonor: build.mutation({
+      query: ({ donorId, donorData }) => ({
+        url: `donor/update/${donorId}`,
+        method: 'PUT',
+        body: donorData,
+      }),
+      invalidatesTags: ['Donors'],
+    }),
+    
     // Derana Daruwo Programs
     deleteDeranaDaruwoProgram: build.mutation({
       query: (programId) => ({
@@ -680,11 +698,13 @@ export const {
   useGetSchoolsQuery,
   useGetSchoolQuery,
   useGetLastSchoolQuery,
+  useUpdateSchoolMutation,
 
   useDeleteDonorMutation,
   useAddDonorMutation,
   useGetDonorsQuery,
   useGetDonorQuery,
+  useUpdateDonorMutation,
 
   useDeleteDeranaDaruwoProgramMutation,
   useAddDeranaDaruwoProgramMutation,
