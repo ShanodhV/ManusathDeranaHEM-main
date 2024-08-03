@@ -19,8 +19,82 @@ const DonorRegistrationModal = ({ openModal, closeModal }) => {
     const { data: programs, isLoading, isError } = useGetDeranaDaruwoProgramsQuery();
     const [loading, setLoading] = useState(false);
     const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+    const [donorIDError, setDonorIDError] = useState("");
+    const [donorNameError, setDonorNameError] = useState("");
+    const [donorAddressError, setDonorAddressError] = useState("");
+    const [contactNumberError, setContactNumberError] = useState("");
+    const [studentIDError, setStudentIDError] = useState("");
+    const [programIdError, setProgramIdError] = useState("");
+
+
+    const validateDonorID = (ID) => {
+      if (!ID) {
+        return "Donor ID is reuired";
+      }
+      return "";
+    };
+
+    const validateDonorName = (name) => {
+      if (!name) {
+        return "Donor Name is reuired";
+      }
+      return "";
+    };
+
+    const validateDonorAddress = (Address) => {
+      if (!Address) {
+        return "Donor Address is reuired";
+      }
+      return "";
+    };
+
+    const validateContactNumber = (contactNumber) => {
+      if (!contactNumber) {
+        return "Contact Number is reuired";
+      }
+      return "";
+    };
+
+    const validateStudentID = (ID) => {
+      if (!ID) {
+        return "Student ID is reuired";
+      }
+      return "";
+    };
+
+    const validateProgramID = (ID) => {
+      if (!ID) {
+        return "Program ID is reuired";
+      }
+      return "";
+    };
 
   const handleAddDonor = () => {
+    const donorIDValidationError = validateDonorID(donorID);
+    const donorNameValidationError = validateDonorName(donorName);
+    const donorAddressValidationError = validateDonorAddress(donorAddress);
+    const donorContactNumberValidationError = validateContactNumber(contactNumber);
+    const studentIDValidationError = validateStudentID(studentID);
+    const programIdValidationError = validateProgramID(programID);
+
+
+    if (donorIDValidationError||donorNameValidationError||donorAddressValidationError||donorContactNumberValidationError||studentIDValidationError||programIdValidationError) {
+      setDonorIDError(donorIDValidationError);
+      setDonorNameError(donorNameValidationError);
+      setDonorAddressError(donorAddressValidationError);
+      setContactNumberError(donorContactNumberValidationError);
+      setStudentIDError(studentIDValidationError);
+      setProgramIdError(programIdValidationError);
+      return;
+    }
+
+    setDonorIDError("");
+    setDonorNameError("");
+    setDonorAddressError("");
+    setContactNumberError("");
+    setStudentIDError("");
+    setProgramIdError("");
+
     const donorData = {
       donorID,
       donorName,
@@ -88,7 +162,13 @@ const DonorRegistrationModal = ({ openModal, closeModal }) => {
                             variant="outlined"
                             fullWidth
                             value={donorID}
-                            onChange={(e) => setDonorID(e.target.value)}
+                            onChange={(e) => {
+                              setDonorID(e.target.value);
+                              setDonorIDError(validateDonorID(e.target.value));
+
+                            }}
+                            error={!!donorIDError}
+                            helperText={donorIDError}
                         />
                     </Box>
                     <Box sx={{ mt: 6 }}>
@@ -97,7 +177,12 @@ const DonorRegistrationModal = ({ openModal, closeModal }) => {
                             variant="outlined"
                             fullWidth
                             value={donorName}
-                            onChange={(e) => setDonorName(e.target.value)}
+                            onChange={(e) => {
+                              setDonorName(e.target.value);
+                              setDonorNameError(validateDonorName(e.target.value));
+                            }}
+                            error={!!donorNameError}
+                            helperText={donorNameError}
                         />
                     </Box>
                     <Box sx={{ mt: 6 }}>
@@ -106,7 +191,12 @@ const DonorRegistrationModal = ({ openModal, closeModal }) => {
                             variant="outlined"
                             fullWidth
                             value={donorAddress}
-                            onChange={(e) => setDonorAddress(e.target.value)}
+                            onChange={(e) => {
+                              setDonorAddress(e.target.value);
+                              setDonorAddressError(validateDonorAddress(e.target.value));
+                            }}
+                            error={!!donorAddressError}
+                            helperText={donorAddressError}
                         />
                     </Box>
                     <Box sx={{ mt: 6 }}>
@@ -115,7 +205,12 @@ const DonorRegistrationModal = ({ openModal, closeModal }) => {
                             variant="outlined"
                             fullWidth
                             value={contactNumber}
-                            onChange={(e) => setContactNumber(e.target.value)}
+                            onChange={(e) => {
+                              setContactNumber(e.target.value);
+                              setContactNumberError(validateContactNumber(e.target.value));
+                            }}
+                            error={!!contactNumberError}
+                            helperText={contactNumberError}
                         />
                     </Box>
 
@@ -125,7 +220,13 @@ const DonorRegistrationModal = ({ openModal, closeModal }) => {
               <InputLabel>Select Student ID</InputLabel>
               <Select
                 value={studentID}
-                onChange={(e) => setStudentID(e.target.value)}
+                onChange={(e) => {
+                  setStudentID(e.target.value);
+                  setStudentIDError(validateStudentID(e.target.value));
+                }}
+                error={!!studentIDError}
+                helperText={studentIDError}
+                
                 label="Select Student ID"
                 disabled={isLoading || isError}
               >
@@ -138,6 +239,7 @@ const DonorRegistrationModal = ({ openModal, closeModal }) => {
                 ))}
               </Select>
             </FormControl>
+            
                     </Box>
 
                     <h3>program ID</h3>
@@ -146,7 +248,13 @@ const DonorRegistrationModal = ({ openModal, closeModal }) => {
               <InputLabel>Select Program ID</InputLabel>
               <Select
                 value={programID}
-                onChange={(e) => setProgramID(e.target.value)}
+                onChange={(e) => {
+                  setProgramID(e.target.value);
+                  setProgramIdError(validateProgramID(e.target.value));
+                }}
+                error={!!programIdError}
+                helperText={programIdError}
+                
                 label="Select Program ID"
                 disabled={isLoading || isError}
               >
