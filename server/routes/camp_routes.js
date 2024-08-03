@@ -5,7 +5,9 @@ import {
   addCamp,
   deleteCamp,
   updateCamp,
-  getLastCamp
+  getLastCamp,
+  getFilteredCamps, 
+  getPatientsByCampdv
 } from "../controllers/camp_controller.js";
 
 const router = express.Router();
@@ -17,4 +19,6 @@ router.delete("/delete/:id", deleteCamp);
 router.put("/update/:id", updateCamp);
 router.get("/last", getLastCamp);
 
+router.get("/filtered", getFilteredCamps);
+router.get('/patients-camp', getPatientsByCampdv);
 export default router;
