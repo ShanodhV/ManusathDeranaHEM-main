@@ -10,18 +10,18 @@ import {
   Button,
   IconButton,
   CircularProgress,
-  Snackbar,
-  Alert,
 } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 import CloseIcon from "@mui/icons-material/Close";
+import { useTheme } from "@mui/material/styles";
+import Buttons from "components/Buttons";
 import CustomTextField from "components/CustomTextField";
 import { useAddSchoolMutation, useGetLastSchoolQuery } from "state/api";
+import { Alert, Snackbar } from "@mui/material";
 
 const generateNextId = (lastId) => {
   const idNumber = parseInt(lastId.split('-')[2], 10);
   const nextIdNumber = (idNumber + 1).toString().padStart(6, '0');
-  return `MD-SHL-${nextIdNumber}`;
+  return `MD-SC-${nextIdNumber}`;
 };
 
 const sriLankanData = {
@@ -70,31 +70,30 @@ const sriLankanData = {
   }
 };
 
-const SchoolRegistrationModal = ({ openModal, handleCloseModal }) => {
+const CreateSchoolModal = ({ openModal, closeModal }) => {
   const theme = useTheme();
   const [schoolId, setSchoolId] = useState("");
   const [schoolName, setSchoolName] = useState("");
   const [schoolAddress, setSchoolAddress] = useState("");
-  const [schoolMobileNumber, setSchoolMobileNumber] = useState("");
   const [province, setProvince] = useState("");
   const [district, setDistrict] = useState("");
   const [town, setTown] = useState("");
+  const [schoolMobileNumber, setSchoolMobileNumber] = useState("");
   const [principalContact, setPrincipalContact] = useState([{ pname: "", pnumber: "" }]);
-  const [errors, setErrors] = useState({});
-  const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+  const [addSchool] = useAddSchoolMutation();
   const [loading, setLoading] = useState(false);
+  const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
 
   const [districts, setDistricts] = useState([]);
   const [towns, setTowns] = useState([]);
-  const { data: lastSchool, isSuccess } = useGetLastSchoolQuery();
 
-  const [addSchool] = useAddSchoolMutation();
+  const { data: lastSchool, isSuccess } = useGetLastSchoolQuery();
 
   useEffect(() => {
     if (isSuccess && lastSchool) {
       setSchoolId(generateNextId(lastSchool.schoolId));
     } else {
-      setSchoolId("MD-SHL-000001");
+      setSchoolId("MD-SC-000001");
     }
   }, [lastSchool, isSuccess]);
 
@@ -117,236 +116,218 @@ const SchoolRegistrationModal = ({ openModal, handleCloseModal }) => {
     setTown("");
   }, [district]);
 
-  const handlePrincipalContactChange = (index, field, value) => {
-    setPrincipalContact((prevContacts) => {
-      const updatedContacts = [...prevContacts];
-      updatedContacts[index][field] = value;
-      return updatedContacts;
-    });
+  const handleClickAddPerson = () => {
+    setPrincipalContact([...principalContact, { pname: "", pnumber: "" }]);
   };
-  
 
-  const validatePhoneNumber = (number) => /^\d+$/.test(number);
+  const handleChangePrincipalContact = (index, field, value) => {
+    const updatedPrincipalContact = [...principalContact];
+    updatedPrincipalContact[index][field] = value;
+    setPrincipalContact(updatedPrincipalContact);
+  };
 
-  const handleAddSchool = () => {
-    // Prepare school data
-    
+  const validatePhoneNumber = (number) => /^\d{10}$/.test(number);
 
-    // Validate inputs and gather errors
+  const handleSubmit = () => {
     const newErrors = {};
     if (!schoolId) newErrors.schoolId = "School ID is required";
-    if (!schoolName) newErrors.schoolName = "School Name is required";
-    if (!schoolAddress) newErrors.schoolAddress = "School Address is required";
+    if (!schoolName) newErrors.schoolName = "School name is required";
+    if (!schoolAddress) newErrors.schoolAddress = "School address is required";
     if (!province) newErrors.province = "Province is required";
     if (!district) newErrors.district = "District is required";
     if (!town) newErrors.town = "Town is required";
-    if (!schoolMobileNumber) newErrors.schoolMobileNumber = "School Mobile Number is required";
-    else if (!validatePhoneNumber(schoolMobileNumber)) newErrors.schoolMobileNumber = "School Mobile Number must contain only numbers";
+    if (!schoolMobileNumber) newErrors.schoolMobileNumber = "Mobile number is required";
     principalContact.forEach((person, index) => {
       if (!person.pname) newErrors[`principalContact${index}pname`] = "Name is required";
       if (!person.pnumber) newErrors[`principalContact${index}pnumber`] = "Phone number is required";
       else if (!validatePhoneNumber(person.pnumber)) newErrors[`principalContact${index}pnumber`] = "Phone number must contain only 10 digits";
     });
-    // if (!principalName) newErrors.principalName = "Principal Name is required";
-    // if (!principalMobileNumber) newErrors.principalMobileNumber = "Principal Mobile Number is required";
-    // else if (!validatePhoneNumber(principalMobileNumber)) newErrors.principalMobileNumber = "Principal Mobile Number must contain only numbers";
 
-    // If there are errors, set them and return early
     if (Object.keys(newErrors).length > 0) {
-        setErrors(newErrors);
-    } else{
+      setErrors(newErrors);
+    } else {
       setLoading(true);
+      const startTime = Date.now();
       const schoolData = {
         schoolId: schoolId,
         schoolName: schoolName,
         schoolAddress: schoolAddress,
-        Province: province,
-        District: district,
-        Town: town,
+        location: {
+          province: province,
+          district: district,
+          town: town,
+        },
         schoolMobileNumber: schoolMobileNumber,
         principalContact: principalContact,
-    };
-    addSchool(schoolData)
-        .then((response) => {
-            console.log("School added successfully:", response);
-            // Clear form fields
-            setSchoolId(generateNextId(schoolId)); // Generate next ID based on the current ID
-            setSchoolName("");
-            setSchoolAddress("");
-            setProvince("");
-            setDistrict("");
-            setTown("");
-            setSchoolMobileNumber("");
-            setPrincipalContact([{ pname:"", pnumber:""}]);
-            setErrors({}); // Clear any errors
-            setSnackbar({ open: true, message: "School added successfully!", severity: "success" });
+      };
 
-            // Hide loading indicator
+      addSchool(schoolData)
+        .then((response) => {
+          console.log("School saved successfully:", response);
+          setSchoolId(generateNextId(schoolId));
+          setSchoolName("");
+          setSchoolAddress("");
+          setProvince("");
+          setDistrict("");
+          setTown("");
+          setSchoolMobileNumber("");
+          setPrincipalContact([{ pname: "", pnumber: "" }]);
+
+          const elapsedTime = Date.now() - startTime;
+          const remainingTime = 500 - elapsedTime;
+          setTimeout(() => {
             setLoading(false);
-            handleCloseModal();
+            closeModal();
+            setSnackbar({ open: true, message: `School created successfully`, severity: "success" });
+          }, remainingTime > 0 ? remainingTime : 0);
         })
         .catch((error) => {
-            console.error("Error adding school:", error);
-            setSnackbar({ open: true, message: "Failed to add school. Please try again.", severity: "error" });
-            setLoading(false);
+          console.error("Error adding school:", error);
+          setLoading(false);
+          setSnackbar({ open: true, message: "Error adding school", severity: "error" });
         });
     }
+  };
+  const [errors, setErrors] = useState({});
 
-    // Show loading indicator
-    
-
-    // Add school data asynchronously
-    
-};
-
-
-
-return (
-  <>
+  return (
+    <>
       <Dialog
-          fullScreen
-          open={openModal}
-          onClose={handleCloseModal}
-          aria-labelledby="modal-title"
-          aria-describedby="modal-description"
+        fullScreen
+        open={openModal}
+        onClose={closeModal}
+        aria-labelledby="form-dialog-title"
       >
-          <DialogTitle sx={{ bgcolor: "#f0f0f0" }} id="modal-title">
-              <div style={{ color: "#d63333", fontWeight: '700', fontSize: '16px' }}>
-                  Register School
-                  <hr style={{ borderColor: "#d63333" }} />
-              </div>
-              <IconButton
-                  aria-label="close"
-                  onClick={handleCloseModal}
-                  sx={{
-                      position: 'absolute',
-                      right: 8,
-                      top: 8,
-                      color: theme.palette.grey[500],
-                  }}
-              >
-                  <CloseIcon />
-              </IconButton>
-          </DialogTitle>
-          <DialogContent>
-              <Box sx={{ mt: 2 }}>
-                  <CustomTextField
-                      label="School ID"
-                      variant="outlined"
-                      fullWidth
-                      value={schoolId}
-                      error={!!errors.schoolId}
-                      helperText={errors.schoolId}
-                      disabled
-                  />
-              </Box>
-              <Box sx={{ mt: 2 }}>
-                  <CustomTextField
-                      label="School Name"
-                      variant="outlined"
-                      fullWidth
-                      value={schoolName}
-                      onChange={(e) => setSchoolName(e.target.value)}
-                      error={!!errors.schoolName}
-                      helperText={errors.schoolName}
-                  />
-              </Box>
-              <Box sx={{ mt: 2 }}>
-                  <CustomTextField
-                      label="School Address"
-                      variant="outlined"
-                      fullWidth
-                      value={schoolAddress}
-                      onChange={(e) => setSchoolAddress(e.target.value)}
-                      error={!!errors.schoolAddress}
-                      helperText={errors.schoolAddress}
-                  />
-              </Box>
-              <Box sx={{ mt: 2 }}>
-                  <CustomTextField
-                      label="School Mobile Number"
-                      variant="outlined"
-                      fullWidth
-                      value={schoolMobileNumber}
-                      onChange={(e) => setSchoolMobileNumber(e.target.value)}
-                      error={!!errors.schoolMobileNumber}
-                      helperText={errors.schoolMobileNumber}
-                  />
-              </Box>
-              <Box sx={{ mt: 4 }}>
-                  <label
-                      style={{
-                          fontWeight: "bold",
-                          color: "black",
-                          fontSize: "16px",
-                          marginTop: "16px"
-                      }}
-                      htmlFor="Add Location name"
-                  >
-                      Add Location Name
-                  </label>
-                  <Grid container spacing={2} sx={{ mt: 0 }}>
-                      <Grid item xs={4}>
-                          <CustomTextField
-                              select
-                              label="Province"
-                              variant="outlined"
-                              fullWidth
-                              value={province}
-                              onChange={(e) => setProvince(e.target.value)}
-                              error={!!errors.province}
-                              helperText={errors.province}
-                          >
-                              {Object.keys(sriLankanData).map((prov) => (
-                                  <MenuItem key={prov} value={prov}>
-                                      {prov}
-                                  </MenuItem>
-                              ))}
-                          </CustomTextField>
-                      </Grid>
-                      <Grid item xs={4}>
-                          <CustomTextField
-                              select
-                              label="District"
-                              variant="outlined"
-                              fullWidth
-                              value={district}
-                              onChange={(e) => setDistrict(e.target.value)}
-                              error={!!errors.district}
-                              helperText={errors.district}
-                              disabled={!province}
-                          >
-                              {districts.map((dist) => (
-                                  <MenuItem key={dist} value={dist}>
-                                      {dist}
-                                  </MenuItem>
-                              ))}
-                          </CustomTextField>
-                      </Grid>
-                      <Grid item xs={4}>
-                          <CustomTextField
-                              select
-                              label="Town"
-                              variant="outlined"
-                              fullWidth
-                              value={town}
-                              onChange={(e) => setTown(e.target.value)}
-                              error={!!errors.town}
-                              helperText={errors.town}
-                              disabled={!district}
-                          >
-                              {towns.map((t) => (
-                                  <MenuItem key={t} value={t}>
-                                      {t}
-                                  </MenuItem>
-                              ))}
-                          </CustomTextField>
-                      </Grid>
-                  </Grid>
-              </Box>
+        <DialogTitle sx={{bgcolor:"#f0f0f0"}} id="form-dialog-title">
+        <div style={{ color: "#d63333", fontWeight: '700', fontSize: '16px' }}>
+          {"Create School"}
+          <hr style={{ borderColor: "#d63333", }} />
+        </div>        
+          <IconButton
+            aria-label="close"
+            onClick={closeModal}
+            sx={{
+              position: 'absolute',
+              right: 8,
+              top: 8,
+              color: theme.palette.grey[500],
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          <Box sx={{ mt: 2 }}>
+            <CustomTextField
+              label="School ID"
+              variant="outlined"
+              value={schoolId}
+              fullWidth
+              error={!!errors.schoolId}
+              helperText={errors.schoolId}
+              disabled
+            />
+          </Box>
 
-              <Box sx={{ mt: 2 }}>
-            <label style={{ fontWeight: "bold", color: "black", fontSize: "16px" }}>Prinscipal Contact</label>
+          <Box sx={{ mt: 2 }}>
+            <CustomTextField
+              label="School Name"
+              variant="outlined"
+              value={schoolName}
+              onChange={(e) => setSchoolName(e.target.value)}
+              fullWidth
+              error={!!errors.schoolName}
+              helperText={errors.schoolName}
+            />
+          </Box>
+
+          <Box sx={{ mt: 2 }}>
+            <CustomTextField
+              label="School Address"
+              variant="outlined"
+              value={schoolAddress}
+              onChange={(e) => setSchoolAddress(e.target.value)}
+              fullWidth
+              error={!!errors.schoolAddress}
+              helperText={errors.schoolAddress}
+            />
+          </Box>
+
+          <Box sx={{ mt: 2 }}>
+            <Grid container spacing={2}>
+              <Grid item xs={4}>
+                <CustomTextField
+                  label="Province"
+                  variant="outlined"
+                  value={province}
+                  onChange={(e) => setProvince(e.target.value)}
+                  select
+                  fullWidth
+                  error={!!errors.province}
+                  helperText={errors.province}
+                >
+                  {Object.keys(sriLankanData).map((prov) => (
+                    <MenuItem key={prov} value={prov}>
+                      {prov}
+                    </MenuItem>
+                  ))}
+                </CustomTextField>
+              </Grid>
+              <Grid item xs={4}>
+                <CustomTextField
+                  label="District"
+                  variant="outlined"
+                  value={district}
+                  onChange={(e) => setDistrict(e.target.value)}
+                  select
+                  fullWidth
+                  error={!!errors.district}
+                  helperText={errors.district}
+                  disabled={!province}
+                >
+                  {districts.map((dist) => (
+                    <MenuItem key={dist} value={dist}>
+                      {dist}
+                    </MenuItem>
+                  ))}
+                </CustomTextField>
+              </Grid>
+              <Grid item xs={4}>
+                <CustomTextField
+                  label="Town"
+                  variant="outlined"
+                  value={town}
+                  onChange={(e) => setTown(e.target.value)}
+                  select
+                  fullWidth
+                  error={!!errors.town}
+                  helperText={errors.town}
+                  disabled={!district}
+                >
+                  {towns.map((t) => (
+                    <MenuItem key={t} value={t}>
+                      {t}
+                    </MenuItem>
+                  ))}
+                </CustomTextField>
+              </Grid>
+            </Grid>
+          </Box>
+
+          <Box sx={{ mt: 2 }}>
+            <CustomTextField
+              label="Mobile Number"
+              variant="outlined"
+              value={schoolMobileNumber}
+              onChange={(e) => setSchoolMobileNumber(e.target.value)}
+              fullWidth
+              error={!!errors.schoolMobileNumber}
+              helperText={errors.schoolMobileNumber}
+            />
+          </Box>
+
+          <Box sx={{ mt: 2 }}>
+            <label style={{ fontWeight: "bold", color: "black", fontSize: "16px" }}>Add Principal Contact</label>
             {principalContact.map((person, index) => (
               <Box key={index} sx={{ mt: 2 }}>
                 <Grid container spacing={2}>
@@ -355,7 +336,7 @@ return (
                       label="Name"
                       variant="outlined"
                       value={person.pname}
-                      onChange={(e) => handlePrincipalContactChange(index, "pname", e.target.value)}
+                      onChange={(e) => handleChangePrincipalContact(index, "pname", e.target.value)}
                       fullWidth
                       error={!!errors[`principalContact${index}pname`]}
                       helperText={errors[`principalContact${index}pname`]}
@@ -366,7 +347,7 @@ return (
                       label="Mobile Number"
                       variant="outlined"
                       value={person.pnumber}
-                      onChange={(e) => handlePrincipalContactChange(index, "pnumber", e.target.value)}
+                      onChange={(e) => handleChangePrincipalContact(index, "pnumber", e.target.value)}
                       fullWidth
                       error={!!errors[`principalContact${index}pnumber`]}
                       helperText={errors[`principalContact${index}pnumber`]}
@@ -375,27 +356,27 @@ return (
                 </Grid>
               </Box>
             ))}
-            
+            {/* <Box sx={{ mt: 2 }}>
+              <Buttons onClick={handleClickAddPerson} label="Add another Person" />
+            </Box> */}
           </Box>
-
-
-      
-          </DialogContent>
-          <DialogActions sx={{bgcolor:"#f0f0f0"}}>
+        </DialogContent>
+        <DialogActions sx={{bgcolor:"#f0f0f0"}}>
           <Button
-            onClick={handleAddSchool}
+            onClick={handleSubmit}
             color="secondary"
             variant="contained"
             disabled={loading}
             endIcon={loading && <CircularProgress size={20} />}
           >
-            {"Register School"}
+            {"Create School"}
           </Button>
-          <Button onClick={handleCloseModal}  variant="outlined" color="secondary">
+          <Button onClick={closeModal}  variant="outlined" color="secondary">
             Cancel
           </Button>
         </DialogActions>
       </Dialog>
+
       <Snackbar
         open={snackbar.open}
         autoHideDuration={6000}
@@ -406,9 +387,8 @@ return (
           {snackbar.message}
         </Alert>
       </Snackbar>
-  </>
-);
-
+    </>
+  );
 };
 
-export default SchoolRegistrationModal;
+export default CreateSchoolModal;

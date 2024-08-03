@@ -1,6 +1,6 @@
 import School from "../models/School.js";
 
-// Add a new school registration
+// Add School
 export const addSchool = async (req, res) => {
   try {
     const { schoolId, schoolName, schoolAddress, location, schoolMobileNumber, principalContact } = req.body;
@@ -9,9 +9,9 @@ export const addSchool = async (req, res) => {
       schoolId,
       schoolName,
       schoolAddress,
-      location,  // Should match the schema with fields province, district, and town
+      location,
       schoolMobileNumber,
-      principalContact,  // Should match the schema with fields name and mobileNumber
+      principalContact,
     });
 
     const savedSchool = await newSchool.save();
@@ -22,7 +22,7 @@ export const addSchool = async (req, res) => {
   }
 };
 
-// Get all school registrations
+// Get All Schools
 export const getSchools = async (req, res) => {
   try {
     const schools = await School.find();
@@ -32,45 +32,44 @@ export const getSchools = async (req, res) => {
   }
 };
 
-// Get a single school registration by ID
+// Get School by ID
 export const getSchool = async (req, res) => {
   try {
     const { id } = req.params;
     const school = await School.findById(id);
-    if (!school) {
-      return res.status(404).json({ message: "School not found" });
-    }
     res.status(200).json(school);
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
 };
 
-// Delete a school registration by ID
+// Delete School
 export const deleteSchool = async (req, res) => {
+  const { id } = req.params;
   try {
-    const { id } = req.params;
-    const deletedSchool = await School.findOneAndDelete({ schoolId: id });
+    const deletedSchool = await School.findByIdAndDelete(id);
     if (!deletedSchool) {
       return res.status(404).json({ error: "School not found" });
     }
     res.json({ message: "School deleted successfully" });
   } catch (error) {
-    console.log("Error deleting school:", error);
+    console.error("Error deleting school:", error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-// Update a school registration by ID
+// Update School
 export const updateSchool = async (req, res) => {
   try {
-    const { id } = req.params;
+    const schoolId = req.params.id;
     const updatedSchoolData = req.body;
 
-    const updatedSchool = await School.findByIdAndUpdate(id, updatedSchoolData, { new: true });
-    if (!updatedSchool) {
-      return res.status(404).json({ message: "School not found" });
-    }
+    const updatedSchool = await School.findByIdAndUpdate(
+      schoolId,
+      updatedSchoolData,
+      { new: true }
+    );
+
     res.json(updatedSchool);
   } catch (error) {
     console.error("Error updating school:", error);
@@ -78,12 +77,12 @@ export const updateSchool = async (req, res) => {
   }
 };
 
-// Get the last school registration
+// Get Last School
 export const getLastSchool = async (req, res) => {
   try {
     const lastSchool = await School.findOne().sort({ createdAt: -1 });
     if (!lastSchool) {
-      return res.status(404).json({ message: "No school found" });
+      return res.status(404).json({ message: "No schools found" });
     }
     res.status(200).json(lastSchool);
   } catch (error) {

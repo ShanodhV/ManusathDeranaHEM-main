@@ -257,83 +257,41 @@ getNextCampLocationsByCamps: build.query({
 }),
 
     // Schools
-    // deleteSchool: build.mutation({
-    //   query: (schoolId) => ({
-    //     url: `school/delete/${schoolId}`,
-    //     method: "DELETE",
-    //   }),
-    //   invalidatesTags: ["Schools"],
-    // }),
-    // addSchool: build.mutation({
-    //   query: ({
-    //     schoolID,
-    //     schoolName,
-    //     schoolAddress,
-    //     location,
-    //     schoolMobileNumber,
-    //     principalContact,
-    //   }) => ({
-    //     url: `school/add`,
-    //     method: "POST",
-    //     body: {
-    //       schoolID,
-    //       schoolName,
-    //       schoolAddress,
-    //       location,
-    //       schoolMobileNumber,
-    //       principalContact,
-    //     },
-    //   }),
-    //   providesTags: ["Schools"],
-    // }),
-    // getSchools: build.query({
-    //   query: () => `school/gets`,
-    //   providesTags: ["Schools"],
-    // }),
-    // getSchool: build.query({
-    //   query: (id) => `school/get/${id}`,
-    //   providesTags: ["Schools"],
-    // }),
-    // getLastSchool: build.query({
-    //   query: () => `school/last`,
-    //   providesTags: ["Schools"],
-    // }),
-    deleteSchool: build.mutation({
-      query: (schoolID) => ({
-        url: `school/delete/${schoolID}`,
-        method: 'DELETE',
-      }),
-      invalidatesTags: ['Schools'],
-    }),
-    addSchool: build.mutation({
-      query: (newSchool) => ({
-        url: `school/add`,
-        method: 'POST',
-        body: newSchool,
-      }),
-      invalidatesTags: ['Schools'],
-    }),
     getSchools: build.query({
-      query: () => `school/gets`,
-      providesTags: ['Schools'],
+      query: () => "schools",
+      providesTags: ["Schools"],
     }),
     getSchool: build.query({
-      query: (id) => `school/get/${id}`,
-      providesTags: ['Schools'],
+      query: (id) => `schools/${id}`,
+      providesTags: ["Schools"],
     }),
     getLastSchool: build.query({
-      query: () => `school/last`,
-      providesTags: ['Schools'],
+      query: () => "schools/last",
+      providesTags: ["Schools"],
+    }),
+    addSchool: build.mutation({
+      query: (school) => ({
+        url: "schools",
+        method: "POST",
+        body: school,
+      }),
+      invalidatesTags: ["Schools"],
+    }),
+    deleteSchool: build.mutation({
+      query: (id) => ({
+        url: `schools/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Schools"],
     }),
     updateSchool: build.mutation({
-      query: ({ schoolId, schoolData }) => ({
-        url: `school/${schoolId}`,
-        method: 'PUT',
-        body: schoolData,
+      query: ({ id, ...rest }) => ({
+        url: `schools/${id}`,
+        method: "PUT",
+        body: rest,
       }),
-      invalidatesTags: ['Schools'],
+      invalidatesTags: ["Schools"],
     }),
-    
     // Donors
     deleteDonor: build.mutation({
       query: (donorId) => ({
@@ -351,7 +309,7 @@ getNextCampLocationsByCamps: build.query({
         mobileNumber,
         occupation,
       }) => ({
-        url: `donor/add`,
+        url: `/add`,
         method: "POST",
         body: {
           donorNIC,
@@ -696,11 +654,11 @@ export const {
   useGetNextCampLocationsByCampsQuery,
 
 
-  useDeleteSchoolMutation,
-  useAddSchoolMutation,
   useGetSchoolsQuery,
   useGetSchoolQuery,
   useGetLastSchoolQuery,
+  useAddSchoolMutation,
+  useDeleteSchoolMutation,
   useUpdateSchoolMutation,
 
   useDeleteDonorMutation,

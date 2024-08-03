@@ -32,7 +32,7 @@ const DonorSchema = new mongoose.Schema(
       },
     },
     mobileNumber: {
-      type: String, // Assuming mobile number is stored as string
+      type: String,
       required: true,
     },
     occupation: {

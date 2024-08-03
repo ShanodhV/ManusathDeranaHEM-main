@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from "react";
-import {Box, Button, Snackbar, Alert } from "@mui/material";
-import Buttons from "components/Buttons";
-import CustomButton from "components/Buttons";
-import SchoolRegistrationModal from "./SchoolRegistrationModal"; // Import the SchoolRegistrationModal component
-import { DataGrid } from "@mui/x-data-grid";
+import { Box, Button, Snackbar, Alert } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import CustomButton from "components/Buttons";
 import DataGridCustomToolbar from "components/DataGridCustomToolbar";
+import { DataGrid } from "@mui/x-data-grid";
 import { useGetSchoolsQuery, useDeleteSchoolMutation } from "state/api";
-import ConfirmationDialog from "components/ConfirmationDialog"; // Import the ConfirmationDialog component
+import ConfirmationDialog from "components/ConfirmationDialog";
 import { Delete, Edit } from "@mui/icons-material";
-import UpdateSchoolRegistrationModal from "./UpdateSchoolRegistrationModal";
+import CreateSchoolModal from "./SchoolRegistrationModal"; 
+import UpdateSchoolModal from "./UpdateSchoolRegistrationModal"; // Import the update modal
 
-const SchoolRegistrationTab = ({ handleOpenUpdateModal}) => {
+const SchoolRegistrationTab = () => {
   const theme = useTheme();
   const [currentSchool, setCurrentSchool] = useState(null);
-  const [openModal, setOpenModal] = useState(false);
   const { data, isLoading, refetch, error } = useGetSchoolsQuery();
   const [deleteSchool] = useDeleteSchoolMutation();
   const [page, setPage] = useState(0);
@@ -22,74 +20,50 @@ const SchoolRegistrationTab = ({ handleOpenUpdateModal}) => {
   const [sort, setSort] = useState({});
   const [search, setSearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
-  const [selectedSchool, setSelectedSchool] = useState(null); // State to manage selected school for update
-  const [openConfirm, setOpenConfirm] = useState(false); // State to manage confirmation dialog
-  const [schoolToDelete, setSchoolToDelete] = useState(null); // State to store the school to delete
+  const [selectedSchool, setSelectedSchool] = useState(null);
+  const [openConfirm, setOpenConfirm] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+
+  // State for handling modals
+  const [openCreateModal, setOpenCreateModal] = useState(false);
+  const [openUpdateModal, setOpenUpdateModal] = useState(false);
 
   useEffect(() => {
     if (error) {
       console.error("Error fetching schools:", error);
+      setSnackbar({ open: true, message: "Error fetching schools", severity: "error" });
     }
   }, [error]);
 
-  const handleOpenModal = (school = null) => {
-    setSelectedSchool(school); // Set the selected school for the modal
-    setOpenModal(true);
-  };
-
-  const handleCloseModal = () => {
-    setOpenModal(false);
-    setSelectedSchool(null); // Clear the selected school on modal close
-  };
-
-  const handleDelete = (schoolId) => {
+  const handleDelete = (schoolID) => {
     setOpenConfirm(true);
-    setSchoolToDelete(schoolId);
+    setSelectedSchool(schoolID);
   };
 
   const confirmDelete = () => {
-    deleteSchool(schoolToDelete)
+    deleteSchool(selectedSchool)
       .unwrap()
-      .then((response) => {
-        console.log("School deleted successfully");
-        setSnackbar({ open: true, message: "Health Camp deleted successfully", severity: "success" });
+      .then(() => {
+        setSnackbar({ open: true, message: "School deleted successfully", severity: "success" });
         refetch();
       })
       .catch((error) => {
         console.error("Error deleting school:", error);
-        setSnackbar({ open: true, message: "Error deleting health camp", severity: "error" });
+        setSnackbar({ open: true, message: "Error deleting school", severity: "error" });
       });
     setOpenConfirm(false);
   };
 
-  const schoolColumns = [
-    {
-      field: "schoolId",
-      headerName: "School ID",
-      flex: 1,
-    },
-    {
-      field: "schoolName",
-      headerName: "School Name",
-      flex: 1,
-    },
-    {
-      field: "schoolAddress",
-      headerName: "Address",
-      flex: 1,
-    },
-    {
-      field: "schoolMobileNumber",
-      headerName: "Mobile Number",
-      flex: 1,
-    },
-    {
-      field: "location",
-      headerName: "Location",
-      flex: 1,
-    },
+  const handleOpenUpdateModal = (school) => {
+    setCurrentSchool(school);
+    setOpenUpdateModal(true);
+  };
 
+  const schoolColumns = [
+    { field: "schoolId", headerName: "School ID", flex: 0.8 },
+    { field: "schoolName", headerName: "School Name", flex: 0.8 },
+    { field: "schoolAddress", headerName: "School Address", flex: 1 },
+    { field: "location.town", headerName: "Town", flex: 1 },
     {
       field: 'principalContact',
       headerName: 'Principal Contact',
@@ -109,17 +83,6 @@ const SchoolRegistrationTab = ({ handleOpenUpdateModal}) => {
         );
       },
     },
-
-    // {
-    //   field: "PrincipalName",
-    //   headerName: "Principal Name",
-    //   flex: 1,
-    // },
-    // {
-    //   field: "principalContact",
-    //   headerName: "Principal Contact",
-    //   flex: 1,
-    // },
     {
       field: "actions",
       headerName: "Actions",
@@ -131,16 +94,16 @@ const SchoolRegistrationTab = ({ handleOpenUpdateModal}) => {
           <Button
             variant="contained"
             color="error"
-            endIcon={<Delete/>}
+            endIcon={<Delete />}
             onClick={() => handleDelete(params.row._id)}
           >
             Delete
           </Button>
-          <div style={{padding:'2px'}}></div>
+          <div style={{ padding: '2px' }}></div>
           <Button
             variant="contained"
             color="info"
-            endIcon={<Edit/>}
+            endIcon={<Edit />}
             onClick={() => handleOpenUpdateModal(params.row)}
           >
             Update
@@ -151,17 +114,10 @@ const SchoolRegistrationTab = ({ handleOpenUpdateModal}) => {
   ];
 
   return (
-    <Box>
+    <Box m="1.5rem 2.5rem">
       <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
-        <CustomButton label="Register School" onClick={handleOpenModal} />
+        <CustomButton label="Create School" onClick={() => setOpenCreateModal(true)} />
       </Box>
-      
-      {/* Render the SchoolRegistrationModal component and pass necessary props */}
-      <SchoolRegistrationModal
-        openModal={openModal}
-        handleCloseModal={handleCloseModal}
-        school={selectedSchool} // Pass the selected school data to the modal
-      />
       <Box
         mt="40px"
         height="75vh"
@@ -190,9 +146,7 @@ const SchoolRegistrationTab = ({ handleOpenUpdateModal}) => {
           onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
           onSortModelChange={(newSortModel) => setSort(newSortModel)}
           components={{ Toolbar: DataGridCustomToolbar }}
-          componentsProps={{
-            toolbar: { searchInput, setSearchInput, setSearch },
-          }}
+          componentsProps={{ toolbar: { searchInput, setSearchInput, setSearch } }}
         />
       </Box>
       <ConfirmationDialog
@@ -212,6 +166,12 @@ const SchoolRegistrationTab = ({ handleOpenUpdateModal}) => {
           {snackbar.message}
         </Alert>
       </Snackbar>
+
+      {/* Create School Modal */}
+      <CreateSchoolModal openModal={openCreateModal} closeModal={() => setOpenCreateModal(false)} />
+
+      {/* Update School Modal */}
+      <UpdateSchoolModal openModal={openUpdateModal} closeModal={() => setOpenUpdateModal(false)} school={currentSchool} />
     </Box>
   );
 };

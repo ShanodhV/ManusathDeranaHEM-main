@@ -8,7 +8,7 @@ const ViewSchoolDetailsTab = () => {
 
   const handleOpenModal = () => {
     setOpenModal(true);
-  };
+  }; 
 
   const handleCloseModal = () => {
     setOpenModal(false);

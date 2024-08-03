@@ -53,7 +53,7 @@ app.use("/sales", salesRoutes);
 app.use("/patient", patientRoutes);
 app.use("/camp", campRoutes);
 app.use("/labreport", labreportRoutes);
-app.use("/school", schoolRoutes);
+app.use("/schools", schoolRoutes);
 app.use("/doner", donerRoutes);
 app.use("/derana-daruwo", daruwoRoutes);
 app.use("/student", studentRoutes);

@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Box, Button, Snackbar, Alert } from "@mui/material";
-import Buttons from "components/Buttons";
-import CustomButton from "components/Buttons";
 import DonorRegistrationModal from "./DonorRegistrationModal";
 import { DataGrid } from "@mui/x-data-grid";
 import { useGetDonorVolunteersQuery, useDeleteDonorVolunteerMutation } from "state/api";
 import { useTheme } from "@mui/material/styles";
 import DataGridCustomToolbar from "components/DataGridCustomToolbar";
-import ConfirmationDialog from "components/ConfirmationDialog"; // Import the ConfirmationDialog component
+import ConfirmationDialog from "components/ConfirmationDialog";
 import { Delete, Edit } from "@mui/icons-material";
+import Buttons from "components/Buttons";
 
 const DonorRegistrationTab = () => {
   const theme = useTheme();
@@ -24,7 +23,6 @@ const DonorRegistrationTab = () => {
   const [openConfirm, setOpenConfirm] = useState(false);
   const [donorToDelete, setDonorToDelete] = useState(null);
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
-
 
   useEffect(() => {
     if (error) {
@@ -53,10 +51,12 @@ const DonorRegistrationTab = () => {
       .then((response) => {
         console.log("Donor deleted successfully");
         setOpenConfirm(false);
+        setSnackbar({ open: true, message: "Donor deleted successfully!", severity: "success" });
         refetch();
       })
       .catch((error) => {
         console.error("Error deleting donor:", error);
+        setSnackbar({ open: true, message: "Failed to delete donor. Please try again.", severity: "error" });
         setOpenConfirm(false);
       });
   };
@@ -86,7 +86,7 @@ const DonorRegistrationTab = () => {
       field: "dateOfBirth",
       headerName: "Date of Birth",
       flex: 1,
-      valueFormatter: ({ value }) => value ? `${value.month}/${value.day}/${value.year}` : ""
+      valueFormatter: ({ value }) => (value ? `${value.month}/${value.day}/${value.year}` : "")
     },
     {
       field: "occupation",
@@ -104,16 +104,16 @@ const DonorRegistrationTab = () => {
           <Button
             variant="contained"
             color="error"
-            endIcon={<Delete/>}
+            endIcon={<Delete />}
             onClick={() => handleDelete(params.row._id)}
           >
             Delete
           </Button>
-          <div style={{padding:'2px'}}></div>
+          <div style={{ padding: '2px' }}></div>
           <Button
             variant="contained"
             color="info"
-            endIcon={<Edit/>}
+            endIcon={<Edit />}
             onClick={() => handleOpenModal(params.row)}
           >
             Update
@@ -126,7 +126,7 @@ const DonorRegistrationTab = () => {
   return (
     <Box>
       <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
-        <CustomButton label="Register Donor" onClick={handleOpenModal} />
+        <Buttons label="Register Donor" onClick={handleOpenModal} />
       </Box>
 
       <DonorRegistrationModal
