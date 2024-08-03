@@ -25,9 +25,6 @@ const UpdateDonorRegistrationModal = ({ openModal, handleCloseModal, donorData }
   const [donorName, setDonorName] = useState("");
   const [donorAddress, setDonorAddress] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
-  const [month, setMonth] = useState("");
-  const [day, setDay] = useState("");
-  const [year, setYear] = useState("");
   const [occupation, setOccupation] = useState("");
   const [errors, setErrors] = useState({});
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
@@ -35,15 +32,54 @@ const UpdateDonorRegistrationModal = ({ openModal, handleCloseModal, donorData }
 
   const [updateDonor] = useUpdateDonorMutation();
 
+
+  const formatDate = (value) => {
+    const digits = value.replace(/\D/g, '');
+    const day = digits.slice(0, 2);
+    const month = digits.slice(2, 4);
+    const year = digits.slice(4, 8);
+    return `${day}${day && month ? '/' : ''}${month}${month && year ? '/' : ''}${year}`;
+  };
+  
+  const isValidDate = (value) => {
+    const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+    return dateRegex.test(value);
+  };
+
+  const convertToISO = (value) => {
+    const [day, month, year] = value.split('/');
+    return `${year}-${month}-${day}`;
+  };
+
+  const [date, setDate] = useState('');
+
+
+  const handleDateChange = (e) => {
+    const { value } = e.target;
+    const formattedValue = formatDate(value);
+    setDate(formattedValue);
+
+    if (!isValidDate(formattedValue)) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        date: "Invalid date format. Use DD/MM/YYYY.",
+      }));
+    } else {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        date: "",
+      }));
+    }
+  };
+
+  
+
   useEffect(() => {
     if (donorData) {
       setDonorNIC(donorData.donorNIC);
       setDonorName(donorData.donorName);
       setDonorAddress(donorData.donorAddress);
       setMobileNumber(donorData.mobileNumber);
-      setMonth(donorData.dateOfBirth?.month || "");
-      setDay(donorData.dateOfBirth?.day || "");
-      setYear(donorData.dateOfBirth?.year || "");
       setOccupation(donorData.occupation);
     }
   }, [donorData]);
@@ -56,7 +92,7 @@ const UpdateDonorRegistrationModal = ({ openModal, handleCloseModal, donorData }
     if (!donorNIC) newErrors.donorNIC = "NIC is required";
     if (!donorName) newErrors.donorName = "Name is required";
     if (!donorAddress) newErrors.donorAddress = "Address is required";
-    if (!month || !day || !year) newErrors.dateOfBirth = "Date of Birth is required";
+    if (!date) newErrors.date = "Date of Birth is required";
     if (!mobileNumber) newErrors.mobileNumber = "Mobile number is required";
     else if (!validatePhoneNumber(mobileNumber)) newErrors.mobileNumber = "Mobile number must contain only numbers";
     if (!occupation) newErrors.occupation = "Occupation is required";
@@ -64,20 +100,17 @@ const UpdateDonorRegistrationModal = ({ openModal, handleCloseModal, donorData }
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
     } else {
+      setLoading(true);
+      const startTime = Date.now();
       const donorData = {
-        donorNIC,
-        donorName,
-        donorAddress,
-        dateOfBirth: {
-          month,
-          day,
-          year,
-        },
-        mobileNumber,
-        occupation,
+        donorNIC: donorNIC,
+        donorName: donorName,
+        donorAddress: donorAddress,
+        date: convertToISO(date),
+        mobileNumber: mobileNumber,
+        occupation: occupation,
       };
 
-      setLoading(true);
       updateDonor(donorData)
         .then((response) => {
           console.log("Donor updated successfully:", response);
@@ -101,10 +134,7 @@ const UpdateDonorRegistrationModal = ({ openModal, handleCloseModal, donorData }
     marginTop: "16px",
   };
 
-  const months = Array.from({ length: 12 }, (_, i) => i + 1);
-  const days = Array.from({ length: 31 }, (_, i) => i + 1);
-  const years = Array.from({ length: 100 }, (_, i) => new Date().getFullYear() - i);
-
+  
   return (
     <>
       <Dialog
@@ -178,66 +208,17 @@ const UpdateDonorRegistrationModal = ({ openModal, handleCloseModal, donorData }
             />
           </Box>
 
-          <Box sx={{ mt: 4 }}>
-            <label style={labelStyle} htmlFor="Date Of Birth">
-              Date of Birth
-            </label>
-            <Grid container spacing={2} sx={{ mt: 0 }}>
-              <Grid item xs={4}>
-                <CustomTextField
-                  select
-                  label="Month"
-                  variant="outlined"
-                  fullWidth
-                  value={month}
-                  onChange={(e) => setMonth(e.target.value)}
-                  error={!!errors.dateOfBirth}
-                  helperText={errors.dateOfBirth}
-                >
-                  {months.map((m) => (
-                    <MenuItem key={m} value={m}>
-                      {m}
-                    </MenuItem>
-                  ))}
-                </CustomTextField>
-              </Grid>
-              <Grid item xs={4}>
-                <CustomTextField
-                  select
-                  label="Day"
-                  variant="outlined"
-                  fullWidth
-                  value={day}
-                  onChange={(e) => setDay(e.target.value)}
-                  error={!!errors.dateOfBirth}
-                  helperText={errors.dateOfBirth}
-                >
-                  {days.map((d) => (
-                    <MenuItem key={d} value={d}>
-                      {d}
-                    </MenuItem>
-                  ))}
-                </CustomTextField>
-              </Grid>
-              <Grid item xs={4}>
-                <CustomTextField
-                  select
-                  label="Year"
-                  variant="outlined"
-                  fullWidth
-                  value={year}
-                  onChange={(e) => setYear(e.target.value)}
-                  error={!!errors.dateOfBirth}
-                  helperText={errors.dateOfBirth}
-                >
-                  {years.map((y) => (
-                    <MenuItem key={y} value={y}>
-                      {y}
-                    </MenuItem>
-                  ))}
-                </CustomTextField>
-              </Grid>
-            </Grid>
+          <Box sx={{ mt: 2 }}>
+            <CustomTextField
+              label="Date of Birth"
+              value={date}
+              onChange={handleDateChange}
+              fullWidth
+              error={!!errors.date}
+              helperText={errors.date || "Enter date as DD/MM/YYYY"}
+              placeholder="DD/MM/YYYY"
+              inputProps={{ pattern: "[0-9]*" }}
+            />
           </Box>
           <Box sx={{ mt: 2 }}>
             <CustomTextField

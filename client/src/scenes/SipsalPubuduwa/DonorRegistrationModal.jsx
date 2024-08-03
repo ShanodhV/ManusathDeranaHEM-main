@@ -42,6 +42,14 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
     return dateRegex.test(value);
   };
 
+  const convertToISO = (value) => {
+    const [day, month, year] = value.split('/');
+    return `${year}-${month}-${day}`;
+  };
+
+  const [date, setDate] = useState('');
+
+
   const handleDateChange = (e) => {
     const { value } = e.target;
     const formattedValue = formatDate(value);
@@ -66,11 +74,10 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
     // Reset errors
     setErrors({});
     const newErrors = {};
-
     if (!donorNIC) newErrors.donorNIC = "NIC is required";
     if (!donorName) newErrors.donorName = "Name is required";
     if (!donorAddress) newErrors.donorAddress = "Address is required";
-    if (!date) newErrors.date = "Date is required";
+    if (!date) newErrors.date = "Date of Birth is required";
     if (!mobileNumber) newErrors.mobileNumber = "Mobile number is required";
     else if (!validatePhoneNumber(mobileNumber)) newErrors.mobileNumber = "Mobile number must contain only numbers";
     if (!occupation) newErrors.occupation = "Occupation is required";
@@ -78,16 +85,18 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
     } else {
+      setLoading(true);
+      const startTime = Date.now();
       const donorData = {
-        donorNIC,
-        donorName,
-        donorAddress,
-        date,
-        mobileNumber,
-        occupation,
+        donorNIC: donorNIC,
+        donorName: donorName,
+        donorAddress: donorAddress,
+        date: convertToISO(date),
+        mobileNumber: mobileNumber,
+        occupation: occupation,
       };
 
-      setLoading(true);
+     
       addDonor(donorData)
         .unwrap()
         .then((response) => {
@@ -103,6 +112,9 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
           setSnackbar({ open: true, message: "Donor added successfully!", severity: "success" });
           setLoading(false);
           handleCloseModal();
+
+          const elapsedTime = Date.now() - startTime;
+          const remainingTime = 500 - elapsedTime;
         })
         .catch((error) => {
           console.error("Error adding donor:", error);
@@ -111,6 +123,15 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
         });
     }
   };
+
+  const labelStyle = {
+    fontWeight: "bold",
+    color: "black",
+    fontSize: "16px",
+    marginTop: "16px",
+  };
+
+  
 
   return (
     <>
@@ -186,7 +207,7 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
           </Box>
           <Box sx={{ mt: 2 }}>
             <CustomTextField
-              label="Date"
+              label="Date of Birth"
               value={date}
               onChange={handleDateChange}
               fullWidth
