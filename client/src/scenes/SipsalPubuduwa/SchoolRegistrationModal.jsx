@@ -79,8 +79,7 @@ const SchoolRegistrationModal = ({ openModal, handleCloseModal }) => {
   const [province, setProvince] = useState("");
   const [district, setDistrict] = useState("");
   const [town, setTown] = useState("");
-  const [principalName, setPrincipalName] = useState("");
-  const [principalMobileNumber, setPrincipalMobileNumber] = useState("");
+  const [principalContact, setPrincipalContact] = useState([{ pname: "", pnumber: "" }]);
   const [errors, setErrors] = useState({});
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
   const [loading, setLoading] = useState(false);
@@ -118,25 +117,20 @@ const SchoolRegistrationModal = ({ openModal, handleCloseModal }) => {
     setTown("");
   }, [district]);
 
+  const handlePrincipalContactChange = (index, field, value) => {
+    setPrincipalContact((prevContacts) => {
+      const updatedContacts = [...prevContacts];
+      updatedContacts[index][field] = value;
+      return updatedContacts;
+    });
+  };
+  
+
   const validatePhoneNumber = (number) => /^\d+$/.test(number);
 
   const handleAddSchool = () => {
     // Prepare school data
-    const schoolData = {
-        schoolId,
-        schoolName,
-        schoolAddress,
-        location: {
-            province,
-            district,
-            town,
-        },
-        schoolMobileNumber,
-        principalContact: {
-            name: principalName,
-            mobileNumber: principalMobileNumber,
-        },
-    };
+    
 
     // Validate inputs and gather errors
     const newErrors = {};
@@ -148,20 +142,30 @@ const SchoolRegistrationModal = ({ openModal, handleCloseModal }) => {
     if (!town) newErrors.town = "Town is required";
     if (!schoolMobileNumber) newErrors.schoolMobileNumber = "School Mobile Number is required";
     else if (!validatePhoneNumber(schoolMobileNumber)) newErrors.schoolMobileNumber = "School Mobile Number must contain only numbers";
-    if (!principalName) newErrors.principalName = "Principal Name is required";
-    if (!principalMobileNumber) newErrors.principalMobileNumber = "Principal Mobile Number is required";
-    else if (!validatePhoneNumber(principalMobileNumber)) newErrors.principalMobileNumber = "Principal Mobile Number must contain only numbers";
+    principalContact.forEach((person, index) => {
+      if (!person.pname) newErrors[`principalContact${index}pname`] = "Name is required";
+      if (!person.pnumber) newErrors[`principalContact${index}pnumber`] = "Phone number is required";
+      else if (!validatePhoneNumber(person.pnumber)) newErrors[`principalContact${index}pnumber`] = "Phone number must contain only 10 digits";
+    });
+    // if (!principalName) newErrors.principalName = "Principal Name is required";
+    // if (!principalMobileNumber) newErrors.principalMobileNumber = "Principal Mobile Number is required";
+    // else if (!validatePhoneNumber(principalMobileNumber)) newErrors.principalMobileNumber = "Principal Mobile Number must contain only numbers";
 
     // If there are errors, set them and return early
     if (Object.keys(newErrors).length > 0) {
         setErrors(newErrors);
-        return;
-    }
-
-    // Show loading indicator
-    setLoading(true);
-
-    // Add school data asynchronously
+    } else{
+      setLoading(true);
+      const schoolData = {
+        schoolId: schoolId,
+        schoolName: schoolName,
+        schoolAddress: schoolAddress,
+        Province: province,
+        District: district,
+        Town: town,
+        schoolMobileNumber: schoolMobileNumber,
+        principalContact: principalContact,
+    };
     addSchool(schoolData)
         .then((response) => {
             console.log("School added successfully:", response);
@@ -173,10 +177,11 @@ const SchoolRegistrationModal = ({ openModal, handleCloseModal }) => {
             setDistrict("");
             setTown("");
             setSchoolMobileNumber("");
-            setPrincipalName("");
-            setPrincipalMobileNumber("");
+            setPrincipalContact([{ pname:"", pnumber:""}]);
             setErrors({}); // Clear any errors
             setSnackbar({ open: true, message: "School added successfully!", severity: "success" });
+
+            // Hide loading indicator
             setLoading(false);
             handleCloseModal();
         })
@@ -185,7 +190,15 @@ const SchoolRegistrationModal = ({ openModal, handleCloseModal }) => {
             setSnackbar({ open: true, message: "Failed to add school. Please try again.", severity: "error" });
             setLoading(false);
         });
+    }
+
+    // Show loading indicator
+    
+
+    // Add school data asynchronously
+    
 };
+
 
 
 return (
@@ -331,28 +344,42 @@ return (
                       </Grid>
                   </Grid>
               </Box>
+
               <Box sx={{ mt: 2 }}>
-                  <CustomTextField
-                      label="Principal Name"
+            <label style={{ fontWeight: "bold", color: "black", fontSize: "16px" }}>Prinscipal Contact</label>
+            {principalContact.map((person, index) => (
+              <Box key={index} sx={{ mt: 2 }}>
+                <Grid container spacing={2}>
+                  <Grid item xs={6}>
+                    <CustomTextField
+                      label="Name"
                       variant="outlined"
+                      value={person.pname}
+                      onChange={(e) => handlePrincipalContactChange(index, "pname", e.target.value)}
                       fullWidth
-                      value={principalName}
-                      onChange={(e) => setPrincipalName(e.target.value)}
-                      error={!!errors.principalName}
-                      helperText={errors.principalName}
-                  />
-              </Box>
-              <Box sx={{ mt: 2 }}>
-                  <CustomTextField
-                      label="Principal Mobile Number"
+                      error={!!errors[`principalContact${index}pname`]}
+                      helperText={errors[`principalContact${index}pname`]}
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <CustomTextField
+                      label="Mobile Number"
                       variant="outlined"
+                      value={person.pnumber}
+                      onChange={(e) => handlePrincipalContactChange(index, "pnumber", e.target.value)}
                       fullWidth
-                      value={principalMobileNumber}
-                      onChange={(e) => setPrincipalMobileNumber(e.target.value)}
-                      error={!!errors.principalMobileNumber}
-                      helperText={errors.principalMobileNumber}
-                  />
+                      error={!!errors[`principalContact${index}pnumber`]}
+                      helperText={errors[`principalContact${index}pnumber`]}
+                    />
+                  </Grid>
+                </Grid>
               </Box>
+            ))}
+            
+          </Box>
+
+
+      
           </DialogContent>
           <DialogActions sx={{bgcolor:"#f0f0f0"}}>
           <Button

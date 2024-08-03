@@ -15,17 +15,60 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useTheme } from "@mui/material/styles";
-import Buttons from "components/Buttons";
 import CustomTextField from "components/CustomTextField";
-import { useUpdateSchoolMutation } from "state/api"; // Replace with the appropriate hook
+import { useUpdateSchoolMutation } from "state/api";
 
 const sriLankanData = {
-  // ... your Sri Lankan data
+  "Western": {
+    "Colombo": ["Colombo 1", "Colombo 2", "Colombo 3", "Colombo 4", "Colombo 5", "Colombo 6", "Colombo 7", "Colombo 8", "Colombo 9", "Colombo 10", "Colombo 11", "Colombo 12", "Colombo 13", "Colombo 14", "Colombo 15"],
+    "Gampaha": ["Negombo", "Gampaha", "Veyangoda", "Wattala", "Minuwangoda", "Ja-Ela", "Kadawatha", "Ragama", "Divulapitiya", "Nittambuwa", "Kiribathgoda"],
+    "Kalutara": ["Kalutara", "Panadura", "Horana", "Beruwala", "Aluthgama", "Matugama", "Wadduwa", "Bandaragama", "Ingiriya"]
+  },
+  "Central": {
+    "Kandy": ["Kandy", "Gampola", "Nawalapitiya", "Peradeniya", "Akurana", "Kadugannawa", "Katugastota"],
+    "Matale": ["Matale", "Dambulla", "Sigiriya", "Nalanda", "Ukuwela", "Rattota"],
+    "Nuwara Eliya": ["Nuwara Eliya", "Hatton", "Nanu Oya", "Talawakele", "Bandarawela", "Welimada"]
+  },
+  "Southern": {
+    "Galle": ["Galle", "Hikkaduwa", "Ambalangoda", "Elpitiya", "Bentota", "Baddegama"],
+    "Matara": ["Matara", "Weligama", "Mirissa", "Akurugoda", "Hakmana", "Devinuwara"],
+    "Hambantota": ["Hambantota", "Tangalle", "Tissamaharama", "Ambalantota", "Beliatta", "Weeraketiya"]
+  },
+  "Northern": {
+    "Jaffna": ["Jaffna", "Nallur", "Chavakachcheri", "Point Pedro", "Karainagar", "Velanai"],
+    "Kilinochchi": ["Kilinochchi", "Pallai", "Paranthan", "Poonakary"],
+    "Mannar": ["Mannar", "Nanattan", "Madhu", "Pesalai"],
+    "Vavuniya": ["Vavuniya", "Nedunkeni", "Settikulam", "Vavuniya South"],
+    "Mullaitivu": ["Mullaitivu", "Oddusuddan", "Puthukudiyiruppu", "Weli Oya"]
+  },
+  "Eastern": {
+    "Trincomalee": ["Trincomalee", "Kinniya", "Mutur", "Kuchchaveli"],
+    "Batticaloa": ["Batticaloa", "Kaluwanchikudy", "Valachchenai", "Eravur"],
+    "Ampara": ["Ampara", "Akkaraipattu", "Kalmunai", "Sainthamaruthu", "Pottuvil"]
+  },
+  "North Western": {
+    "Kurunegala": ["Kurunegala", "Kuliyapitiya", "Narammala", "Wariyapola", "Pannala", "Melsiripura"],
+    "Puttalam": ["Puttalam", "Chilaw", "Wennappuwa", "Anamaduwa", "Nattandiya", "Dankotuwa"]
+  },
+  "North Central": {
+    "Anuradhapura": ["Anuradhapura", "Kekirawa", "Thambuttegama", "Eppawala", "Medawachchiya"],
+    "Polonnaruwa": ["Polonnaruwa", "Kaduruwela", "Medirigiriya", "Hingurakgoda"]
+  },
+  "Uva": {
+    "Badulla": ["Badulla", "Bandarawela", "Haputale", "Welimada", "Mahiyanganaya", "Passara"],
+    "Monaragala": ["Monaragala", "Bibile", "Wellawaya", "Medagama", "Buttala"]
+  },
+  "Sabaragamuwa": {
+    "Ratnapura": ["Ratnapura", "Embilipitiya", "Balangoda", "Pelmadulla", "Eheliyagoda", "Kuruwita"],
+    "Kegalle": ["Kegalle", "Mawanella", "Warakapola", "Rambukkana", "Galigamuwa"]
+  }
 };
 
 const UpdateSchoolRegistrationModal = ({ openModal, closeModal, currentSchool }) => {
   const theme = useTheme();
   const [schoolId, setSchoolId] = useState("");
+  const [schoolName, setSchoolName] = useState("");
+  const [schoolAddress, setSchoolAddress] = useState("");
   const [province, setProvince] = useState("");
   const [district, setDistrict] = useState("");
   const [town, setTown] = useState("");
@@ -41,6 +84,8 @@ const UpdateSchoolRegistrationModal = ({ openModal, closeModal, currentSchool })
   useEffect(() => {
     if (currentSchool) {
       setSchoolId(currentSchool.schoolId);
+      setSchoolName(currentSchool.schoolName);
+      setSchoolAddress(currentSchool.schoolAddress);
       setProvince(currentSchool.province);
       setDistrict(currentSchool.district);
       setTown(currentSchool.town);
@@ -91,6 +136,8 @@ const UpdateSchoolRegistrationModal = ({ openModal, closeModal, currentSchool })
       const startTime = Date.now();
       const schoolData = {
         schoolId,
+        schoolName,
+        schoolAddress,
         province,
         district,
         town,
@@ -100,7 +147,10 @@ const UpdateSchoolRegistrationModal = ({ openModal, closeModal, currentSchool })
 
       updateSchool({ id: currentSchool._id, ...schoolData })
         .then((response) => {
-          console.log("School updated successfully:", response);
+
+        console.log("School updated successfully:", response);
+
+
           const elapsedTime = Date.now() - startTime;
           const remainingTime = 500 - elapsedTime;
           setTimeout(() => {
@@ -155,7 +205,6 @@ const UpdateSchoolRegistrationModal = ({ openModal, closeModal, currentSchool })
               disabled
             />
           </Box>
-
           <Box sx={{ mt: 2 }}>
             <Grid container spacing={2}>
               <Grid item xs={4}>
@@ -216,7 +265,6 @@ const UpdateSchoolRegistrationModal = ({ openModal, closeModal, currentSchool })
               </Grid>
             </Grid>
           </Box>
-
           <Box sx={{ mt: 2 }}>
             <CustomTextField
               label="Principal Name"
@@ -228,7 +276,6 @@ const UpdateSchoolRegistrationModal = ({ openModal, closeModal, currentSchool })
               helperText={errors.principalName}
             />
           </Box>
-
           <Box sx={{ mt: 2 }}>
             <CustomTextField
               label="Contact Number"
@@ -256,7 +303,6 @@ const UpdateSchoolRegistrationModal = ({ openModal, closeModal, currentSchool })
           </Button>
         </DialogActions>
       </Dialog>
-
       <Snackbar
         open={snackbar.open}
         autoHideDuration={6000}
