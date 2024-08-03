@@ -47,7 +47,6 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
     return `${year}-${month}-${day}`;
   };
 
-  const [date, setDate] = useState('');
 
 
   const handleDateChange = (e) => {
