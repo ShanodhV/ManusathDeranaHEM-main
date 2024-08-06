@@ -348,10 +348,10 @@ getNextCampLocationsByCamps: build.query({
       invalidatesTags: ["DeranaDaruwoPrograms"],
     }),
     addDeranaDaruwoProgram: build.mutation({
-      query: ({ programId, programName, province,district,town,name,mobileNumber }) => ({
+      query: ({ programId, programName,Date, province,district,town,name,mobileNumber }) => ({
         url: `derana-daruwo/add`,
         method: "POST",
-        body: { programId, programName, province,district,town,name,mobileNumber},
+        body: { programId, programName,Date, province,district,town,name,mobileNumber},
       }),
       providesTags: ["DeranaDaruwoPrograms"],
     }),
@@ -406,11 +406,11 @@ getNextCampLocationsByCamps: build.query({
         studentName,
         studentAddress,
         studentID,
-        programID,
         parentName,
         parentContactDetails,
         bankAccountDetails,
         accountNumber,
+        deranaDaruwProgram,
       }) => ({
         url: `student/add`,
         method: "POST",
@@ -418,11 +418,11 @@ getNextCampLocationsByCamps: build.query({
           studentName,
           studentAddress,
           studentID,
-          programID,
           parentName, 
           parentContactDetails,
           bankAccountDetails,
-          accountNumber
+          accountNumber,
+          deranaDaruwProgram,
         },
       }),
       providesTags: ["Students"],
@@ -441,11 +441,11 @@ getNextCampLocationsByCamps: build.query({
         studentID,
         studentName,
         studentAddress,
-        programID,
         parentName,
         parentContactDetails,
         bankAccountDetails,
         accountNumber,
+        deranaDaruwProgram,
       }) => ({
         url: `student/update/${studentID}`,
         method: "PUT",
@@ -453,14 +453,19 @@ getNextCampLocationsByCamps: build.query({
           
           studentName,
           studentAddress,
-          programID,
           parentName,
           parentContactDetails,
           bankAccountDetails,
           accountNumber,
+          deranaDaruwProgram,
         },
       }),
       invalidatesTags: ["Students"],
+    }),
+    
+    getStudentsByDeranaDaruwoProgram: build.query({
+      query: (programId) => `student/program/${programId}`,
+      providesTags: ["Students"],
     }),
     
     // Donor Volunteers
@@ -680,6 +685,7 @@ export const {
   useGetStudentsQuery,
   useGetStudentQuery,
   useUpdateStudentsMutation,
+  useGetStudentsByDeranaDaruwoProgramQuery,
 
 
   useDeleteDonorVolunteerMutation,

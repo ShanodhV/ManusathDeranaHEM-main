@@ -1,24 +1,26 @@
 import Student from "../models/Student.js";
+import DerenaDaruwo from "../models/DeranaDarwo.js"
 import mongoose from "mongoose";
 // Add a new student
 export const addStudent = async (req, res) => {
   try {
-      const { studentName, studentAddress, studentID, programID, parentName, parentContactDetails,bankAccountDetails,accountNumber } = req.body;
-
+      const { studentName, studentAddress, studentID,  parentName, parentContactDetails,bankAccountDetails,accountNumber,deranaDaruwProgram } = req.body;
+      console.log(studentName, studentAddress, studentID,  parentName, parentContactDetails,bankAccountDetails,accountNumber,deranaDaruwProgram);
     // Create a new student instance
     const newStudent = new Student({
       studentName,
       studentAddress,
       studentID,
-      programID,
       parentName,
       parentContactDetails,
       bankAccountDetails,
-      accountNumber
+      accountNumber,
+      deranaDaruwProgram,
     });
 
     // Save the student to the database
     console.log("controll runner");
+    console.log(newStudent);
 
     const savedStudent = await newStudent.save();
     console.log(savedStudent);
@@ -68,6 +70,16 @@ export const deleteStudent = async (req, res) => {
   }
 };
 
+export const GetStudentsByDeranaDaruwoProgram = async (req, res) => {
+  try {
+    const { programId } = req.params;
+    const students = await Student.find({ deranaDaruwProgram: programId }).populate("deranaDaruwProgram");
+    res.status(200).json(students);
+  } catch (error) {
+    console.error("Error fetching student by camp:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 // Example server-side updateStudents controller
 // export const updateStudents = async (req, res) => {
 //   try {
