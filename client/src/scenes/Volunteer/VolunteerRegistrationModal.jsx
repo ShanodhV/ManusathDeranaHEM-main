@@ -1,5 +1,5 @@
 import CloseIcon from "@mui/icons-material/Close";
-import { Alert, Box, Dialog, DialogContent, DialogTitle, Grid, IconButton, Snackbar } from "@mui/material";
+import { Alert, Box, Dialog, DialogContent, DialogTitle, Grid, IconButton, MenuItem, Snackbar } from "@mui/material";
 import Buttons from "components/Buttons";
 import CustomTextField from "components/CustomTextField"; // Import your custom TextField component
 import { useState } from "react";
@@ -140,6 +140,25 @@ const VolunteerRegistrationModal = ({ openModal, handleCloseModal,onVolunteerAdd
     fontSize: "16px",
     marginTop: "16px",
   };
+ // Data structure for Sri Lankan locations
+  const sriLankanData = {
+    Western: {
+      Colombo: ["Colombo", "Dehiwala", "Moratuwa", "Negombo", "Kelaniya"],
+      Gampaha: ["Gampaha", "Nittambuwa", "Minuwangoda", "Ja-Ela", "Katunayake"],
+      Kalutara: ["Kalutara", "Beruwala", "Panadura", "Horana", "Aluthgama"],
+    },
+    Central: {
+      Kandy: ["Kandy", "Peradeniya", "Katugastota", "Gampola", "Nawalapitiya"],
+      Matale: ["Matale", "Dambulla", "Sigiriya", "Habarana", "Rattota"],
+      NuwaraEliya: ["Nuwara Eliya", "Hatton", "Talawakele", "Nanu Oya", "Bandarawela"],
+    },
+    Southern: {
+      Galle: ["Galle", "Hikkaduwa", "Unawatuna", "Ambalangoda", "Karapitiya"],
+      Matara: ["Matara", "Weligama", "Deniyaya", "Dickwella", "Akuressa"],
+      Hambantota: ["Hambantota", "Tangalle", "Tissamaharama", "Beliatta", "Ambalantota"],
+    },
+  };
+  
 
   return (
     <>
@@ -280,6 +299,15 @@ const VolunteerRegistrationModal = ({ openModal, handleCloseModal,onVolunteerAdd
                     onChange={handleProvinceChange}
                   >
                     {/* Province options */}
+                    <MenuItem value="">
+                      <em>Select Province</em>
+                    </MenuItem>
+                    {Object.keys(sriLankanData).map((province) => (
+                      <MenuItem key={province} value={province}>
+                        {province}
+                      </MenuItem>
+                    ))}
+
                   </CustomTextField>
                 </Grid>
                 <Grid item xs={4}>
@@ -290,8 +318,23 @@ const VolunteerRegistrationModal = ({ openModal, handleCloseModal,onVolunteerAdd
                     fullWidth
                     value={location.district}
                     onChange={handleDistrictChange}
+                    disabled={!location.province} // Disable if no province is selected
                   >
                     {/* District options */}
+
+                    <MenuItem value="">
+                      <em>Select District</em>
+                    </MenuItem>
+                    {location.province &&
+                      Object.keys(sriLankanData[location.province]).map(
+                        (district) => (
+                          <MenuItem key={district} value={district}>
+                            {district}
+                          </MenuItem>
+                        )
+                      )}
+
+
                   </CustomTextField>
                 </Grid>
                 <Grid item xs={4}>
@@ -302,8 +345,23 @@ const VolunteerRegistrationModal = ({ openModal, handleCloseModal,onVolunteerAdd
                     fullWidth
                     value={location.town}
                     onChange={handleTownChange}
+                    disabled={!location.district} // Disable if no district is selected
                   >
                     {/* Town options */}
+
+                    <MenuItem value="">
+                      <em>Select Town</em>
+                    </MenuItem>
+                    {location.district &&
+                      sriLankanData[location.province][location.district].map(
+                        (town) => (
+                          <MenuItem key={town} value={town}>
+                            {town}
+                          </MenuItem>
+                        )
+                      )}
+
+
                   </CustomTextField>
                 </Grid>
               </Grid>
