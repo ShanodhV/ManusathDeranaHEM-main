@@ -178,7 +178,7 @@ const CreateSchoolModal = ({ openModal, closeModal }) => {
           setTimeout(() => {
             setLoading(false);
             closeModal();
-            setSnackbar({ open: true, message: `School created successfully`, severity: "success" });
+            setSnackbar({ open: true, message: `School registerd successfully`, severity: "success" });
           }, remainingTime > 0 ? remainingTime : 0);
         })
         .catch((error) => {
@@ -200,7 +200,7 @@ const CreateSchoolModal = ({ openModal, closeModal }) => {
       >
         <DialogTitle sx={{bgcolor:"#f0f0f0"}} id="form-dialog-title">
         <div style={{ color: "#d63333", fontWeight: '700', fontSize: '16px' }}>
-          {"Create School"}
+          {"Register School"}
           <hr style={{ borderColor: "#d63333", }} />
         </div>        
           <IconButton
@@ -369,7 +369,7 @@ const CreateSchoolModal = ({ openModal, closeModal }) => {
             disabled={loading}
             endIcon={loading && <CircularProgress size={20} />}
           >
-            {"Create School"}
+            {"Register School"}
           </Button>
           <Button onClick={closeModal}  variant="outlined" color="secondary">
             Cancel
