@@ -1,8 +1,10 @@
 {
   "dependencies": {
     "@amcharts/amcharts5": "^5.9.13",
+    "@mui/material": "^5.16.6",
     "@mui/x-date-pickers": "^7.11.0",
     "axios": "^1.7.2",
+    "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "chart.js": "^4.4.2",
@@ -13,6 +15,8 @@
     "express-openid-connect": "^2.17.1",
     "express-session": "^1.18.0",
     "helmet": "^7.1.0",
+    "joi": "^17.13.3",
+    "joi-password-complexity": "^5.2.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.5.2",
     "morgan": "^1.10.0",

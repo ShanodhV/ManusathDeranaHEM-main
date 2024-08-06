@@ -19,6 +19,9 @@ import studentRoutes from "./routes/student_routes.js";
 import donerVolunteerRoutes from "./routes/donorVolunteer_routes.js";
 import volunteerRoutes from "./routes/volunteer_routes.js";
 import volunteerEventRoutes from "./routes/volunteerEvent_routes.js";
+
+import userRoutes from "./routes/users.js";
+import authRoutes from "./routes/auth.js";
 // data imports
 import Camps from './models/Camps.js';
 import Patients from "./models/Patient.js";
@@ -60,6 +63,9 @@ app.use("/student", studentRoutes);
 app.use("/donor-volunteer", donerVolunteerRoutes);
 app.use("/volunteer", volunteerRoutes);
 app.use("/volunteer-event", volunteerEventRoutes);
+
+app.use("/api/users", userRoutes);
+app.use("/api/auth", authRoutes);
 
 /* MONGOOSE SETUP */
 const PORT = process.env.PORT || 9000;
