@@ -63,7 +63,7 @@ const SchoolRegistrationTab = () => {
     { field: "schoolId", headerName: "School ID", flex: 0.8 },
     { field: "schoolName", headerName: "School Name", flex: 0.8 },
     { field: "schoolAddress", headerName: "School Address", flex: 1 },
-    { field: "location.town", headerName: "Town", flex: 1 },
+    { field: "location", headerName: "Town", flex: 1 },
     {
       field: 'principalContact',
       headerName: 'Principal Contact',
@@ -116,7 +116,7 @@ const SchoolRegistrationTab = () => {
   return (
     <Box m="1.5rem 2.5rem">
       <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
-        <CustomButton label="Create School" onClick={() => setOpenCreateModal(true)} />
+        <CustomButton label="Register School" onClick={() => setOpenCreateModal(true)} />
       </Box>
       <Box
         mt="40px"

@@ -70,8 +70,7 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
   const validatePhoneNumber = (number) => /^\d{10}$/.test(number);
 
   const handleAddDonor = () => {
-    // Reset errors
-    setErrors({});
+
     const newErrors = {};
     if (!donorNIC) newErrors.donorNIC = "NIC is required";
     if (!donorName) newErrors.donorName = "Name is required";
@@ -97,7 +96,7 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
 
      
       addDonor(donorData)
-        .unwrap()
+      
         .then((response) => {
           console.log("Donor added successfully:", response);
           // Clear form fields
@@ -107,13 +106,16 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
           setDate("");
           setMobileNumber("");
           setOccupation("");
-          setErrors({});
-          setSnackbar({ open: true, message: "Donor added successfully!", severity: "success" });
           setLoading(false);
           handleCloseModal();
 
           const elapsedTime = Date.now() - startTime;
           const remainingTime = 500 - elapsedTime;
+          setTimeout(() => {
+            setLoading(false);
+            handleCloseModal();
+            setSnackbar({ open: true, message: `School registerd successfully`, severity: "success" });
+          }, remainingTime > 0 ? remainingTime : 0);
         })
         .catch((error) => {
           console.error("Error adding donor:", error);
@@ -122,14 +124,6 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
         });
     }
   };
-
-  const labelStyle = {
-    fontWeight: "bold",
-    color: "black",
-    fontSize: "16px",
-    marginTop: "16px",
-  };
-
   
 
   return (
