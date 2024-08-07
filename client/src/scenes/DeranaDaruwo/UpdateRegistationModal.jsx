@@ -34,7 +34,7 @@ const UpdateRegistationModal = ({ openModal, closeModal, refetch,currentStudent,
       setBankAccountDetails(currentStudent.bankAccountDetails);
       setAccountNumber(currentStudent.accountNumber);
     }
-  }, [currentStudent]);
+  }, [currentStudent]); 
   // const studentId = currentStudent ? currentStudent._id : "";
   const handleUpdateStudent = () => {
     updateStudents({
