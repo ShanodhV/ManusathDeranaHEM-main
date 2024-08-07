@@ -13,12 +13,15 @@ import patientRoutes from "./routes/patient_routes.js";
 import campRoutes from "./routes/camp_routes.js";
 import labreportRoutes from "./routes/labreport_routes.js";
 import schoolRoutes from "./routes/school_routes.js";
-import donerRoutes from "./routes/donor_routes.js";
+import donorRoutes from "./routes/donor_routes.js";
 import daruwoRoutes from "./routes/daruwo_routes.js";
 import studentRoutes from "./routes/student_routes.js";
 import donerVolunteerRoutes from "./routes/donorVolunteer_routes.js";
 import volunteerRoutes from "./routes/volunteer_routes.js";
 import volunteerEventRoutes from "./routes/volunteerEvent_routes.js";
+
+import userRoutes from "./routes/users.js";
+import authRoutes from "./routes/auth.js";
 // data imports
 import Camps from './models/Camps.js';
 import Patients from "./models/Patient.js";
@@ -53,13 +56,16 @@ app.use("/sales", salesRoutes);
 app.use("/patient", patientRoutes);
 app.use("/camp", campRoutes);
 app.use("/labreport", labreportRoutes);
-app.use("/school", schoolRoutes);
-app.use("/doner", donerRoutes);
+app.use("/schools", schoolRoutes);
+app.use("/donor", donorRoutes);
 app.use("/derana-daruwo", daruwoRoutes);
 app.use("/student", studentRoutes);
 app.use("/donor-volunteer", donerVolunteerRoutes);
 app.use("/volunteer", volunteerRoutes);
 app.use("/volunteer-event", volunteerEventRoutes);
+
+app.use("/api/users", userRoutes);
+app.use("/api/auth", authRoutes);
 
 /* MONGOOSE SETUP */
 const PORT = process.env.PORT || 9000;

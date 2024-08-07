@@ -189,10 +189,13 @@ getLastCamp: build.query({
       providesTags: ["Camps"],
     }),
     getPatientsByCampdv: build.query({
-      query: ({ campId, infected }) => ({
+      query: ({ campIds, infected }) => ({
         url: "camp/patients-camp",
         method: "GET",
-        params: { campId, infected },
+        params: {
+          campIds,   // Ensure this is correctly passed as a string of comma-separated values
+          infected,
+        },
       }),
       providesTags: ["Patients"],
     }),
@@ -254,83 +257,41 @@ getNextCampLocationsByCamps: build.query({
 }),
 
     // Schools
-    // deleteSchool: build.mutation({
-    //   query: (schoolId) => ({
-    //     url: `school/delete/${schoolId}`,
-    //     method: "DELETE",
-    //   }),
-    //   invalidatesTags: ["Schools"],
-    // }),
-    // addSchool: build.mutation({
-    //   query: ({
-    //     schoolID,
-    //     schoolName,
-    //     schoolAddress,
-    //     location,
-    //     schoolMobileNumber,
-    //     principalContact,
-    //   }) => ({
-    //     url: `school/add`,
-    //     method: "POST",
-    //     body: {
-    //       schoolID,
-    //       schoolName,
-    //       schoolAddress,
-    //       location,
-    //       schoolMobileNumber,
-    //       principalContact,
-    //     },
-    //   }),
-    //   providesTags: ["Schools"],
-    // }),
-    // getSchools: build.query({
-    //   query: () => `school/gets`,
-    //   providesTags: ["Schools"],
-    // }),
-    // getSchool: build.query({
-    //   query: (id) => `school/get/${id}`,
-    //   providesTags: ["Schools"],
-    // }),
-    // getLastSchool: build.query({
-    //   query: () => `school/last`,
-    //   providesTags: ["Schools"],
-    // }),
-    deleteSchool: build.mutation({
-      query: (schoolID) => ({
-        url: `school/delete/${schoolID}`,
-        method: 'DELETE',
-      }),
-      invalidatesTags: ['Schools'],
-    }),
-    addSchool: build.mutation({
-      query: (newSchool) => ({
-        url: `school/add`,
-        method: 'POST',
-        body: newSchool,
-      }),
-      invalidatesTags: ['Schools'],
-    }),
     getSchools: build.query({
-      query: () => `school/gets`,
-      providesTags: ['Schools'],
+      query: () => "schools",
+      providesTags: ["Schools"],
     }),
     getSchool: build.query({
-      query: (id) => `school/get/${id}`,
-      providesTags: ['Schools'],
+      query: (id) => `schools/${id}`,
+      providesTags: ["Schools"],
     }),
     getLastSchool: build.query({
-      query: () => `school/last`,
-      providesTags: ['Schools'],
+      query: () => "schools/last",
+      providesTags: ["Schools"],
+    }),
+    addSchool: build.mutation({
+      query: (school) => ({
+        url: "schools",
+        method: "POST",
+        body: school,
+      }),
+      invalidatesTags: ["Schools"],
+    }),
+    deleteSchool: build.mutation({
+      query: (id) => ({
+        url: `schools/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Schools"],
     }),
     updateSchool: build.mutation({
-      query: ({ schoolId, schoolData }) => ({
-        url: `school/${schoolId}`,
-        method: 'PUT',
-        body: schoolData,
+      query: ({ id, ...rest }) => ({
+        url: `schools/${id}`,
+        method: "PUT",
+        body: rest,
       }),
-      invalidatesTags: ['Schools'],
+      invalidatesTags: ["Schools"],
     }),
-    
     // Donors
     deleteDonor: build.mutation({
       query: (donorId) => ({
@@ -348,7 +309,7 @@ getNextCampLocationsByCamps: build.query({
         mobileNumber,
         occupation,
       }) => ({
-        url: `donor/add`,
+        url: `/add`,
         method: "POST",
         body: {
           donorNIC,
@@ -387,10 +348,10 @@ getNextCampLocationsByCamps: build.query({
       invalidatesTags: ["DeranaDaruwoPrograms"],
     }),
     addDeranaDaruwoProgram: build.mutation({
-      query: ({ programId, programName, province,district,town,name,mobileNumber }) => ({
+      query: ({ programId, programName,Date, province,district,town,name,mobileNumber }) => ({
         url: `derana-daruwo/add`,
         method: "POST",
-        body: { programId, programName, province,district,town,name,mobileNumber},
+        body: { programId, programName,Date, province,district,town,name,mobileNumber},
       }),
       providesTags: ["DeranaDaruwoPrograms"],
     }),
@@ -445,11 +406,11 @@ getNextCampLocationsByCamps: build.query({
         studentName,
         studentAddress,
         studentID,
-        programID,
         parentName,
         parentContactDetails,
         bankAccountDetails,
         accountNumber,
+        deranaDaruwProgram,
       }) => ({
         url: `student/add`,
         method: "POST",
@@ -457,11 +418,11 @@ getNextCampLocationsByCamps: build.query({
           studentName,
           studentAddress,
           studentID,
-          programID,
           parentName, 
           parentContactDetails,
           bankAccountDetails,
-          accountNumber
+          accountNumber,
+          deranaDaruwProgram,
         },
       }),
       providesTags: ["Students"],
@@ -480,11 +441,11 @@ getNextCampLocationsByCamps: build.query({
         studentID,
         studentName,
         studentAddress,
-        programID,
         parentName,
         parentContactDetails,
         bankAccountDetails,
         accountNumber,
+        deranaDaruwProgram,
       }) => ({
         url: `student/update/${studentID}`,
         method: "PUT",
@@ -492,14 +453,19 @@ getNextCampLocationsByCamps: build.query({
           
           studentName,
           studentAddress,
-          programID,
           parentName,
           parentContactDetails,
           bankAccountDetails,
           accountNumber,
+          deranaDaruwProgram,
         },
       }),
       invalidatesTags: ["Students"],
+    }),
+    
+    getStudentsByDeranaDaruwoProgram: build.query({
+      query: (programId) => `student/program/${programId}`,
+      providesTags: ["Students"],
     }),
     
     // Donor Volunteers
@@ -693,11 +659,11 @@ export const {
   useGetNextCampLocationsByCampsQuery,
 
 
-  useDeleteSchoolMutation,
-  useAddSchoolMutation,
   useGetSchoolsQuery,
   useGetSchoolQuery,
   useGetLastSchoolQuery,
+  useAddSchoolMutation,
+  useDeleteSchoolMutation,
   useUpdateSchoolMutation,
 
   useDeleteDonorMutation,
@@ -719,6 +685,7 @@ export const {
   useGetStudentsQuery,
   useGetStudentQuery,
   useUpdateStudentsMutation,
+  useGetStudentsByDeranaDaruwoProgramQuery,
 
 
   useDeleteDonorVolunteerMutation,

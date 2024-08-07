@@ -124,31 +124,65 @@ export const getPatientsByCampdv = async (req, res) => {
     const { campIds, infected } = req.query;
     console.log("Received query parameters:", req.query);
 
+    // Check if campIds parameter is present
     if (!campIds) {
+      console.error("Missing campIds parameter.");
       return res.status(400).json({ message: "campIds parameter is required" });
     }
 
-    const campObjectIds = campIds.split(',').map(id => mongoose.Types.ObjectId(id));
-    const patients = await Patients.find({ healthCamp: { $in: campObjectIds } }).lean();
+    // Ensure campIds are valid MongoDB ObjectIds
+    const campObjectIds = campIds.split(",").map((id) => {
+      if (mongoose.Types.ObjectId.isValid(id)) {
+        return mongoose.Types.ObjectId(id);
+      } else {
+        console.error(`Invalid campId: ${id}`);
+        return null;
+      }
+    }).filter(id => id !== null);
 
-    if (!patients.length) {
-      return res.status(404).json({ message: "No patients found for the specified camps." });
+    if (campObjectIds.length === 0) {
+      console.error("No valid campIds provided.");
+      return res.status(400).json({ message: "No valid campIds provided." });
     }
 
-    const patientIds = patients.map(patient => mongoose.Types.ObjectId(patient._id));
-    const labReports = await LabReport.find({ patient: { $in: patientIds } }).lean();
+    // Fetch patients based on campIds
+    const patients = await Patients.find({
+      healthCamp: { $in: campObjectIds },
+    }).lean();
 
-    const patientsWithInfectionStatus = patients.map(patient => {
-      const labReport = labReports.find(report => report.patient.equals(patient._id));
+    if (!patients.length) {
+      console.warn("No patients found for the specified camps.");
+      return res
+        .status(404)
+        .json({ message: "No patients found for the specified camps." });
+    }
+
+    // Fetch lab reports for the patients
+    const patientIds = patients.map((patient) =>
+      mongoose.Types.ObjectId(patient._id)
+    );
+    const labReports = await LabReport.find({
+      patient: { $in: patientIds },
+    }).lean();
+
+    // Determine infection status based on lab reports
+    const patientsWithInfectionStatus = patients.map((patient) => {
+      const labReport = labReports.find((report) =>
+        report.patient.equals(patient._id)
+      );
       return {
         ...patient,
-        infected: labReport ? labReport.kidneySerum > 1.3 : false
+        infected: labReport ? labReport.kidneySerum > 1.3 : false,
       };
     });
 
-    const filteredPatients = infected !== undefined && infected.trim() !== '' 
-      ? patientsWithInfectionStatus.filter(patient => patient.infected === (infected === 'true'))
-      : patientsWithInfectionStatus;
+    // Filter patients by infection status if provided
+    const filteredPatients =
+      infected !== undefined && infected.trim() !== ""
+        ? patientsWithInfectionStatus.filter(
+            (patient) => patient.infected === (infected === "true")
+          )
+        : patientsWithInfectionStatus;
 
     res.status(200).json(filteredPatients);
   } catch (error) {
@@ -156,9 +190,3 @@ export const getPatientsByCampdv = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
-
-
-
-
-

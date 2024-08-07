@@ -17,22 +17,12 @@ const DonorSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    dateOfBirth: {
-      month: {
-        type: String,
-        required: true,
-      },
-      day: {
-        type: Number,
-        required: true,
-      },
-      year: {
-        type: Number,
-        required: true,
-      },
+    Date: {
+      type: Date,
+      required: true,
     },
     mobileNumber: {
-      type: String, // Assuming mobile number is stored as string
+      type: String,
       required: true,
     },
     occupation: {

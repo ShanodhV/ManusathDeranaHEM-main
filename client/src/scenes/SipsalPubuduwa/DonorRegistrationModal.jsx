@@ -13,12 +13,8 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useTheme } from "@mui/material/styles";
-import CustomTextField from "components/CustomTextField"; // Adjust the import according to your file structure
-import {useDeleteDonorMutation,
-  useAddDonorMutation,
-  useGetDonorsQuery,
-  useGetDonorQuery,
-  useUpdateDonorMutation,  } from "state/api"; // Adjust the import according to your file structure
+import CustomTextField from "components/CustomTextField";
+import { useAddDonorMutation } from "state/api";
 
 const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
   const theme = useTheme();
@@ -30,13 +26,9 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
   const [errors, setErrors] = useState({});
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
   const [loading, setLoading] = useState(false);
+  const [date, setDate] = useState('');
+  const [addDonor] = useAddDonorMutation();
 
-  //const [addDonor] = useAddDonorMutation();
-  const [updateDonor] = useUpdateDonorMutation();
-
-  
-
-  
   const formatDate = (value) => {
     const digits = value.replace(/\D/g, '');
     const day = digits.slice(0, 2);
@@ -44,13 +36,19 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
     const year = digits.slice(4, 8);
     return `${day}${day && month ? '/' : ''}${month}${month && year ? '/' : ''}${year}`;
   };
-  
+
   const isValidDate = (value) => {
     const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
     return dateRegex.test(value);
   };
 
-  const [date, setDate] = useState('');
+  const convertToISO = (value) => {
+    const [day, month, year] = value.split('/');
+    return `${year}-${month}-${day}`;
+  };
+
+
+
   const handleDateChange = (e) => {
     const { value } = e.target;
     const formattedValue = formatDate(value);
@@ -69,17 +67,15 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
     }
   };
 
-  const [addDonor] = useAddDonorMutation();
-
   const validatePhoneNumber = (number) => /^\d{10}$/.test(number);
 
   const handleAddDonor = () => {
-    const newErrors = {};
 
+    const newErrors = {};
     if (!donorNIC) newErrors.donorNIC = "NIC is required";
     if (!donorName) newErrors.donorName = "Name is required";
     if (!donorAddress) newErrors.donorAddress = "Address is required";
-    if (!date) newErrors.date = "Date is required";
+    if (!date) newErrors.date = "Date of Birth is required";
     if (!mobileNumber) newErrors.mobileNumber = "Mobile number is required";
     else if (!validatePhoneNumber(mobileNumber)) newErrors.mobileNumber = "Mobile number must contain only numbers";
     if (!occupation) newErrors.occupation = "Occupation is required";
@@ -87,17 +83,20 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
     } else {
+      setLoading(true);
+      const startTime = Date.now();
       const donorData = {
-        donorNIC,
-        donorName,
-        donorAddress,
-        date,
-        mobileNumber,
-        occupation,
+        donorNIC: donorNIC,
+        donorName: donorName,
+        donorAddress: donorAddress,
+        date: convertToISO(date),
+        mobileNumber: mobileNumber,
+        occupation: occupation,
       };
 
-      setLoading(true);
+     
       addDonor(donorData)
+      
         .then((response) => {
           console.log("Donor added successfully:", response);
           // Clear form fields
@@ -107,10 +106,16 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
           setDate("");
           setMobileNumber("");
           setOccupation("");
-          setErrors({});
-          setSnackbar({ open: true, message: "Donor added successfully!", severity: "success" });
           setLoading(false);
           handleCloseModal();
+
+          const elapsedTime = Date.now() - startTime;
+          const remainingTime = 500 - elapsedTime;
+          setTimeout(() => {
+            setLoading(false);
+            handleCloseModal();
+            setSnackbar({ open: true, message: `School registerd successfully`, severity: "success" });
+          }, remainingTime > 0 ? remainingTime : 0);
         })
         .catch((error) => {
           console.error("Error adding donor:", error);
@@ -119,17 +124,7 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
         });
     }
   };
-
-  const labelStyle = {
-    fontWeight: "bold",
-    color: "black",
-    fontSize: "16px",
-    marginTop: "16px",
-  };
-
-  const months = Array.from({ length: 12 }, (_, i) => i + 1);
-  const days = Array.from({ length: 31 }, (_, i) => i + 1);
-  const years = Array.from({ length: 100 }, (_, i) => new Date().getFullYear() - i);
+  
 
   return (
     <>
@@ -203,10 +198,9 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
               helperText={errors.mobileNumber}
             />
           </Box>
-
           <Box sx={{ mt: 2 }}>
             <CustomTextField
-              label="Date"
+              label="Date of Birth"
               value={date}
               onChange={handleDateChange}
               fullWidth
@@ -259,4 +253,3 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
 };
 
 export default DonorRegistrationModal;
-

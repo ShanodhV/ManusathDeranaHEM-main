@@ -86,6 +86,13 @@ export default function CreateProgramTab() {
       headerName: "Program Name",
       flex: 1,
     },
+
+    {
+      field: "Date",
+      headerName: "Date",
+      flex: 0.5,
+    },
+
     {
       field: "province",
       headerName: "Province",
@@ -170,7 +177,7 @@ export default function CreateProgramTab() {
         {/* Render the CreateProgramModal component and pass necessary props */}
         {/* <CreateProgramModal openModal={openCreateModal} closeModal={handleCloseCreateModal} /> */}
         <ProgramModal
-         openModal={openCreateModal} closeModal={handleCloseCreateModal}
+         openModal={openCreateModal} closeModal={handleCloseCreateModal} refetch={refetch}
         />
       </Box>
       {openUpdateModal && (

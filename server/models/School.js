@@ -35,16 +35,18 @@ const SchoolSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    principalContact: {
-      name: {
-        type: String,
-        required: true,
+    principalContact: [
+      {
+        pname: {
+          type: String,
+          required: true,
+        },
+        pnumber: {
+          type: String,
+          required: true,
+        },
       },
-      mobileNumber: {
-        type: String,
-        required: true,
-      },
-    },
+    ],
   },
   { timestamps: true }
 );

@@ -5,16 +5,16 @@ import {
   addSchool,
   deleteSchool,
   updateSchool,
-  getLastSchool
+  getLastSchool,
 } from "../controllers/school_controller.js";
 
 const router = express.Router();
 
-router.get("/gets", getSchools);
-router.get("/get/:id", getSchool);
-router.get("/getLast", getLastSchool);
-router.post("/add", addSchool);
-router.delete("/delete/:id", deleteSchool);
-router.put("/update/:id", updateSchool);
+router.get("/", getSchools); // Adjusted route to match root for schools
+router.get("/last", getLastSchool); // Adjusted route for last school
+router.get("/:id", getSchool);
+router.post("/", addSchool);
+router.delete("/:id", deleteSchool);
+router.put("/:id", updateSchool);
 
 export default router;

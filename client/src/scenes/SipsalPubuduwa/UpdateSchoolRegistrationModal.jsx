@@ -10,55 +10,90 @@ import {
   Button,
   IconButton,
   CircularProgress,
-  Snackbar,
-  Alert,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useTheme } from "@mui/material/styles";
-import Buttons from "components/Buttons";
 import CustomTextField from "components/CustomTextField";
-import { useUpdateSchoolMutation } from "state/api"; // Replace with the appropriate hook
+import { useUpdateSchoolMutation } from "state/api";
+import { Alert, Snackbar } from "@mui/material";
 
 const sriLankanData = {
-  // ... your Sri Lankan data
+  "Western": {
+    "Colombo": ["Colombo 1", "Colombo 2", "Colombo 3", "Colombo 4", "Colombo 5", "Colombo 6", "Colombo 7", "Colombo 8", "Colombo 9", "Colombo 10", "Colombo 11", "Colombo 12", "Colombo 13", "Colombo 14", "Colombo 15"],
+    "Gampaha": ["Negombo", "Gampaha", "Veyangoda", "Wattala", "Minuwangoda", "Ja-Ela", "Kadawatha", "Ragama", "Divulapitiya", "Nittambuwa", "Kiribathgoda"],
+    "Kalutara": ["Kalutara", "Panadura", "Horana", "Beruwala", "Aluthgama", "Matugama", "Wadduwa", "Bandaragama", "Ingiriya"]
+  },
+  "Central": {
+    "Kandy": ["Kandy", "Gampola", "Nawalapitiya", "Peradeniya", "Akurana", "Kadugannawa", "Katugastota"],
+    "Matale": ["Matale", "Dambulla", "Sigiriya", "Nalanda", "Ukuwela", "Rattota"],
+    "Nuwara Eliya": ["Nuwara Eliya", "Hatton", "Nanu Oya", "Talawakele", "Bandarawela", "Welimada"]
+  },
+  "Southern": {
+    "Galle": ["Galle", "Hikkaduwa", "Ambalangoda", "Elpitiya", "Bentota", "Baddegama"],
+    "Matara": ["Matara", "Weligama", "Mirissa", "Akurugoda", "Hakmana", "Devinuwara"],
+    "Hambantota": ["Hambantota", "Tangalle", "Tissamaharama", "Ambalantota", "Beliatta", "Weeraketiya"]
+  },
+  "Northern": {
+    "Jaffna": ["Jaffna", "Nallur", "Chavakachcheri", "Point Pedro", "Karainagar", "Velanai"],
+    "Kilinochchi": ["Kilinochchi", "Pallai", "Paranthan", "Poonakary"],
+    "Mannar": ["Mannar", "Nanattan", "Madhu", "Pesalai"],
+    "Vavuniya": ["Vavuniya", "Nedunkeni", "Settikulam", "Vavuniya South"],
+    "Mullaitivu": ["Mullaitivu", "Oddusuddan", "Puthukudiyiruppu", "Weli Oya"]
+  },
+  "Eastern": {
+    "Trincomalee": ["Trincomalee", "Kinniya", "Mutur", "Kuchchaveli"],
+    "Batticaloa": ["Batticaloa", "Kaluwanchikudy", "Valachchenai", "Eravur"],
+    "Ampara": ["Ampara", "Akkaraipattu", "Kalmunai", "Sainthamaruthu", "Pottuvil"]
+  },
+  "North Western": {
+    "Kurunegala": ["Kurunegala", "Kuliyapitiya", "Narammala", "Wariyapola", "Pannala", "Melsiripura"],
+    "Puttalam": ["Puttalam", "Chilaw", "Wennappuwa", "Anamaduwa", "Nattandiya", "Dankotuwa"]
+  },
+  "North Central": {
+    "Anuradhapura": ["Anuradhapura", "Kekirawa", "Thambuttegama", "Eppawala", "Medawachchiya"],
+    "Polonnaruwa": ["Polonnaruwa", "Kaduruwela", "Medirigiriya", "Hingurakgoda"]
+  },
+  "Uva": {
+    "Badulla": ["Badulla", "Bandarawela", "Haputale", "Welimada", "Mahiyanganaya", "Passara"],
+    "Monaragala": ["Monaragala", "Bibile", "Wellawaya", "Medagama", "Buttala"]
+  },
+  "Sabaragamuwa": {
+    "Ratnapura": ["Ratnapura", "Embilipitiya", "Balangoda", "Pelmadulla", "Eheliyagoda", "Kuruwita"],
+    "Kegalle": ["Kegalle", "Mawanella", "Warakapola", "Rambukkana", "Galigamuwa"]
+  }
 };
 
-const UpdateSchoolRegistrationModal = ({ openModal, closeModal, currentSchool }) => {
+const UpdateSchoolModal = ({ openModal, closeModal, school }) => {
   const theme = useTheme();
-  const [schoolId, setSchoolId] = useState("");
+  const [schoolName, setSchoolName] = useState("");
+  const [schoolAddress, setSchoolAddress] = useState("");
   const [province, setProvince] = useState("");
   const [district, setDistrict] = useState("");
   const [town, setTown] = useState("");
-  const [principalName, setPrincipalName] = useState("");
-  const [contactNumber, setContactNumber] = useState("");
-  const [errors, setErrors] = useState({});
+  const [schoolMobileNumber, setSchoolMobileNumber] = useState("");
+  const [principalContact, setPrincipalContact] = useState([{ pname: "", pnumber: "" }]);
   const [updateSchool] = useUpdateSchoolMutation();
   const [loading, setLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
   const [districts, setDistricts] = useState([]);
   const [towns, setTowns] = useState([]);
+  const [errors, setErrors] = useState({}); // Ensure errors are handled
 
   useEffect(() => {
-    if (currentSchool) {
-      setSchoolId(currentSchool.schoolId);
-      setProvince(currentSchool.province);
-      setDistrict(currentSchool.district);
-      setTown(currentSchool.town);
-      setPrincipalName(currentSchool.principalName);
-      setContactNumber(currentSchool.contactNumber);
-
-      if (currentSchool.province) {
-        setDistricts(Object.keys(sriLankanData[currentSchool.province]));
-      }
-      if (currentSchool.province && currentSchool.district) {
-        setTowns(sriLankanData[currentSchool.province][currentSchool.district]);
-      }
+    if (school) {
+      setSchoolName(school.schoolName || "");
+      setSchoolAddress(school.schoolAddress || "");
+      setProvince(school.location?.province || "");
+      setDistrict(school.location?.district || "");
+      setTown(school.location?.town || "");
+      setSchoolMobileNumber(school.schoolMobileNumber || "");
+      setPrincipalContact(school.principalContact || [{ pname: "", pnumber: "" }]);
     }
-  }, [currentSchool]);
+  }, [school]);
 
   useEffect(() => {
     if (province) {
-      setDistricts(Object.keys(sriLankanData[province]));
+      setDistricts(Object.keys(sriLankanData[province] || {}));
     } else {
       setDistricts([]);
     }
@@ -68,45 +103,65 @@ const UpdateSchoolRegistrationModal = ({ openModal, closeModal, currentSchool })
 
   useEffect(() => {
     if (district) {
-      setTowns(sriLankanData[province][district]);
+      setTowns(sriLankanData[province]?.[district] || []);
     } else {
       setTowns([]);
     }
     setTown("");
   }, [district]);
 
+  const handleClickAddPerson = () => {
+    setPrincipalContact([...principalContact, { pname: "", pnumber: "" }]);
+  };
+
+  const handleChangePrincipalContact = (index, field, value) => {
+    const updatedPrincipalContact = [...principalContact];
+    updatedPrincipalContact[index][field] = value;
+    setPrincipalContact(updatedPrincipalContact);
+  };
+
+  const validatePhoneNumber = (number) => /^\d{10}$/.test(number);
+
   const handleSubmit = () => {
     const newErrors = {};
-    if (!schoolId) newErrors.schoolId = "School ID is required";
+    if (!schoolName) newErrors.schoolName = "School name is required";
+    if (!schoolAddress) newErrors.schoolAddress = "School address is required";
     if (!province) newErrors.province = "Province is required";
     if (!district) newErrors.district = "District is required";
     if (!town) newErrors.town = "Town is required";
-    if (!principalName) newErrors.principalName = "Principal Name is required";
-    if (!contactNumber) newErrors.contactNumber = "Contact Number is required";
+    if (!schoolMobileNumber) newErrors.schoolMobileNumber = "Mobile number is required";
+    principalContact.forEach((person, index) => {
+      if (!person.pname) newErrors[`principalContact${index}pname`] = "Name is required";
+      if (!person.pnumber) newErrors[`principalContact${index}pnumber`] = "Phone number is required";
+      else if (!validatePhoneNumber(person.pnumber)) newErrors[`principalContact${index}pnumber`] = "Phone number must contain only 10 digits";
+    });
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
     } else {
       setLoading(true);
       const startTime = Date.now();
-      const schoolData = {
-        schoolId,
-        province,
-        district,
-        town,
-        principalName,
-        contactNumber,
+      const updatedSchoolData = {
+        schoolName,
+        schoolAddress,
+        location: {
+          province,
+          district,
+          town,
+        },
+        schoolMobileNumber,
+        principalContact,
       };
 
-      updateSchool({ id: currentSchool._id, ...schoolData })
-        .then((response) => {
-          console.log("School updated successfully:", response);
+      updateSchool({ id: school._id, ...updatedSchoolData })
+        .unwrap()
+        .then(() => {
           const elapsedTime = Date.now() - startTime;
           const remainingTime = 500 - elapsedTime;
           setTimeout(() => {
             setLoading(false);
             closeModal();
-            setSnackbar({ open: true, message: `School updated successfully`, severity: "success" });
+            setSnackbar({ open: true, message: "School updated successfully", severity: "success" });
           }, remainingTime > 0 ? remainingTime : 0);
         })
         .catch((error) => {
@@ -125,9 +180,9 @@ const UpdateSchoolRegistrationModal = ({ openModal, closeModal, currentSchool })
         onClose={closeModal}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle sx={{ bgcolor: "#f0f0f0" }} id="form-dialog-title">
+        <DialogTitle sx={{bgcolor:"#f0f0f0"}} id="form-dialog-title">
           <div style={{ color: "#d63333", fontWeight: '700', fontSize: '16px' }}>
-            {"Update School Registration"}
+            {"Update School"}
             <hr style={{ borderColor: "#d63333", }} />
           </div>
           <IconButton
@@ -146,13 +201,25 @@ const UpdateSchoolRegistrationModal = ({ openModal, closeModal, currentSchool })
         <DialogContent>
           <Box sx={{ mt: 2 }}>
             <CustomTextField
-              label="School ID"
+              label="School Name"
               variant="outlined"
-              value={schoolId}
+              value={schoolName}
+              onChange={(e) => setSchoolName(e.target.value)}
               fullWidth
-              error={!!errors.schoolId}
-              helperText={errors.schoolId}
-              disabled
+              error={!!errors.schoolName}
+              helperText={errors.schoolName}
+            />
+          </Box>
+
+          <Box sx={{ mt: 2 }}>
+            <CustomTextField
+              label="School Address"
+              variant="outlined"
+              value={schoolAddress}
+              onChange={(e) => setSchoolAddress(e.target.value)}
+              fullWidth
+              error={!!errors.schoolAddress}
+              helperText={errors.schoolAddress}
             />
           </Box>
 
@@ -219,44 +286,65 @@ const UpdateSchoolRegistrationModal = ({ openModal, closeModal, currentSchool })
 
           <Box sx={{ mt: 2 }}>
             <CustomTextField
-              label="Principal Name"
+              label="Mobile Number"
               variant="outlined"
-              value={principalName}
-              onChange={(e) => setPrincipalName(e.target.value)}
+              value={schoolMobileNumber}
+              onChange={(e) => setSchoolMobileNumber(e.target.value)}
               fullWidth
-              error={!!errors.principalName}
-              helperText={errors.principalName}
+              error={!!errors.schoolMobileNumber}
+              helperText={errors.schoolMobileNumber}
             />
           </Box>
 
           <Box sx={{ mt: 2 }}>
-            <CustomTextField
-              label="Contact Number"
+            <label style={{ fontWeight: "bold", color: "black", fontSize: "16px" }}>Update Principal Contact</label>
+            {principalContact.map((contact, index) => (
+              <Box key={index} sx={{ mt: 2 }}>
+                <CustomTextField
+                  label={`Principal ${index + 1} Name`}
+                  variant="outlined"
+                  value={contact.pname}
+                  onChange={(e) => handleChangePrincipalContact(index, "pname", e.target.value)}
+                  fullWidth
+                  error={!!errors[`principalContact${index}pname`]}
+                  helperText={errors[`principalContact${index}pname`]}
+                />
+                <Box sx={{padding:'10px'}}/>
+                <CustomTextField
+                  label={`Principal ${index + 1} Phone Number`}
+                  variant="outlined"
+                  value={contact.pnumber}
+                  onChange={(e) => handleChangePrincipalContact(index, "pnumber", e.target.value)}
+                  fullWidth
+                  error={!!errors[`principalContact${index}pnumber`]}
+                  helperText={errors[`principalContact${index}pnumber`]}
+                  sx={{ mt: 1 }}
+                />
+              </Box>
+            ))}
+            {/* <Button
+              onClick={handleClickAddPerson}
               variant="outlined"
-              value={contactNumber}
-              onChange={(e) => setContactNumber(e.target.value)}
-              fullWidth
-              error={!!errors.contactNumber}
-              helperText={errors.contactNumber}
-            />
+              sx={{ mt: 2 }}
+            >
+              Add Another Principal Contact
+            </Button> */}
           </Box>
         </DialogContent>
-        <DialogActions sx={{ bgcolor: "#f0f0f0" }}>
+        <DialogActions>
+          <Button onClick={closeModal} color="secondary" variant="outlined">
+            Cancel
+          </Button>
           <Button
             onClick={handleSubmit}
             color="secondary"
             variant="contained"
             disabled={loading}
-            endIcon={loading && <CircularProgress size={20} />}
           >
-            {"Update School"}
-          </Button>
-          <Button onClick={closeModal} variant="outlined" color="secondary">
-            Cancel
+            {loading ? <CircularProgress size={24} /> : "Update"}
           </Button>
         </DialogActions>
       </Dialog>
-
       <Snackbar
         open={snackbar.open}
         autoHideDuration={6000}
@@ -271,4 +359,4 @@ const UpdateSchoolRegistrationModal = ({ openModal, closeModal, currentSchool })
   );
 };
 
-export default UpdateSchoolRegistrationModal;
+export default UpdateSchoolModal;
