@@ -171,7 +171,7 @@ const DonorRegistrationModal = ({ openModal, closeModal }) => {
                             helperText={donorIDError}
                         />
                     </Box>
-                    <Box sx={{ mt: 6 }}>
+                    <Box sx={{ mt: 2 }}>
                         <CustomTextField
                             label="Donor Name"
                             variant="outlined"
@@ -185,7 +185,7 @@ const DonorRegistrationModal = ({ openModal, closeModal }) => {
                             helperText={donorNameError}
                         />
                     </Box>
-                    <Box sx={{ mt: 6 }}>
+                    <Box sx={{ mt: 2}}>
                         <CustomTextField
                             label="Donor Address"
                             variant="outlined"
@@ -199,7 +199,7 @@ const DonorRegistrationModal = ({ openModal, closeModal }) => {
                             helperText={donorAddressError}
                         />
                     </Box>
-                    <Box sx={{ mt: 6 }}>
+                    <Box sx={{ mt: 2 }}>
                         <CustomTextField
                             label="Contact Number"
                             variant="outlined"
@@ -215,7 +215,7 @@ const DonorRegistrationModal = ({ openModal, closeModal }) => {
                     </Box>
 
                     <h3>Assign Student ID</h3>
-                    <Box sx={{ mt: 6 }}>
+                    <Box sx={{ mt: 2 }}>
                     <FormControl fullWidth variant="outlined">
               <InputLabel>Select Student ID</InputLabel>
               <Select
@@ -243,7 +243,7 @@ const DonorRegistrationModal = ({ openModal, closeModal }) => {
                     </Box>
 
                     <h3>program ID</h3>
-                    <Box sx={{ mt: 6 }}>
+                    <Box sx={{ mt: 2 }}>
                     <FormControl fullWidth variant="outlined">
               <InputLabel>Select Program ID</InputLabel>
               <Select

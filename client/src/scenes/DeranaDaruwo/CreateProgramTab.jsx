@@ -63,13 +63,13 @@ export default function CreateProgramTab() {
     deleteTreeEvent(selectedProgram)
       .unwrap()
       .then((response) => {
-        console.log("Health Camp deleted successfully");
-        setSnackbar({ open: true, message: "Health Camp deleted successfully", severity: "success" });
+        console.log("Derana Daruwo Program deleted successfully");
+        setSnackbar({ open: true, message: "Derana Daruwo Program deleted successfully", severity: "success" });
         refetch();
       })
       .catch((error) => {
-        console.error("Error deleting health camp:", error);
-        setSnackbar({ open: true, message: "Error deleting health camp", severity: "error" });
+        console.error("Error deleting derana daruwo program:", error);
+        setSnackbar({ open: true, message: "Error deleting derana daruwo program", severity: "error" });
       });
     setOpenConfirm(false);
   };
@@ -242,7 +242,7 @@ export default function CreateProgramTab() {
         onClose={() => setOpenConfirm(false)}
         onConfirm={confirmDelete}
         title="Confirm Delete"
-        description="Are you sure you want to delete this health camp? This action cannot be undone."
+        description="Are you sure you want to delete this derana daruwo program? This action cannot be undone."
       />
       <Snackbar
         open={snackbar.open}

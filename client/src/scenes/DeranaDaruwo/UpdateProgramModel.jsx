@@ -400,7 +400,7 @@ const UpdateProgramModel = ({ openModal, closeModal, refetch, newProgamDetails }
                       disabled={loading}
                       endIcon={loading && <CircularProgress size={20} />}
                   >
-                      {"Create Health Camp"}
+                      {"Create Derana Daruwo Program"}
                   </Button>
                   <Button onClick={handleCancel} variant="outlined" color="secondary">
                       Cancel
