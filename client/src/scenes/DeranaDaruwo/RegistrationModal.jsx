@@ -175,7 +175,7 @@ const RegistrationModal = ({ openModal, closeModal }) => {
           </IconButton>
         </DialogTitle>
         <DialogContent>
-          <Box sx={{ mt: 6 }}>
+          <Box sx={{ mt: 2 }}>
             <CustomTextField
               label="Student ID"
               variant="outlined"
@@ -189,7 +189,7 @@ const RegistrationModal = ({ openModal, closeModal }) => {
             helperText={studentIDError}
             />
           </Box>
-          <Box sx={{ mt: 6 }}>
+          <Box sx={{ mt: 2 }}>
             <CustomTextField
               label="Student Name"
               variant="outlined"
@@ -203,7 +203,7 @@ const RegistrationModal = ({ openModal, closeModal }) => {
             helperText={studentNameError}
             />
           </Box>
-          <Box sx={{ mt: 6 }}>
+          <Box sx={{ mt: 2 }}>
             <CustomTextField
               label="Student Address"
               variant="outlined"
@@ -217,7 +217,7 @@ const RegistrationModal = ({ openModal, closeModal }) => {
             helperText={studentAddressError}
             />
           </Box>
-          <Box sx={{ mt: 6 }}>
+          <Box sx={{ mt: 2 }}>
             <FormControl fullWidth variant="outlined">
               <InputLabel>Select Program ID</InputLabel>
               <Select
@@ -244,7 +244,7 @@ const RegistrationModal = ({ openModal, closeModal }) => {
           </Box>
           <br /><br />
           <h4>Parent Details</h4>
-          <Box sx={{ mt: 4 }}>
+          <Box sx={{ mt: 2 }}>
             <CustomTextField
               label="Parent Name"
               variant="outlined"
@@ -258,7 +258,7 @@ const RegistrationModal = ({ openModal, closeModal }) => {
               helperText={parentNameError}
             />
           </Box>
-          <Box sx={{ mt: 6 }}>
+          <Box sx={{ mt: 2 }}>
             <CustomTextField
               label="Parent Contact Details"
               variant="outlined"
@@ -273,7 +273,7 @@ const RegistrationModal = ({ openModal, closeModal }) => {
             />
           </Box>
           <h4>Bank Account Details</h4>
-          <Box sx={{ mt: 4 }}>
+          <Box sx={{ mt: 2 }}>
             <CustomTextField
               label="Bank Account Details"
               variant="outlined"
@@ -287,7 +287,7 @@ const RegistrationModal = ({ openModal, closeModal }) => {
               helperText={bankAccountDetailsError}
             />
           </Box>
-          <Box sx={{ mt: 6 }}>
+          <Box sx={{ mt: 2 }}>
             <CustomTextField
               label="Account Number"
               variant="outlined"
