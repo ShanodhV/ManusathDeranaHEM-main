@@ -1,9 +1,10 @@
 import DeranaDaruwo from "../models/DeranaDarwo.js";
 
+
 // Add a new Derana Daruwo program
 export const addDeranaDaruwo = async (req, res) => {
   try {
-    const { programId, programName, province, district, town, name, mobileNumber } = req.body;
+    const { programId, programName,Date, province, district, town, name, mobileNumber } = req.body;
 
     // Validate programId to ensure it's not null or empty
     if (!programId) {
@@ -14,6 +15,7 @@ export const addDeranaDaruwo = async (req, res) => {
     const newDeranaDaruwo = new DeranaDaruwo({
       programId,
       programName,
+      Date,
       province,
       district,
       town,
@@ -100,13 +102,13 @@ export const updateDeranaDaruwoProgram = async (req, res) => {
 // Get Last ID
 export const getLastProgram = async (req, res) => {
   try {
-    const lastProgram = await Camps.findOne().sort({ createdAt: -1 });
+    const lastProgram = await DeranaDaruwo.findOne().sort({ createdAt: -1 });
     if (!lastProgram) {
-      return res.status(404).json({ message: "No health camps found" });
+      return res.status(404).json({ message: "No program found" });
     }
     res.status(200).json(lastProgram);
   } catch (error) {
-    console.error("Error fetching last health camp:", error);
+    console.error("Error fetching last program:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };

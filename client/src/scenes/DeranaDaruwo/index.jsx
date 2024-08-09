@@ -9,6 +9,7 @@ import NextAreaPredictorTab from './NextAreaPredictorTab';
 import ProgramModal from './ProgramModal';
 import RegistrationModal from './RegistrationModal';
 import DonorRegistrationModal from './DonorRegistrationModal';
+import ManageStudent from './ManageStudent';
 
 
 const DeranaDaruwo = () => {
@@ -53,7 +54,8 @@ const DeranaDaruwo = () => {
       </Tabs>
 
       {activeTab === 0 && <CreateProgramTab handleOpenModal={handleOpenProgramModal} />}
-      {activeTab === 1 && <StudentRegistrationTab />}
+      {/* {activeTab === 1 && <StudentRegistrationTab />} */}
+      {activeTab === 1 && <ManageStudent />}
       {activeTab === 2 && <VolunteerDonorRegistrationTab handleOpenModal={handleOpenVolunteerModal} />}
       {activeTab === 3 && <NextAreaPredictorTab />}
 
