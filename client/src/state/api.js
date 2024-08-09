@@ -294,11 +294,11 @@ getNextCampLocationsByCamps: build.query({
     }),
     // Donors
     deleteDonor: build.mutation({
-      query: (donorId) => ({
-        url: `donor/delete/${donorId}`,
-        method: "DELETE",
+      query: (donorNIC) => ({
+        url: `donor/delete/${donorNIC}`,
+        method: 'DELETE',
       }),
-      invalidatesTags: ["Donors"],
+      invalidatesTags: ['Donors'],
     }),
     addDonor: build.mutation({
       query: ({
@@ -309,8 +309,8 @@ getNextCampLocationsByCamps: build.query({
         mobileNumber,
         occupation,
       }) => ({
-        url: `/add`,
-        method: "POST",
+        url: '/add',
+        method: 'POST',
         body: {
           donorNIC,
           donorName,
@@ -320,19 +320,19 @@ getNextCampLocationsByCamps: build.query({
           occupation,
         },
       }),
-      providesTags: ["Donors"],
+      providesTags: ['Donors'],
     }),
     getDonors: build.query({
-      query: () => `donor/gets`,
-      providesTags: ["Donors"],
+      query: () => 'donor/gets',
+      providesTags: ['Donors'],
     }),
     getDonor: build.query({
       query: (id) => `donor/get/${id}`,
-      providesTags: ["Donors"],
+      providesTags: ['Donors'],
     }),
     updateDonor: build.mutation({
-      query: ({ donorId, donorData }) => ({
-        url: `donor/update/${donorId}`,
+      query: ({ donorNIC, donorData }) => ({
+        url: `donor/update/${donorNIC}`,
         method: 'PUT',
         body: donorData,
       }),
