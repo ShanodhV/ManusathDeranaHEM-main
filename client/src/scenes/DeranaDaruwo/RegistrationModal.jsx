@@ -219,11 +219,7 @@ const RegistrationModal = ({ openModal, closeModal,programId }) => {
             helperText={studentAddressError}
             />
           </Box>
-<<<<<<< HEAD
-          <Box sx={{ mt: 2 }}>
-=======
           {/* <Box sx={{ mt: 6 }}>
->>>>>>> 2ded4a32d224e3b852e01f25b72c7ff9c98d1278
             <FormControl fullWidth variant="outlined">
               <InputLabel>Select Program ID</InputLabel>
               <Select

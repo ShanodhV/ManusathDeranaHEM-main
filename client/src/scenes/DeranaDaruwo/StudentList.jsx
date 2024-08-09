@@ -184,7 +184,7 @@ const StudentList = ({ open, onClose, program}) => {
             variant="contained"
             style={{ marginRight: "8px" }} // Add some margin between button and icon
           >
-            Register Patient
+            Register Student
           </Button>
           <IconButton
             aria-label="close"
@@ -216,7 +216,7 @@ const StudentList = ({ open, onClose, program}) => {
             color="secondary"
             variant="contained"
           >
-            Register Patient
+            Register Student
           </Button>
           <Button onClick={onClose} variant="outlined" color="secondary">
             Close
