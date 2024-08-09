@@ -62,7 +62,7 @@ const ManageStudent = () => {
   return (
     <Box m="1.5rem 2.5rem">
       <Box sx={{ mb: 3, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <Typography variant="h4" fontWeight="bold">Manage Ptients</Typography>
+        <Typography variant="h4" fontWeight="bold">Manage Students</Typography>
         <Tooltip title="Search by Camp ID, Town, or District" arrow>
           <TextField
             label="Search Camps"
