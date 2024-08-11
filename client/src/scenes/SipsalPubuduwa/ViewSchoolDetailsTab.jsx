@@ -21,6 +21,7 @@ const SchoolDataViewerTab = () => {
   const [province, setProvince] = useState("");
   const [district, setDistrict] = useState("");
   const [town, setTown] = useState("");
+  const [selectedSchoolIds, setSelectedSchoolIds] = useState([]);
 
   const [getFilteredSchools, { data: filteredSchools, isLoading: schoolsLoading }] =
     useLazyGetFilteredSchoolsQuery();
@@ -138,6 +139,9 @@ const SchoolDataViewerTab = () => {
               pageSize={5}
               rowsPerPageOptions={[5, 10, 20]}
               checkboxSelection
+              onSelectionModelChange={(newSelection) =>
+                setSelectedSchoolIds(newSelection)
+              }
               getRowId={(row) => row._id}
             />
           </Box>
