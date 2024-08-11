@@ -309,51 +309,58 @@ getNextCampLocationsByCamps: build.query({
       providesTags: ["Schools"],
     }),
     // Donors
-    deleteDonor: build.mutation({
-      query: (donorNIC) => ({
-        url: `donor/delete/${donorNIC}`,
-        method: 'DELETE',
-      }),
-      invalidatesTags: ['Donors'],
-    }),
-    addDonor: build.mutation({
-      query: ({
-        donorNIC,
-        donorName,
-        donorAddress,
-        dateOfBirth,
-        mobileNumber,
-        occupation,
-      }) => ({
-        url: '/add',
-        method: 'POST',
-        body: {
-          donorNIC,
-          donorName,
-          donorAddress,
-          dateOfBirth,
-          mobileNumber,
-          occupation,
-        },
-      }),
-      providesTags: ['Donors'],
-    }),
-    getDonors: build.query({
-      query: () => 'donor/gets',
-      providesTags: ['Donors'],
-    }),
-    getDonor: build.query({
-      query: (id) => `donor/get/${id}`,
-      providesTags: ['Donors'],
-    }),
-    updateDonor: build.mutation({
-      query: ({ donorNIC, donorData }) => ({
-        url: `donor/update/${donorNIC}`,
-        method: 'PUT',
-        body: donorData,
-      }),
-      invalidatesTags: ['Donors'],
-    }),
+deleteDonor: build.mutation({
+  query: (donorId) => ({
+    url: `donor/delete/${donorId}`,
+    method: 'DELETE',
+  }),
+  invalidatesTags: ['Donors'],
+}),
+addDonor: build.mutation({
+  query: ({
+    donorId,             // Donor ID
+    donorNIC,            // NIC
+    donorName,           // Name
+    donorAddress,        // Address
+    dateOfBirth,         // Date of Birth
+    mobileNumber,        // Mobile Number
+    occupation,          // Occupation
+  }) => ({
+    url: 'donor/add',   // Correct URL path
+    method: 'POST',
+    body: {
+      donorId,           // Included donorId in request body
+      donorNIC,
+      donorName,
+      donorAddress,
+      dateOfBirth,
+      mobileNumber,
+      occupation,
+    },
+  }),
+  invalidatesTags: ['Donors'],
+}),
+getDonors: build.query({
+  query: () => 'donor/gets',
+  providesTags: ['Donors'],
+}),
+getDonor: build.query({
+  query: (id) => `donor/get/${id}`,
+  providesTags: ['Donors'],
+}),
+updateDonor: build.mutation({
+  query: ({ donorId, donorData }) => ({
+    url: `donor/update/${donorId}`,  // Updated to use donorId
+    method: 'PUT',
+    body: donorData,
+  }),
+  invalidatesTags: ['Donors'],
+}),
+getLastDonor: build.query({
+  query: () => 'donor/last',  // Assumes endpoint for fetching the last donor
+  providesTags: ['Donors'],
+}),
+
     
     // Derana Daruwo Programs
     deleteDeranaDaruwoProgram: build.mutation({
@@ -719,6 +726,7 @@ export const {
   useGetDonorsQuery,
   useGetDonorQuery,
   useUpdateDonorMutation,
+  useGetLastDonorQuery,
 
   useDeleteDeranaDaruwoProgramMutation,
   useAddDeranaDaruwoProgramMutation,
