@@ -1,7 +1,13 @@
+// models/Donor.js
 import mongoose from 'mongoose';
 
 const DonorSchema = new mongoose.Schema(
   {
+    donorId: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     donorNIC: {
       type: String,
       required: true,
@@ -17,7 +23,7 @@ const DonorSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    Date: {
+    dateOfBirth: {
       type: Date,
       required: true,
     },
