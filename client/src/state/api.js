@@ -587,6 +587,35 @@ getNextCampLocationsByCamps: build.query({
       query: (id) => `volunteer/get/${id}`,
       providesTags: ["Volunteers"],
     }),
+
+    updateVolunteer: build.mutation({
+      query: ({
+        id,
+        volunteerNIC,
+        volunteerName,
+        dateOfBirth,
+        contactNumber,
+        volunteerAddress,
+        location,
+        occupation,
+        status,
+      }) => ({
+        url: `volunteer/update/${id}`,
+        method: "PUT",
+        body: {
+          volunteerNIC,
+          volunteerName,
+          dateOfBirth,
+          contactNumber,
+          volunteerAddress,
+          location,
+          occupation,
+          status,
+        },
+      }),
+      invalidatesTags: ["Volunteers"],
+    }),
+
     // Volunteer Events
     
     deleteVolunteerEvent: build.mutation({
@@ -628,7 +657,7 @@ getNextCampLocationsByCamps: build.query({
       query: (id) => `volunteer-event/get/${id}`,
       providesTags: ["VolunteerEvents"],
     }),
-
+      
 
   }),
 });
@@ -717,6 +746,7 @@ export const {
   useAddVolunteerMutation,
   useGetVolunteersQuery,
   useGetVolunteerQuery,
+  useUpdateVolunteerMutation,
 
   useDeleteVolunteerEventMutation,
   useAddVolunteerEventMutation,

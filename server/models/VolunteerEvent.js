@@ -11,9 +11,8 @@ const VolunteerEventSchema = new mongoose.Schema(
       required: true,
     },
     eventDate: {
-      date: { type: Number, },
-      month: { type: Number,},
-      year: { type: Number, },
+      type: String,
+      required: true,
     },
     venue: {
       type: String,
