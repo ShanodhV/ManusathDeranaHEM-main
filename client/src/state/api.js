@@ -292,6 +292,22 @@ getNextCampLocationsByCamps: build.query({
       }),
       invalidatesTags: ["Schools"],
     }),
+    getFilteredSchools: build.query({
+      query: ({ province, district, town }) => ({
+        url: `schools/filter`,
+        method: "GET",
+        params: { province, district, town },
+      }),
+      providesTags: ["Schools"],
+    }),
+    getStudentsBySchool: build.query({
+      query: ({ schoolIds }) => ({
+        url: `schools/students`,
+        method: "GET",
+        params: { schoolIds },
+      }),
+      providesTags: ["Schools"],
+    }),
     // Donors
     deleteDonor: build.mutation({
       query: (donorNIC) => ({
@@ -665,6 +681,9 @@ export const {
   useAddSchoolMutation,
   useDeleteSchoolMutation,
   useUpdateSchoolMutation,
+
+  useLazyGetFilteredSchoolsQuery,
+  useLazyGetStudentsBySchoolQuery,
 
   useDeleteDonorMutation,
   useAddDonorMutation,
