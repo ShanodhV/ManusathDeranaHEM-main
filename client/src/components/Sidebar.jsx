@@ -21,6 +21,7 @@ import {
   School,
   AdminPanelSettingsOutlined,
   Groups3,
+  Logout,
 } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -60,8 +61,8 @@ const navItems = [
     icon: <AdminPanelSettingsOutlined />,
   },
   {
-    text: "Settings",
-    icon: <SettingsOutlined />,
+    text: "Logout",
+    icon: <Logout />,
   },
 ];
 
