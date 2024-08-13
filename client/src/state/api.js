@@ -292,52 +292,75 @@ getNextCampLocationsByCamps: build.query({
       }),
       invalidatesTags: ["Schools"],
     }),
+    getFilteredSchools: build.query({
+      query: ({ province, district, town }) => ({
+        url: `schools/filter`,
+        method: "GET",
+        params: { province, district, town },
+      }),
+      providesTags: ["Schools"],
+    }),
+    getStudentsBySchool: build.query({
+      query: ({ schoolIds }) => ({
+        url: `schools/students`,
+        method: "GET",
+        params: { schoolIds },
+      }),
+      providesTags: ["Schools"],
+    }),
     // Donors
-    deleteDonor: build.mutation({
-      query: (donorId) => ({
-        url: `donor/delete/${donorId}`,
-        method: "DELETE",
-      }),
-      invalidatesTags: ["Donors"],
-    }),
-    addDonor: build.mutation({
-      query: ({
-        donorNIC,
-        donorName,
-        donorAddress,
-        dateOfBirth,
-        mobileNumber,
-        occupation,
-      }) => ({
-        url: `/add`,
-        method: "POST",
-        body: {
-          donorNIC,
-          donorName,
-          donorAddress,
-          dateOfBirth,
-          mobileNumber,
-          occupation,
-        },
-      }),
-      providesTags: ["Donors"],
-    }),
-    getDonors: build.query({
-      query: () => `donor/gets`,
-      providesTags: ["Donors"],
-    }),
-    getDonor: build.query({
-      query: (id) => `donor/get/${id}`,
-      providesTags: ["Donors"],
-    }),
-    updateDonor: build.mutation({
-      query: ({ donorId, donorData }) => ({
-        url: `donor/update/${donorId}`,
-        method: 'PUT',
-        body: donorData,
-      }),
-      invalidatesTags: ['Donors'],
-    }),
+deleteDonor: build.mutation({
+  query: (donorId) => ({
+    url: `donor/delete/${donorId}`,
+    method: 'DELETE',
+  }),
+  invalidatesTags: ['Donors'],
+}),
+addDonor: build.mutation({
+  query: ({
+    donorId,             // Donor ID
+    donorNIC,            // NIC
+    donorName,           // Name
+    donorAddress,        // Address
+    dateOfBirth,         // Date of Birth
+    mobileNumber,        // Mobile Number
+    occupation,          // Occupation
+  }) => ({
+    url: 'donor/add',   // Correct URL path
+    method: 'POST',
+    body: {
+      donorId,           // Included donorId in request body
+      donorNIC,
+      donorName,
+      donorAddress,
+      dateOfBirth,
+      mobileNumber,
+      occupation,
+    },
+  }),
+  invalidatesTags: ['Donors'],
+}),
+getDonors: build.query({
+  query: () => 'donor/gets',
+  providesTags: ['Donors'],
+}),
+getDonor: build.query({
+  query: (id) => `donor/get/${id}`,
+  providesTags: ['Donors'],
+}),
+updateDonor: build.mutation({
+  query: ({ donorId, donorData }) => ({
+    url: `donor/update/${donorId}`,  // Updated to use donorId
+    method: 'PUT',
+    body: donorData,
+  }),
+  invalidatesTags: ['Donors'],
+}),
+getLastDonor: build.query({
+  query: () => 'donor/last',  // Assumes endpoint for fetching the last donor
+  providesTags: ['Donors'],
+}),
+
     
     // Derana Daruwo Programs
     deleteDeranaDaruwoProgram: build.mutation({
@@ -348,10 +371,10 @@ getNextCampLocationsByCamps: build.query({
       invalidatesTags: ["DeranaDaruwoPrograms"],
     }),
     addDeranaDaruwoProgram: build.mutation({
-      query: ({ programId, programName, province,district,town,name,mobileNumber }) => ({
+      query: ({ programId, programName,Date, province,district,town,name,mobileNumber }) => ({
         url: `derana-daruwo/add`,
         method: "POST",
-        body: { programId, programName, province,district,town,name,mobileNumber},
+        body: { programId, programName,Date, province,district,town,name,mobileNumber},
       }),
       providesTags: ["DeranaDaruwoPrograms"],
     }),
@@ -406,11 +429,11 @@ getNextCampLocationsByCamps: build.query({
         studentName,
         studentAddress,
         studentID,
-        programID,
         parentName,
         parentContactDetails,
         bankAccountDetails,
         accountNumber,
+        deranaDaruwProgram,
       }) => ({
         url: `student/add`,
         method: "POST",
@@ -418,11 +441,11 @@ getNextCampLocationsByCamps: build.query({
           studentName,
           studentAddress,
           studentID,
-          programID,
           parentName, 
           parentContactDetails,
           bankAccountDetails,
-          accountNumber
+          accountNumber,
+          deranaDaruwProgram,
         },
       }),
       providesTags: ["Students"],
@@ -441,11 +464,11 @@ getNextCampLocationsByCamps: build.query({
         studentID,
         studentName,
         studentAddress,
-        programID,
         parentName,
         parentContactDetails,
         bankAccountDetails,
         accountNumber,
+        deranaDaruwProgram,
       }) => ({
         url: `student/update/${studentID}`,
         method: "PUT",
@@ -453,14 +476,19 @@ getNextCampLocationsByCamps: build.query({
           
           studentName,
           studentAddress,
-          programID,
           parentName,
           parentContactDetails,
           bankAccountDetails,
           accountNumber,
+          deranaDaruwProgram,
         },
       }),
       invalidatesTags: ["Students"],
+    }),
+    
+    getStudentsByDeranaDaruwoProgram: build.query({
+      query: (programId) => `student/program/${programId}`,
+      providesTags: ["Students"],
     }),
     
     // Donor Volunteers
@@ -566,6 +594,35 @@ getNextCampLocationsByCamps: build.query({
       query: (id) => `volunteer/get/${id}`,
       providesTags: ["Volunteers"],
     }),
+
+    updateVolunteer: build.mutation({
+      query: ({
+        id,
+        volunteerNIC,
+        volunteerName,
+        dateOfBirth,
+        contactNumber,
+        volunteerAddress,
+        location,
+        occupation,
+        status,
+      }) => ({
+        url: `volunteer/update/${id}`,
+        method: "PUT",
+        body: {
+          volunteerNIC,
+          volunteerName,
+          dateOfBirth,
+          contactNumber,
+          volunteerAddress,
+          location,
+          occupation,
+          status,
+        },
+      }),
+      invalidatesTags: ["Volunteers"],
+    }),
+
     // Volunteer Events
     
     deleteVolunteerEvent: build.mutation({
@@ -607,7 +664,7 @@ getNextCampLocationsByCamps: build.query({
       query: (id) => `volunteer-event/get/${id}`,
       providesTags: ["VolunteerEvents"],
     }),
-
+      
 
   }),
 });
@@ -661,11 +718,15 @@ export const {
   useDeleteSchoolMutation,
   useUpdateSchoolMutation,
 
+  useLazyGetFilteredSchoolsQuery,
+  useLazyGetStudentsBySchoolQuery,
+
   useDeleteDonorMutation,
   useAddDonorMutation,
   useGetDonorsQuery,
   useGetDonorQuery,
   useUpdateDonorMutation,
+  useGetLastDonorQuery,
 
   useDeleteDeranaDaruwoProgramMutation,
   useAddDeranaDaruwoProgramMutation,
@@ -680,6 +741,7 @@ export const {
   useGetStudentsQuery,
   useGetStudentQuery,
   useUpdateStudentsMutation,
+  useGetStudentsByDeranaDaruwoProgramQuery,
 
 
   useDeleteDonorVolunteerMutation,
@@ -692,6 +754,7 @@ export const {
   useAddVolunteerMutation,
   useGetVolunteersQuery,
   useGetVolunteerQuery,
+  useUpdateVolunteerMutation,
 
   useDeleteVolunteerEventMutation,
   useAddVolunteerEventMutation,

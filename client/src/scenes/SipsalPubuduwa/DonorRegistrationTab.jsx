@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Box, Button, Snackbar, Alert } from "@mui/material";
 import DonorRegistrationModal from "./DonorRegistrationModal";
 import { DataGrid } from "@mui/x-data-grid";
-import { useGetDonorVolunteersQuery, useDeleteDonorVolunteerMutation } from "state/api";
+import { useGetDonorQuery, useDeleteDonorMutation } from "state/api";
 import { useTheme } from "@mui/material/styles";
 import DataGridCustomToolbar from "components/DataGridCustomToolbar";
 import ConfirmationDialog from "components/ConfirmationDialog";
@@ -12,8 +12,8 @@ import Buttons from "components/Buttons";
 const DonorRegistrationTab = () => {
   const theme = useTheme();
   const [openModal, setOpenModal] = useState(false);
-  const { data, isLoading, refetch, error } = useGetDonorVolunteersQuery();
-  const [deleteDonor] = useDeleteDonorVolunteerMutation();
+  const { data, isLoading, refetch, error } = useGetDonorQuery();
+  const [deleteDonor] = useDeleteDonorMutation();
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(20);
   const [sort, setSort] = useState([]);
@@ -24,9 +24,15 @@ const DonorRegistrationTab = () => {
   const [donorToDelete, setDonorToDelete] = useState(null);
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
 
+  const [openCreateModal, setOpenCreateModal] = useState(false);
+  const [openUpdateModal, setOpenUpdateModal] = useState(false);
+
+
+
   useEffect(() => {
     if (error) {
       console.error("Error fetching donors:", error);
+      setSnackbar({ open: true, message: "Error fetching donors", severity: "error" });
     }
   }, [error]);
 
@@ -40,9 +46,9 @@ const DonorRegistrationTab = () => {
     setSelectedDonor(null); // Clear the selected donor on modal close
   };
 
-  const handleDelete = (donorId) => {
+  const handleDelete = (donorNIC) => {
     setOpenConfirm(true);
-    setDonorToDelete(donorId);
+    setDonorToDelete(donorNIC);
   };
 
   const confirmDelete = () => {

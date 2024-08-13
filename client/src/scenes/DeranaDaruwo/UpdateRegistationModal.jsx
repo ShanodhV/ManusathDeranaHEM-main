@@ -3,15 +3,16 @@ import { Dialog, Box, DialogContent, DialogTitle, DialogActions, IconButton, Cir
   import React, { useState, useEffect } from 'react';
   import CustomTextField from 'components/CustomTextField';
   import { useTheme } from "@mui/material/styles";
-  import { useUpdateStudentsMutation, useGetDeranaDaruwoProgramsQuery  } from "state/api";
+  import { useUpdateStudentsMutation, useGetDeranaDaruwoProgramsQuery,useGetStudentsByDeranaDaruwoProgramQuery  } from "state/api";
   import { Alert, Snackbar } from "@mui/material";
   import CloseIcon from "@mui/icons-material/Close";
 
-const UpdateRegistationModal = ({ openModal, closeModal, newStudentData,refetch }) => {
+const UpdateRegistationModal = ({ openModal, closeModal, refetch,currentStudent, programId }) => {
     const theme = useTheme();
+  const [studentId, setStudentId] = useState("");
   const [studentName, setStudentName] = useState("");
   const [studentAddress, setStudentAddress] = useState("");
-  const [programID, setProgramID] = useState("");
+  // const [programId, setProgramId] = useState("");
   const [parentName, setParentName] = useState("");
   const [parentContactDetails, setParentContactDetails] = useState("");
   const [bankAccountDetails, setBankAccountDetails] = useState("");
@@ -20,29 +21,31 @@ const UpdateRegistationModal = ({ openModal, closeModal, newStudentData,refetch 
   const { data: programs, isLoading, isError } = useGetDeranaDaruwoProgramsQuery();
   const [loading, setLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+  const { data: programStudent } = useGetStudentsByDeranaDaruwoProgramQuery(programId, { skip: !programId });
+
 
   useEffect(() => {
-    if (newStudentData) {
-      setStudentName(newStudentData.studentName);
-      setStudentAddress(newStudentData.studentAddress);
-      setProgramID(newStudentData.programID);
-      setParentName(newStudentData.parentName);
-      setParentContactDetails(newStudentData.parentContactDetails);
-      setBankAccountDetails(newStudentData.bankAccountDetails);
-      setAccountNumber(newStudentData.accountNumber);
+    if (currentStudent) {
+      setStudentId(currentStudent.studentId)
+      setStudentName(currentStudent.studentName);
+      setStudentAddress(currentStudent.studentAddress);
+      setParentName(currentStudent.parentName);
+      setParentContactDetails(currentStudent.parentContactDetails);
+      setBankAccountDetails(currentStudent.bankAccountDetails);
+      setAccountNumber(currentStudent.accountNumber);
     }
-  }, [newStudentData]);
-  const studentID = newStudentData ? newStudentData._id : "";
+  }, [currentStudent]); 
+  // const studentId = currentStudent ? currentStudent._id : "";
   const handleUpdateStudent = () => {
     updateStudents({
-      studentID,
+      studentId,
       studentName,
       studentAddress,
-      programID,
       parentName,
       parentContactDetails,
       bankAccountDetails,
       accountNumber,
+      deranaDaruwProgram:programId,
     })
       .then((response) => {
         console.log("Student updated successfully:", response);
@@ -50,7 +53,7 @@ const UpdateRegistationModal = ({ openModal, closeModal, newStudentData,refetch 
         // setStudentID("");
         setStudentName("");
         setStudentAddress("");
-        setProgramID("");
+        // setProgramID("");
         setParentName("");
         setParentContactDetails("");
         setBankAccountDetails("");
@@ -72,7 +75,7 @@ const UpdateRegistationModal = ({ openModal, closeModal, newStudentData,refetch 
     // setStudentID("");
     setStudentName("");
     setStudentAddress("");
-    setProgramID("");
+    // setProgramID("");
     setParentName("");
     setParentContactDetails("");
     setBankAccountDetails("");
@@ -109,7 +112,9 @@ const UpdateRegistationModal = ({ openModal, closeModal, newStudentData,refetch 
           </IconButton>
         </DialogTitle>
         <DialogContent>
-          
+        <Box sx={{ mt: 2 }}>
+            <CustomTextField label="Student ID" variant="outlined" value={studentId} fullWidth disabled />
+          </Box>
           <Box sx={{ mt: 6 }}>
             <CustomTextField
               label="Student Name"
@@ -128,7 +133,7 @@ const UpdateRegistationModal = ({ openModal, closeModal, newStudentData,refetch 
               onChange={(e) => setStudentAddress(e.target.value)}
             />
           </Box>
-          <Box sx={{ mt: 6 }}>
+          {/* <Box sx={{ mt: 6 }}>
             <FormControl fullWidth variant="outlined">
               <InputLabel>Select Program ID</InputLabel>
               <Select
@@ -146,7 +151,7 @@ const UpdateRegistationModal = ({ openModal, closeModal, newStudentData,refetch 
                 ))}
               </Select>
             </FormControl>
-          </Box>
+          </Box> */}
           <br /><br />
           <h4>Parent Details</h4>
           <Box sx={{ mt: 4 }}>
@@ -185,6 +190,9 @@ const UpdateRegistationModal = ({ openModal, closeModal, newStudentData,refetch 
               value={accountNumber}
               onChange={(e) => setAccountNumber(e.target.value)}
             />
+          </Box>
+          <Box sx={{ mt: 2 }}>
+            <CustomTextField label="Program object ID" variant="outlined" value={programId} fullWidth disabled />
           </Box>
         </DialogContent>
         <DialogActions sx={{ bgcolor: "#f0f0f0" }}>

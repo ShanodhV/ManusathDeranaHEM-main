@@ -63,6 +63,11 @@ const UpdateProgramModel = ({ openModal, closeModal, refetch, newProgamDetails }
   const [mobileNumber, setMobileNumber] = useState("");
   const [programIdError, setProgramIdError] = useState("");
   const [programNameError, setProgramNameError] = useState("");
+  const [provinceError, setProvinceError] = useState("");
+  const [districtError, setDistrictError] = useState("");
+  const [townError, setTownError] = useState("");
+  const [nameError, setNameError] = useState("");
+  const [mobileNumberError, setMobileNumberError] = useState("");
   const [loading, setLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
   const [updateDeranaDaruwoProgram] = useUpdateDeranDaruwoProgramMutation();
@@ -121,35 +126,79 @@ const UpdateProgramModel = ({ openModal, closeModal, refetch, newProgamDetails }
       setDistrict(selectedDistrict);
   };
 
-  const validateProgramId = (id) => {
-      const alphanumericRegex = /^[a-zA-Z0-9]+$/;
-      if (!id) {
-          return "Program ID is required";
-      } else if (!alphanumericRegex.test(id)) {
-          return "Program ID must be alphanumeric";
-      }
-      return "";
-  };
+
 
   const validateProgramName = (name) => {
-    const alphabeticRegex = /^[a-zA-Z\s]+$/;
     if (!name) {
-        return "Program Name is required";
-    } else if (!alphabeticRegex.test(name)) {
-        return "Program Name must be alphabetic";
+      return "Program Name is required";
     }
     return "";
-};
+  };
+
+  const validateProvince = (province) => {
+    if (!province) {
+      return "Province is required";
+    }
+    return "";
+  };
+
+  const validateDistrict = (district) => {
+    if (!district) {
+      return "District is required";
+    }
+    return "";
+  };
+
+  const validateTown = (town) => {
+    if (!town) {
+      return "Town is required";
+    }
+    return "";
+  };
+
+  const validateName = (name) => {
+    const regex = /^[a-zA-Z\s]+$/;
+    if (!name) {
+      return "Name is required.";
+    } else if (!regex.test(name)) {
+      return "Name can only contain letters and spaces.";
+    } else if (name.length < 3) {
+      return "Name must be at least 3 characters long.";
+    }
+    return '';
+  };
+
+  const validateMobileNumber = (mobileNumber) => {
+    const regex = /^\d{10}$/; // This regex checks for exactly 10 digits
+    if (!mobileNumber) {
+      return "Phone number is required.";
+    } else if (!regex.test(mobileNumber)) {
+      return "Phone number must be exactly 10 digits.";
+    }
+    return '';
+  };
 
   const handleUpdateProgram = () => {
-      const programIdError = validateProgramId(programName);
-      const programNameError = validateProgramName(name);
+
+    const programNameValidationError = validateProgramName(programName);
+    const provinceValidationError = validateProvince(province);
+    const districtValidationError = validateDistrict(district);
+    const townValidationError = validateTown(town);
+    const nameValidationError = validateName(name);
+    const mobileNumberValidationError = validateMobileNumber(mobileNumber);
 
       setProgramIdError(programIdError);
       setProgramNameError(programNameError);
 
-      if (programIdError || programNameError) {
-          return;
+      if ( programNameValidationError || provinceValidationError || districtValidationError || townValidationError || nameValidationError || mobileNumberValidationError) {
+  
+        setProgramNameError(programNameValidationError);
+        setProvinceError(provinceValidationError);
+        setDistrictError(districtValidationError);
+        setTownError(townValidationError);
+        setNameError(nameValidationError);
+        setMobileNumberError(mobileNumberValidationError);
+        return;
       }
 
       const updatedProgramData = {
@@ -249,7 +298,12 @@ const UpdateProgramModel = ({ openModal, closeModal, refetch, newProgamDetails }
                                   variant="outlined"
                                   fullWidth
                                   value={province}
-                                  onChange={(e) => handleProvinceChange(e.target.value)}
+                                  onChange={(e) => {
+                                    handleProvinceChange(e.target.value)
+                                    setProvinceError(validateProvince(e.target.value));
+                                }}
+                                  error={!!provinceError}
+                                  helperText={provinceError}
                               >
                                   {Object.keys(sriLankanData).map((prov) => (
                                       <MenuItem key={prov} value={prov}>
@@ -265,7 +319,12 @@ const UpdateProgramModel = ({ openModal, closeModal, refetch, newProgamDetails }
                                   variant="outlined"
                                   fullWidth
                                   value={district}
-                                  onChange={(e) => handleDistrictChange(e.target.value)}
+                                  onChange={(e) => {
+                                    handleDistrictChange(e);
+                                    setDistrictError(validateDistrict(e.target.value));
+                                  }}
+                                  error={!!districtError}
+                                  helperText={districtError}
                                   disabled={!province}
                               >
                                   {province ? Object.keys(sriLankanData[province]).map((dist) => (
@@ -282,7 +341,12 @@ const UpdateProgramModel = ({ openModal, closeModal, refetch, newProgamDetails }
                                   variant="outlined"
                                   fullWidth
                                   value={town}
-                                  onChange={(e) => setTown(e.target.value)}
+                                  onChange={(e) => {
+                                    setTown(e.target.value);
+                                    setTownError(validateTown(e.target.value));
+                                  }}
+                                  error={!!townError}
+                                  helperText={townError}
                                   disabled={!district}
                               >
                                   {district ? sriLankanData[province][district].map((c) => (
@@ -305,7 +369,12 @@ const UpdateProgramModel = ({ openModal, closeModal, refetch, newProgamDetails }
                           variant="outlined"
                           fullWidth
                           value={name}
-                          onChange={(e) => setName(e.target.value)}
+                          onChange={(e) => {
+                            setName(e.target.value);
+                            setNameError(validateName(e.target.value));
+                          }}
+                          error={!!nameError}
+                          helperText={nameError}
                       />
                   </Box>
                   <Box sx={{ mt: 2 }}>
@@ -314,7 +383,12 @@ const UpdateProgramModel = ({ openModal, closeModal, refetch, newProgamDetails }
                           variant="outlined"
                           fullWidth
                           value={mobileNumber}
-                          onChange={(e) => setMobileNumber(e.target.value)}
+                          onChange={(e) => {
+                            setMobileNumber(e.target.value);
+                            setMobileNumberError(validateMobileNumber(e.target.value));
+                          }}
+                          error={!!mobileNumberError}
+                          helperText={mobileNumberError}
                       />
                   </Box>
               </DialogContent>
@@ -326,7 +400,7 @@ const UpdateProgramModel = ({ openModal, closeModal, refetch, newProgamDetails }
                       disabled={loading}
                       endIcon={loading && <CircularProgress size={20} />}
                   >
-                      {"Create Health Camp"}
+                      {"Create Derana Daruwo Program"}
                   </Button>
                   <Button onClick={handleCancel} variant="outlined" color="secondary">
                       Cancel

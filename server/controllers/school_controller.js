@@ -90,3 +90,21 @@ export const getLastSchool = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+// Get Filtered Schools
+export const getFilteredSchools = async (req, res) => {
+  try {
+    const { province, district, town } = req.query;
+
+    const filterCriteria = {};
+    if (province) filterCriteria["location.province"] = province;
+    if (district) filterCriteria["location.district"] = district;
+    if (town) filterCriteria["location.town"] = town;
+
+    const filteredSchools = await School.find(filterCriteria);
+    res.status(200).json(filteredSchools);
+  } catch (error) {
+    console.error("Error fetching filtered schools:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

@@ -8,7 +8,7 @@ import { useAddVolunteerMutation } from "state/api"; // Adjust the import accord
 const VolunteerRegistrationModal = ({ openModal, handleCloseModal,onVolunteerAdded  }) => {
   const [volunteerNIC, setVolunteerNIC] = useState("");
   const [volunteerName, setVolunteerName] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState({ month: "", day: "", year: "" });
+  const [dateOfBirth, setDateOfBirth] = useState(""); // Date of Birth state
   const [contactNumber, setContactNumber] = useState("");
   const [volunteerAddress, setVolunteerAddress] = useState("");
   const [location, setLocation] = useState({ province: "", district: "", town: "" });
@@ -49,8 +49,17 @@ const VolunteerRegistrationModal = ({ openModal, handleCloseModal,onVolunteerAdd
     const newErrors = {
       nic: "",
       mobile: "",
+      dateOfBirth: "",
     };
 
+    if (!isValidDate(dateOfBirth)) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        dateOfBirth: "Invalid date format. Use DD/MM/YYYY.",
+      }));
+      return;
+    }
+  
     // Validate NIC
     if (!verifyNIC(volunteerNIC)) {
       newErrors.nic = "Invalid NIC format. Use 9 digits followed by 'V' or 12 digits without 'V'.";
@@ -75,7 +84,7 @@ const VolunteerRegistrationModal = ({ openModal, handleCloseModal,onVolunteerAdd
     addVolunteer({
       volunteerNIC,
       volunteerName,
-      dateOfBirth,
+      dateOfBirth: convertToISO(dateOfBirth),
       contactNumber,
       volunteerAddress,
       location,
@@ -87,7 +96,7 @@ const VolunteerRegistrationModal = ({ openModal, handleCloseModal,onVolunteerAdd
         // Clear form fields
         setVolunteerNIC("");
         setVolunteerName("");
-        setDateOfBirth({ month: "", day: "", year: "" });
+        setDateOfBirth("");
         setContactNumber("");
         setVolunteerAddress("");
         setLocation({ province: "", district: "", town: "" });
@@ -106,17 +115,43 @@ const VolunteerRegistrationModal = ({ openModal, handleCloseModal,onVolunteerAdd
       });
   };
 
-  const handleMonthChange = (event) => {
-    setDateOfBirth({ ...dateOfBirth, month: event.target.value });
+  const formatDate = (value) => {
+    const digits = value.replace(/\D/g, '');
+    const day = digits.slice(0, 2);
+    const month = digits.slice(2, 4);
+    const year = digits.slice(4, 8);
+    return `${day}${day && month ? '/' : ''}${month}${month && year ? '/' : ''}${year}`;
   };
-
-  const handleDayChange = (event) => {
-    setDateOfBirth({ ...dateOfBirth, day: event.target.value });
+  
+  const isValidDate = (value) => {
+    const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+    return dateRegex.test(value);
   };
-
-  const handleYearChange = (event) => {
-    setDateOfBirth({ ...dateOfBirth, year: event.target.value });
+  
+  const convertToISO = (value) => {
+    const [day, month, year] = value.split('/');
+    return `${year}-${month}-${day}`;
   };
+  
+  const handleDateChange = (e) => {
+    const { value } = e.target;
+    const formattedValue = formatDate(value);
+    setDateOfBirth(formattedValue);
+  
+    if (!isValidDate(formattedValue)) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        dateOfBirth: "Invalid date format. Use DD/MM/YYYY.",
+      }));
+    } else {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        dateOfBirth: "",
+      }));
+    }
+  };
+  
+  
 
   const handleProvinceChange = (event) => {
     setLocation({ ...location, province: event.target.value });
@@ -142,21 +177,51 @@ const VolunteerRegistrationModal = ({ openModal, handleCloseModal,onVolunteerAdd
   };
  // Data structure for Sri Lankan locations
   const sriLankanData = {
-    Western: {
-      Colombo: ["Colombo", "Dehiwala", "Moratuwa", "Negombo", "Kelaniya"],
-      Gampaha: ["Gampaha", "Nittambuwa", "Minuwangoda", "Ja-Ela", "Katunayake"],
-      Kalutara: ["Kalutara", "Beruwala", "Panadura", "Horana", "Aluthgama"],
-    },
-    Central: {
-      Kandy: ["Kandy", "Peradeniya", "Katugastota", "Gampola", "Nawalapitiya"],
-      Matale: ["Matale", "Dambulla", "Sigiriya", "Habarana", "Rattota"],
-      NuwaraEliya: ["Nuwara Eliya", "Hatton", "Talawakele", "Nanu Oya", "Bandarawela"],
-    },
-    Southern: {
-      Galle: ["Galle", "Hikkaduwa", "Unawatuna", "Ambalangoda", "Karapitiya"],
-      Matara: ["Matara", "Weligama", "Deniyaya", "Dickwella", "Akuressa"],
-      Hambantota: ["Hambantota", "Tangalle", "Tissamaharama", "Beliatta", "Ambalantota"],
-    },
+      "Western": {
+        "Colombo": ["Colombo 1", "Colombo 2", "Colombo 3", "Colombo 4", "Colombo 5", "Colombo 6", "Colombo 7", "Colombo 8", "Colombo 9", "Colombo 10", "Colombo 11", "Colombo 12", "Colombo 13", "Colombo 14", "Colombo 15"],
+        "Gampaha": ["Negombo", "Gampaha", "Veyangoda", "Wattala", "Minuwangoda", "Ja-Ela", "Kadawatha", "Ragama", "Divulapitiya", "Nittambuwa", "Kiribathgoda","Batuwatta"],
+        "Kalutara": ["Kalutara", "Panadura", "Horana", "Beruwala", "Aluthgama", "Matugama", "Wadduwa", "Bandaragama", "Ingiriya"]
+      },
+      "Central": {
+        "Kandy": ["Kandy", "Gampola", "Nawalapitiya", "Peradeniya", "Akurana", "Kadugannawa", "Katugastota"],
+        "Matale": ["Matale", "Dambulla", "Sigiriya", "Nalanda", "Ukuwela", "Rattota"],
+        "Nuwara Eliya": ["Nuwara Eliya", "Hatton", "Nanu Oya", "Talawakele", "Bandarawela", "Welimada"]
+      },
+      "Southern": {
+        "Galle": ["Galle", "Hikkaduwa", "Ambalangoda", "Elpitiya", "Bentota", "Baddegama"],
+        "Matara": ["Matara", "Weligama", "Mirissa", "Akurugoda", "Hakmana", "Devinuwara"],
+        "Hambantota": ["Hambantota", "Tangalle", "Tissamaharama", "Ambalantota", "Beliatta", "Weeraketiya"]
+      },
+      "Northern": {
+        "Jaffna": ["Jaffna", "Nallur", "Chavakachcheri", "Point Pedro", "Karainagar", "Velanai"],
+        "Kilinochchi": ["Kilinochchi", "Pallai", "Paranthan", "Poonakary"],
+        "Mannar": ["Mannar", "Nanattan", "Madhu", "Pesalai"],
+        "Vavuniya": ["Vavuniya", "Nedunkeni", "Settikulam", "Vavuniya South"],
+        "Mullaitivu": ["Mullaitivu", "Oddusuddan", "Puthukudiyiruppu", "Weli Oya"]
+      },
+      "Eastern": {
+        "Trincomalee": ["Trincomalee", "Kinniya", "Mutur", "Kuchchaveli"],
+        "Batticaloa": ["Batticaloa", "Kaluwanchikudy", "Valachchenai", "Eravur"],
+        "Ampara": ["Ampara", "Akkaraipattu", "Kalmunai", "Sainthamaruthu", "Pottuvil"]
+      },
+      "North Western": {
+        "Kurunegala": ["Kurunegala", "Kuliyapitiya", "Narammala", "Wariyapola", "Pannala", "Melsiripura"],
+        "Puttalam": ["Puttalam", "Chilaw", "Wennappuwa", "Anamaduwa", "Nattandiya", "Dankotuwa"]
+      },
+      "North Central": {
+        "Anuradhapura": ["Anuradhapura", "Kekirawa", "Thambuttegama", "Eppawala", "Medawachchiya"],
+        "Polonnaruwa": ["Polonnaruwa", "Kaduruwela", "Medirigiriya", "Hingurakgoda"]
+      },
+      "Uva": {
+        "Badulla": ["Badulla", "Bandarawela", "Haputale", "Welimada", "Mahiyanganaya", "Passara"],
+        "Monaragala": ["Monaragala", "Bibile", "Wellawaya", "Medagama", "Buttala"]
+      },
+      "Sabaragamuwa": {
+        "Ratnapura": ["Ratnapura", "Embilipitiya", "Balangoda", "Pelmadulla", "Eheliyagoda", "Kuruwita"],
+        "Kegalle": ["Kegalle", "Mawanella", "Warakapola", "Rambukkana", "Galigamuwa"]
+      }
+
+    
   };
   
 
@@ -219,46 +284,23 @@ const VolunteerRegistrationModal = ({ openModal, handleCloseModal,onVolunteerAdd
             </Box>
   
             <Box sx={{ mt: 4 }}>
-              <label style={{ fontWeight: 'bold', fontSize: '16px' }} htmlFor="Date Of Birth">
+              <label
+                style={{ fontWeight: "bold", fontSize: "16px", color: "black" }}
+                htmlFor="Date of Birth"
+              >
                 Date of Birth
               </label>
-              <Grid container spacing={2} sx={{ mt: 0 }}>
-                <Grid item xs={4}>
-                  <CustomTextField
-                    select
-                    label="Month"
-                    variant="outlined"
-                    fullWidth
-                    value={dateOfBirth.month}
-                    onChange={handleMonthChange}
-                  >
-                    {/* Month options */}
-                  </CustomTextField>
-                </Grid>
-                <Grid item xs={4}>
-                  <CustomTextField
-                    select
-                    label="Day"
-                    variant="outlined"
-                    fullWidth
-                    value={dateOfBirth.day}
-                    onChange={handleDayChange}
-                  >
-                    {/* Day options */}
-                  </CustomTextField>
-                </Grid>
-                <Grid item xs={4}>
-                  <CustomTextField
-                    select
-                    label="Year"
-                    variant="outlined"
-                    fullWidth
-                    value={dateOfBirth.year}
-                    onChange={handleYearChange}
-                  >
-                    {/* Year options */}
-                  </CustomTextField>
-                </Grid>
+              <Grid item xs={12} sm={6}>
+                <CustomTextField
+                  label="Date of Birth"
+                  value={dateOfBirth}
+                  onChange={handleDateChange}
+                  fullWidth
+                  error={!!errors.dateOfBirth}
+                  helperText={errors.dateOfBirth || "Enter date as DD/MM/YYYY"}
+                  placeholder="DD/MM/YYYY"
+                  inputProps={{ pattern: "[0-9]*" }}
+                />
               </Grid>
             </Box>
   
@@ -368,13 +410,42 @@ const VolunteerRegistrationModal = ({ openModal, handleCloseModal,onVolunteerAdd
             </Box>
   
             <Box sx={{ mt: 4 }}>
+              <label style={{ fontWeight: 'bold', fontSize: '16px' }} htmlFor="Occupation">
+                Occupation
+              </label>
               <CustomTextField
+                select
                 label="Occupation"
                 variant="outlined"
                 fullWidth
                 value={occupation}
                 onChange={(e) => setOccupation(e.target.value)}
-              />
+              >
+                <MenuItem value="">
+                  <em>Select Occupation</em>
+                </MenuItem>
+                {[
+                  "Technology and Information",
+                  "Healthcare and Medicine",
+                  "Engineering and Manufacturing",
+                  "Finance and Banking",
+                  "Education and Academia",
+                  "Law and Legal Services",
+                  "Business and Management",
+                  "Media and Communications",
+                  "Arts and Design",
+                  "Science and Research",
+                  "Construction and Real Estate",
+                  "Transportation and Logistics",
+                  "Agriculture and Food",
+                  "Energy and Environment",
+                  "Hospitality and Tourism"
+                ].map((option) => (
+                  <MenuItem key={option} value={option}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </CustomTextField>
             </Box>
   
             <Box sx={{ mt: 4 }}>
@@ -397,7 +468,7 @@ const VolunteerRegistrationModal = ({ openModal, handleCloseModal,onVolunteerAdd
         open={openSnackbar}
         autoHideDuration={6000}
         onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
         <Alert onClose={handleCloseSnackbar} severity="success"
           sx={{
@@ -412,3 +483,4 @@ const VolunteerRegistrationModal = ({ openModal, handleCloseModal,onVolunteerAdd
 };
 
 export default VolunteerRegistrationModal;
+

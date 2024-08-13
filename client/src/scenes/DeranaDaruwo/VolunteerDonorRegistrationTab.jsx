@@ -56,13 +56,13 @@ const VolunteerDonorRegistrationTab = () => {
     deleteDonorVolunteer(selectedDonor)
       .unwrap()
       .then((response) => {
-        console.log("Health Camp deleted successfully");
-        setSnackbar({ open: true, message: "Health Camp deleted successfully", severity: "success" });
+        console.log("Donor deleted successfully");
+        setSnackbar({ open: true, message: "Donor deleted successfully", severity: "success" });
         refetch();
       })
       .catch((error) => {
-        console.error("Error deleting health camp:", error);
-        setSnackbar({ open: true, message: "Error deleting health camp", severity: "error" });
+        console.error("Error deleting donor:", error);
+        setSnackbar({ open: true, message: "Error deleting donor", severity: "error" });
       });
     setOpenConfirm(false);
   };
@@ -90,6 +90,7 @@ const VolunteerDonorRegistrationTab = () => {
           >
             Delete
           </Button>
+          <div style={{padding:'8px'}}></div>
           <Button
             variant="contained"
             color="info"
@@ -170,7 +171,7 @@ const VolunteerDonorRegistrationTab = () => {
         onClose={() => setOpenConfirm(false)}
         onConfirm={confirmDelete}
         title="Confirm Delete"
-        description="Are you sure you want to delete this health camp? This action cannot be undone."
+        description="Are you sure you want to delete this donor? This action cannot be undone."
       />
       <Snackbar
         open={snackbar.open}

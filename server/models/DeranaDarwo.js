@@ -16,6 +16,11 @@ const DeranaDaruwosSchema = new mongoose.Schema(
       minlength: 2,
       maxlength: 100,
     },
+
+    Date: {
+      type: Date,
+      required: true,
+    },
   
     province: {
       type: String,
