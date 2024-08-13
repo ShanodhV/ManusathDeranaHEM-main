@@ -16,6 +16,7 @@ import UsersPage from 'scenes/UsersPage';
 import Admin from "scenes/admin";
 import Login from "scenes/auth/Login/index";
 import Signup from "scenes/auth/Singup/index";
+import Logout from 'components/Logout';
 
 function App() {
   const mode = useSelector((state) => state.global.mode);
@@ -53,6 +54,8 @@ function App() {
                 <Route path="/Sipsal Pubuduwa" element={<SipsalPubuduwa />} />
                 <Route path="/Derana Daruwo" element={<DeranaDaruwo />} />
                 <Route path="/Volunteer" element={<Volunteer />} />
+                <Route path="/logout" element={<Logout />} />
+
               </Route>
               )}
             </Routes>
