@@ -257,10 +257,8 @@ const VolunteerRegistrationModal = ({ openModal, handleCloseModal,onVolunteerAdd
         <DialogContent>
           <Box
             sx={{
-              mt: 4,
-              width: '100%',
-              maxWidth: 900,
-              mx: 'auto',
+              mt: 6,
+              
             }}
           >
             <CustomTextField
@@ -468,14 +466,14 @@ const VolunteerRegistrationModal = ({ openModal, handleCloseModal,onVolunteerAdd
         open={openSnackbar}
         autoHideDuration={6000}
         onClose={handleCloseSnackbar}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
         <Alert onClose={handleCloseSnackbar} severity="success"
           sx={{
             backgroundColor: 'black',
             color: 'white',
           }}>
-          Event successfully added
+          Register New Volunteer Successfully
         </Alert>
       </Snackbar>
     </>
