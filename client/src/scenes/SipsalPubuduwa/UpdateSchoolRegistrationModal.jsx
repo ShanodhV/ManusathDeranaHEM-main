@@ -113,12 +113,25 @@ const UpdateSchoolModal = ({ openModal, closeModal, school }) => {
   const handleClickAddPerson = () => {
     setPrincipalContact([...principalContact, { pname: "", pnumber: "" }]);
   };
+  // const handleClickAddPerson = () => {
+  //   setPrincipalContact([...principalContact, { pname: "", pnumber: "" }]);
+  // };
+
+  // const handleClickAddPerson = () => {
+  //   setPrincipalContact([...principalContact, { pname: "", pnumber: "" }]);
+  // };
 
   const handleChangePrincipalContact = (index, field, value) => {
-    const updatedPrincipalContact = [...principalContact];
-    updatedPrincipalContact[index][field] = value;
-    setPrincipalContact(updatedPrincipalContact);
+    setPrincipalContact((prevContacts) => {
+      const updatedContacts = [...prevContacts];
+      updatedContacts[index] = {
+        ...updatedContacts[index],
+        [field]: value,
+      };
+      return updatedContacts;
+    });
   };
+  
 
   const validatePhoneNumber = (number) => /^\d{10}$/.test(number);
 
