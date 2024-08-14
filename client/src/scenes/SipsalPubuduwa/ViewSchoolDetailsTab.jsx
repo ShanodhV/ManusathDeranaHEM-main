@@ -6,7 +6,6 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  Button,
   CircularProgress,
   Alert,
 } from "@mui/material";
@@ -23,7 +22,7 @@ const SchoolDataViewerTab = () => {
   const [town, setTown] = useState("");
   const [selectedSchoolIds, setSelectedSchoolIds] = useState([]);
 
-  const [getFilteredSchools, { data: filteredSchools, isLoading: schoolsLoading }] =
+  const [getFilteredSchools, { data: filteredSchools, isLoading: schoolsLoading, error: filterError }] =
     useLazyGetFilteredSchoolsQuery();
 
   useEffect(() => {
@@ -33,14 +32,16 @@ const SchoolDataViewerTab = () => {
   }, [province, district, town, getFilteredSchools]);
 
   const handleProvinceChange = (event) => {
-    setProvince(event.target.value);
-    setDistrict("");
+    const newProvince = event.target.value;
+    setProvince(newProvince);
+    setDistrict(""); // Reset district and town when province changes
     setTown("");
   };
 
   const handleDistrictChange = (event) => {
-    setDistrict(event.target.value);
-    setTown("");
+    const newDistrict = event.target.value;
+    setDistrict(newDistrict);
+    setTown(""); // Reset town when district changes
   };
 
   const handleTownChange = (event) => {
@@ -62,6 +63,15 @@ const SchoolDataViewerTab = () => {
     );
   }
 
+  if (filterError) {
+    return (
+      <Alert severity="error">Error loading filtered schools: {filterError.message}</Alert>
+    );
+  }
+
+  // Debugging: Log filteredSchools to ensure it has the expected structure
+  console.log("Filtered Schools:", filteredSchools);
+
   return (
     <Box m="1.5rem 2.5rem">
       <Typography variant="h4" fontWeight="bold" mb={4}>
@@ -72,7 +82,7 @@ const SchoolDataViewerTab = () => {
         <FormControl variant="outlined" sx={{ minWidth: 200 }}>
           <InputLabel>Province</InputLabel>
           <Select value={province} onChange={handleProvinceChange} label="Province">
-            {Array.from(new Set(schools?.map((school) => school.Province))).map(
+            {Array.from(new Set(schools?.map((school) => school.location.province))).map(
               (province) => (
                 <MenuItem key={province} value={province}>
                   {province}
@@ -88,8 +98,8 @@ const SchoolDataViewerTab = () => {
             {Array.from(
               new Set(
                 schools
-                  ?.filter((school) => school.Province === province)
-                  .map((school) => school.District)
+                  ?.filter((school) => school.location.province === province)
+                  .map((school) => school.location.district)
               )
             ).map((district) => (
               <MenuItem key={district} value={district}>
@@ -105,8 +115,8 @@ const SchoolDataViewerTab = () => {
             {Array.from(
               new Set(
                 schools
-                  ?.filter((school) => school.District === district)
-                  .map((school) => school.Town)
+                  ?.filter((school) => school.location.district === district)
+                  .map((school) => school.location.town)
               )
             ).map((town) => (
               <MenuItem key={town} value={town}>
@@ -129,19 +139,32 @@ const SchoolDataViewerTab = () => {
             <DataGrid
               rows={filteredSchools || []}
               columns={[
-                { field: "SchoolId", headerName: "School ID", width: 150 },
-                { field: "SchoolName", headerName: "School Name", width: 200 },
-                { field: "Province", headerName: "Province", width: 150 },
-                { field: "District", headerName: "District", width: 150 },
-                { field: "Town", headerName: "Town", width: 150 },
-                { field: "Address", headerName: "Address", width: 250 },
+                { field: "schoolId", headerName: "School ID", width: 150 },
+                { field: "schoolName", headerName: "School Name", width: 200 },
+                {
+                  field: "location.province",
+                  headerName: "Province",
+                  width: 150,
+                  valueGetter: (params) => params.row.location?.province || "N/A",
+                },
+                {
+                  field: "location.district",
+                  headerName: "District",
+                  width: 150,
+                  valueGetter: (params) => params.row.location?.district || "N/A",
+                },
+                {
+                  field: "location.town",
+                  headerName: "Town",
+                  width: 150,
+                  valueGetter: (params) => params.row.location?.town || "N/A",
+                },
+                { field: "schoolAddress", headerName: "Address", width: 250 },
               ]}
               pageSize={5}
               rowsPerPageOptions={[5, 10, 20]}
               checkboxSelection
-              onSelectionModelChange={(newSelection) =>
-                setSelectedSchoolIds(newSelection)
-              }
+              onSelectionModelChange={(newSelection) => setSelectedSchoolIds(newSelection)}
               getRowId={(row) => row._id}
             />
           </Box>
