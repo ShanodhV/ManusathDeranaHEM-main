@@ -35,11 +35,21 @@ export const getSchools = async (req, res) => {
 // Get School by ID
 export const getSchool = async (req, res) => {
   try {
-    const { id } = req.params;
-    const school = await School.findById(id);
-    res.status(200).json(school);
+    const { province, district, town } = req.query;
+
+     // Build the filter object
+     const filter = {};
+     if (province) filter['location.province'] = province;
+     if (district) filter['location.district'] = district;
+     if (town) filter['location.town'] = town;
+
+
+    // Fetch the filtered schools
+    const schools = await School.find(filter);
+    res.status(200).json(schools);
   } catch (error) {
-    res.status(404).json({ message: error.message });
+    console.error(error);
+    res.status(500).json({ message: 'Error fetching schools' });
   }
 };
 
