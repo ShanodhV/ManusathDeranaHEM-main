@@ -113,6 +113,10 @@ const UpdateSchoolModal = ({ openModal, closeModal, school }) => {
   const handleClickAddPerson = () => {
     setPrincipalContact([...principalContact, { pname: "", pnumber: "" }]);
   };
+  
+  // const handleClickAddPerson = () => {
+  //   setPrincipalContact([...principalContact, { pname: "", pnumber: "" }]);
+  // };
 
   const handleChangePrincipalContact = (index, field, value) => {
     setPrincipalContact((prevContacts) => {
