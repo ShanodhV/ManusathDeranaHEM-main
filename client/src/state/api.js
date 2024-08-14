@@ -308,7 +308,8 @@ getNextCampLocationsByCamps: build.query({
       }),
       providesTags: ["Schools"],
     }),
-    // Donors
+    
+   // Donor-related API calls
 deleteDonor: build.mutation({
   query: (donorId) => ({
     url: `donor/delete/${donorId}`,
@@ -316,52 +317,44 @@ deleteDonor: build.mutation({
   }),
   invalidatesTags: ['Donors'],
 }),
+
 addDonor: build.mutation({
   query: ({
-    donorId,             // Donor ID
-    donorNIC,            // NIC
-    donorName,           // Name
-    donorAddress,        // Address
-    dateOfBirth,         // Date of Birth
-    mobileNumber,        // Mobile Number
-    occupation,          // Occupation
+    donorId, donorNIC, donorName, donorAddress, dateOfBirth, mobileNumber, occupation,
   }) => ({
-    url: 'donor/add',   // Correct URL path
+    url: 'donor/add',
     method: 'POST',
     body: {
-      donorId,           // Included donorId in request body
-      donorNIC,
-      donorName,
-      donorAddress,
-      dateOfBirth,
-      mobileNumber,
-      occupation,
+      donorId, donorNIC, donorName, donorAddress, dateOfBirth, mobileNumber, occupation,
     },
   }),
   invalidatesTags: ['Donors'],
 }),
+
 getDonors: build.query({
   query: () => 'donor/gets',
   providesTags: ['Donors'],
 }),
+
 getDonor: build.query({
-  query: (id) => `donor/get/${id}`,
+  query: (donorId) => `donor/get/${donorId}`,
   providesTags: ['Donors'],
 }),
+
 updateDonor: build.mutation({
   query: ({ donorId, donorData }) => ({
-    url: `donor/update/${donorId}`,  // Updated to use donorId
+    url: `donor/update/${donorId}`,
     method: 'PUT',
     body: donorData,
   }),
   invalidatesTags: ['Donors'],
 }),
+
 getLastDonor: build.query({
-  query: () => 'donor/last',  // Assumes endpoint for fetching the last donor
+  query: () => 'donor/last',
   providesTags: ['Donors'],
 }),
 
-    
     // Derana Daruwo Programs
     deleteDeranaDaruwoProgram: build.mutation({
       query: (programId) => ({
