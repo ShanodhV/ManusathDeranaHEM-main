@@ -1,3 +1,4 @@
+// routes/donor_routes.js
 import express from 'express';
 import {
   getDonors,
@@ -9,10 +10,9 @@ import {
 
 const router = express.Router();
 
-// Define routes with consistent paths
 router.get("/gets", getDonors);
 router.get("/get/:id", getDonor);
-router.post("/add", addDonor); // Correct route for adding donor
+router.post("/add", addDonor);
 router.delete("/delete/:id", deleteDonor);
 router.put("/update/:id", updateDonor);
 
