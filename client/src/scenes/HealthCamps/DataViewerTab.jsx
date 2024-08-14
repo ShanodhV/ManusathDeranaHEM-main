@@ -34,7 +34,7 @@ const DataViewerTab = () => {
     { data: patients, isLoading: patientsLoading, error: patientsError },
   ] = useLazyGetPatientsByCampdvQuery();
 
-  useEffect(() => {
+  useEffect(() => { 
     if (province || district || town) {
       getFilteredCamps({ province, district, town });
     }

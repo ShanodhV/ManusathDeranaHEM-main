@@ -38,17 +38,34 @@ export const addDonor = async (req, res) => {
     res.status(500).json({ error: "Failed to add new donor" });
   }
 };
-
+// Get the last donor
+export const getLastDonor = async (req, res) => {
+  try {
+    const lastDonor = await Donors.findOne().sort({ donorId: -1 });
+    if (!lastDonor) {
+      return res.status(404).json({ message: "No donors found" });
+    }
+    res.status(200).json(lastDonor);
+  } catch (error) {
+    console.error("Error fetching last donor:", error);
+    res.status(500).json({ message: "Failed to fetch last donor" });
+  }
+};
 // Get all donors
+// Adjusted getDonors function
 export const getDonors = async (req, res) => {
   try {
     const donors = await Donors.find();
-    res.status(200).json(donors);
+    res.status(200).json({
+      items: donors,         // Array of donor objects
+      total: donors.length,  // Total count, useful for pagination
+    });
   } catch (error) {
     console.error("Error fetching donors:", error);
     res.status(500).json({ message: "Failed to fetch donors" });
   }
 };
+
 
 // Get a single donor by ID
 export const getDonor = async (req, res) => {

@@ -63,8 +63,12 @@ const SchoolRegistrationTab = () => {
     { field: "schoolId", headerName: "School ID", flex: 0.8 },
     { field: "schoolName", headerName: "School Name", flex: 0.8 },
     { field: "schoolAddress", headerName: "School Address", flex: 1 },
-    { field: "location", headerName: "Town", flex: 1 },
     {
+      field: "location",
+      headerName: "Town",
+      flex: 0.5,
+      valueGetter: (params) => params.row.location?.town || "",  // Extract the town from the location object
+    },    {
       field: 'principalContact',
       headerName: 'Principal Contact',
       flex: 1,

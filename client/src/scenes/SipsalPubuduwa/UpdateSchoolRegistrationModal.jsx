@@ -63,6 +63,7 @@ const sriLankanData = {
   }
 };
 
+
 const UpdateSchoolModal = ({ openModal, closeModal, school }) => {
   const theme = useTheme();
   const [schoolName, setSchoolName] = useState("");
@@ -77,7 +78,7 @@ const UpdateSchoolModal = ({ openModal, closeModal, school }) => {
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
   const [districts, setDistricts] = useState([]);
   const [towns, setTowns] = useState([]);
-  const [errors, setErrors] = useState({}); // Ensure errors are handled
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (school) {
@@ -93,33 +94,43 @@ const UpdateSchoolModal = ({ openModal, closeModal, school }) => {
 
   useEffect(() => {
     if (province) {
-      setDistricts(Object.keys(sriLankanData[province] || {}));
+      const availableDistricts = Object.keys(sriLankanData[province] || {});
+      setDistricts(availableDistricts);
+
+      // If there's an existing district, set it
+      if (school && school.location?.district) {
+        setDistrict(school.location.district);
+      } else {
+        setDistrict(""); // Reset district if province changes
+      }
     } else {
       setDistricts([]);
+      setDistrict("");
     }
-    setDistrict("");
     setTown("");
-  }, [province]);
+    setTowns([]);
+  }, [province, school]);
 
   useEffect(() => {
     if (district) {
-      setTowns(sriLankanData[province]?.[district] || []);
+      const availableTowns = sriLankanData[province]?.[district] || [];
+      setTowns(availableTowns);
+
+      // If there's an existing town, set it
+      if (school && school.location?.town) {
+        setTown(school.location.town);
+      } else {
+        setTown(""); // Reset town if district changes
+      }
     } else {
       setTowns([]);
+      setTown("");
     }
-    setTown("");
-  }, [district]);
+  }, [district, school]);
 
   const handleClickAddPerson = () => {
     setPrincipalContact([...principalContact, { pname: "", pnumber: "" }]);
   };
-  // const handleClickAddPerson = () => {
-  //   setPrincipalContact([...principalContact, { pname: "", pnumber: "" }]);
-  // };
-
-  // const handleClickAddPerson = () => {
-  //   setPrincipalContact([...principalContact, { pname: "", pnumber: "" }]);
-  // };
 
   const handleChangePrincipalContact = (index, field, value) => {
     setPrincipalContact((prevContacts) => {
@@ -131,7 +142,6 @@ const UpdateSchoolModal = ({ openModal, closeModal, school }) => {
       return updatedContacts;
     });
   };
-  
 
   const validatePhoneNumber = (number) => /^\d{10}$/.test(number);
 
@@ -335,13 +345,13 @@ const UpdateSchoolModal = ({ openModal, closeModal, school }) => {
                 />
               </Box>
             ))}
-            {/* <Button
+            <Button
               onClick={handleClickAddPerson}
               variant="outlined"
               sx={{ mt: 2 }}
             >
               Add Another Principal Contact
-            </Button> */}
+            </Button>
           </Box>
         </DialogContent>
         <DialogActions>
