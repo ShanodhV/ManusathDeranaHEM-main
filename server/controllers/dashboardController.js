@@ -1,11 +1,12 @@
 import Camps from "../models/Camps.js";
 import Patients from "../models/Patient.js";
 import LabReport from "../models/LabReport.js";
+import Volunteer from "../models/Volunteer.js";
 
 // 1. Get Total Number of Camps
 export const getTotalCamps = async (req, res) => {
   try {
-    const totalCamps = await Camps.countDocuments();
+    const totalCamps = await Camps.countDocuments()+1;
     res.status(200).json({ totalCamps });
   } catch (error) {
     res.status(500).json({ error: "Failed to get total camps" });
@@ -59,5 +60,15 @@ export const getTopCampLocations = async (req, res) => {
     res.status(200).json(topLocations);
   } catch (error) {
     res.status(500).json({ error: "Failed to get top locations" });
+  }
+};
+
+// 1. Get Total Number of Voulenteers
+export const getTotalVolunteers = async (req, res) => {
+  try {
+    const totalvol = await Volunteer.countDocuments();
+    res.status(200).json({ totalvol });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to get total camps" });
   }
 };

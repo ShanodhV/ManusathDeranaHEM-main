@@ -468,11 +468,7 @@ const VolunteerRegistrationModal = ({ openModal, handleCloseModal,onVolunteerAdd
         onClose={handleCloseSnackbar}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
       >
-        <Alert onClose={handleCloseSnackbar} severity="success"
-          sx={{
-            backgroundColor: 'black',
-            color: 'white',
-          }}>
+        <Alert onClose={handleCloseSnackbar} severity="success">
           Register New Volunteer Successfully
         </Alert>
       </Snackbar>

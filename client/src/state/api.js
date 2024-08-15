@@ -690,6 +690,10 @@ getLastDonor: build.query({
       query: () => 'dashboard/top-locations',
       providesTags: ['Camps'],
     }),
+    getTotalVolunteers: build.query({
+      query: () => 'dashboard/vol',
+      providesTags: ['Volunteers'],
+    }),
 
   }),
 });
@@ -792,6 +796,7 @@ export const {
   useGetTotalCampsQuery,
   useGetTotalPatientsQuery,
   useGetPatientInfectionStatusQuery,
-  useGetTopCampLocationsQuery
+  useGetTopCampLocationsQuery,
+  useGetTotalVolunteersQuery,
   
 } = api;
