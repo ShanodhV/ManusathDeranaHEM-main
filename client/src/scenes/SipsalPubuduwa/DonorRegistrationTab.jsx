@@ -29,6 +29,15 @@ const DonorRegistrationTab = () => {
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
 
+  const handleOpenUpdateModal = (donor) => {
+    setSelectedDonor(donor);
+    setOpenUpdateModal(true);
+  };
+
+  const handleCloseUpdateModal = () => {
+    setOpenUpdateModal(false);
+    setSelectedDonor(null);
+  };
 
 
   useEffect(() => {
@@ -38,7 +47,7 @@ const DonorRegistrationTab = () => {
     }
   }, [error]);
 
-  const handleOpenModal = (donor = null) => {
+  const handleOpenModal = (donor) => {
     setSelectedDonor(donor); // Set the selected donor for the modal
     setOpenModal(true);
   };
@@ -53,10 +62,10 @@ const DonorRegistrationTab = () => {
     setDonorToDelete(donorNIC);
   };
 
-  const handleOpenUpdateModal = (donor) => {
-    setcurrentDonor(donor);
-    setOpenUpdateModal(true);
-  };
+  // const handleOpenUpdateModal = (donor) => {
+  //   setcurrentDonor(donor);
+  //   setOpenUpdateModal(true);
+  // };
 
   const confirmDelete = () => {
     if (!donorToDelete) return;
@@ -206,7 +215,11 @@ const DonorRegistrationTab = () => {
         </Alert>
       </Snackbar>
 
-    <UpdateDonorModal openModal={openUpdateModal} handleCloseModal={() => setOpenUpdateModal(false)} donor={currentDonor}/>
+      <UpdateDonorModal
+        openModal={openUpdateModal}
+        handleCloseModal={handleCloseUpdateModal}
+        donorData={selectedDonor} // Pass the selected donor data to the modal
+      />
 
     </Box>
   );
