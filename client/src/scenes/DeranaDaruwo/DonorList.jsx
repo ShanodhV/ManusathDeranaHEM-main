@@ -16,7 +16,7 @@ import { useTheme } from "@mui/material/styles";
 import {
   // useGetStudentsByDeranaDaruwoProgramQuery,
   useDeleteDonorVolunteerMutation,
-  useGetDonorVolunteerQuery
+  useGetDonorVolunteersQuery
 } from "state/api";
 import CustomHeader from "./CustomerHead";
 // import UpdateRegistationModal from "./UpdateRegistationModal";
@@ -38,7 +38,7 @@ const DonorList = ({ open, onClose }) => {
     message: "",
     severity: "success",
   });
-  const { data, isLoading, refetch, error } = useGetDonorVolunteerQuery();
+  const { data, isLoading, refetch, error } = useGetDonorVolunteersQuery();
 
   // const [openStudentModal, setOpenStudentModal] = useState(false);
   // const [openStudentUpdateModal, setOpenStudentUpdateModal] = useState(false);
