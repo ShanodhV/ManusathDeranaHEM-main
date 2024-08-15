@@ -15,16 +15,19 @@ const DonorVolunteersSchema = new mongoose.Schema(
       type: String,
       //required: true,
     },
+
+    countryCode: {
+      type: String,
+      required: true,
+    },
+
+
     contactNumber: {
       type: String,
       required: true,
     },
-    
-    studentID: {
-      type: String,
-      required: true,
-    },
-    programID: {
+   
+    emailAddress: {
       type: String,
       required: true,
     },

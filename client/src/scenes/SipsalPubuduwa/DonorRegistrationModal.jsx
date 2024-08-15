@@ -94,7 +94,7 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
     const newErrors = {};
     if (!donorId) newErrors.donorId = "Donor ID is required";
     if (!donorNIC) newErrors.donorNIC = "NIC is required";
-    if (!donorName) newErrors.donorName = "Name is required";
+    else if (donorNIC.length < 10) newErrors.donorNIC = "NIC must be at least 10 characters long";    if (!donorName) newErrors.donorName = "Name is required";
     if (!donorAddress) newErrors.donorAddress = "Address is required";
     if (!date) newErrors.date = "Date of Birth is required";
     if (!mobileNumber) newErrors.mobileNumber = "Mobile number is required";
@@ -262,7 +262,7 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
             disabled={loading}
             endIcon={loading && <CircularProgress size={20} />}
           >
-            {"Register School"}
+            {"Register Donor"}
           </Button>
           <Button onClick={handleCloseModal}  variant="outlined" color="secondary">
             Cancel

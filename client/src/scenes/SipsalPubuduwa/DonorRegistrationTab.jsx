@@ -8,10 +8,12 @@ import DataGridCustomToolbar from "components/DataGridCustomToolbar";
 import ConfirmationDialog from "components/ConfirmationDialog";
 import { Delete, Edit } from "@mui/icons-material";
 import Buttons from "components/Buttons";
+import UpdateDonorModal from "./UpdateDonorRegistrationModal"
 
 const DonorRegistrationTab = () => {
   const theme = useTheme();
   const [openModal, setOpenModal] = useState(false);
+  const [currentDonor, setcurrentDonor] = useState(null);
   const { data, isLoading, refetch, error } = useGetDonorsQuery();
   const [deleteDonor] = useDeleteDonorMutation();
   const [page, setPage] = useState(0);
@@ -51,11 +53,18 @@ const DonorRegistrationTab = () => {
     setDonorToDelete(donorNIC);
   };
 
+  const handleOpenUpdateModal = (donor) => {
+    setcurrentDonor(donor);
+    setOpenUpdateModal(true);
+  };
+
   const confirmDelete = () => {
+    if (!donorToDelete) return;
+  
     deleteDonor(donorToDelete)
       .unwrap()
       .then((response) => {
-        console.log("Donor deleted successfully");
+        console.log("Donor deleted successfully:", response);
         setOpenConfirm(false);
         setSnackbar({ open: true, message: "Donor deleted successfully!", severity: "success" });
         refetch();
@@ -66,8 +75,14 @@ const DonorRegistrationTab = () => {
         setOpenConfirm(false);
       });
   };
+  
 
   const donorColumns = [
+    {
+      field: "donorId",
+      headerName: "Donor ID",
+      flex: 1,
+    },
     {
       field: "donorNIC",
       headerName: "Donor NIC",
@@ -88,12 +103,12 @@ const DonorRegistrationTab = () => {
       headerName: "Mobile Number",
       flex: 1,
     },
-    {
-      field: "dateOfBirth",
-      headerName: "Date of Birth",
-      flex: 1,
-      valueFormatter: ({ value }) => (value ? `${value.month}/${value.day}/${value.year}` : "")
-    },
+    // {
+    //   field: "dateOfBirth",
+    //   headerName: "Date of Birth",
+    //   flex: 1,
+    //   valueFormatter: ({ value }) => (value ? `${value.month}/${value.day}/${value.year}` : "")
+    // },
     {
       field: "occupation",
       headerName: "Occupation",
@@ -120,7 +135,7 @@ const DonorRegistrationTab = () => {
             variant="contained"
             color="info"
             endIcon={<Edit />}
-            onClick={() => handleOpenModal(params.row)}
+            onClick={() => handleOpenUpdateModal(params.row)}
           >
             Update
           </Button>
@@ -190,6 +205,9 @@ const DonorRegistrationTab = () => {
           {snackbar.message}
         </Alert>
       </Snackbar>
+
+    <UpdateDonorModal openModal={openUpdateModal} handleCloseModal={() => setOpenUpdateModal(false)} donor={currentDonor}/>
+
     </Box>
   );
 };
