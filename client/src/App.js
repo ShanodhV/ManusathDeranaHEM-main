@@ -5,7 +5,6 @@ import { useSelector } from 'react-redux';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { themeSettings } from 'theme';
 import Layout from 'scenes/layout';
-import Dashboard from 'scenes/dashboard';
 import HealthCamps from 'scenes/HealthCamps/index';
 import SipsalPubuduwa from 'scenes/SipsalPubuduwa/index';
 import DeranaDaruwo from 'scenes/DeranaDaruwo/index';
@@ -17,6 +16,7 @@ import Admin from "scenes/admin";
 import Login from "scenes/auth/Login/index";
 import Signup from "scenes/auth/Singup/index";
 import Logout from 'components/Logout';
+import { Dashboard } from 'scenes/dashboard';
 
 function App() {
   const mode = useSelector((state) => state.global.mode);
