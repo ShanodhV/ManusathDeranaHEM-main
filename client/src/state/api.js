@@ -486,8 +486,8 @@ getLastDonor: build.query({
     
     // Donor Volunteers
     deleteDonorVolunteer: build.mutation({
-      query: (donorVolunteerId) => ({
-        url: `donor-volunteer/delete/${donorVolunteerId}`,
+      query: (donorID) => ({
+        url: `donor-volunteer/delete/${donorID}`,
         method: "DELETE",
       }),
       invalidatesTags: ["DonorVolunteers"],
@@ -497,19 +497,19 @@ getLastDonor: build.query({
         donorID,
         donorName,
         donorAddress,
+        countryCode,
         contactNumber,
-        studentID,
-      programID,
+        emailAddress,
       }) => ({
         url: `donor-volunteer/add`,
         method: "POST",
         body: { 
           donorID,
-          donorName,
-          donorAddress,
-          contactNumber,
-          studentID,
-          programID,
+        donorName,
+        donorAddress,
+        countryCode,
+        contactNumber,
+        emailAddress,
         },
       }),
       providesTags: ["DonorVolunteers"],
@@ -519,6 +519,7 @@ getLastDonor: build.query({
       providesTags: ["DonorVolunteers"],
     }),
     getDonorVolunteer: build.query({
+    
       query: (id) => `donor-volunteer/get/${id}`,
       providesTags: ["DonorVolunteers"],
     }),
@@ -526,24 +527,31 @@ getLastDonor: build.query({
     UpdateDonorVolunteer: build.mutation({
       query: ({
         donorID,
-          donorName,
-          donorAddress,
-          contactNumber,
-          studentID,
-          programID,
+        donorName,
+        donorAddress,
+        countryCode,
+        contactNumber,
+        emailAddress,
+        
       }) => ({
         url: `donor-volunteer/update/${donorID}`,
         method: "PUT",
         body: {
    
-          donorName,
-          donorAddress,
-          contactNumber,
-          studentID,
-          programID,
+          donorID,
+        donorName,
+        donorAddress,
+        countryCode,
+        contactNumber,
+        emailAddress,
+        
         },
       }),
       invalidatesTags: ["DonorVolunteers"],
+    }),
+    getLastDonorVolunteer: build.query({
+      query: () => `donor-volunteer/last`,
+      providesTags: ["DonorVolunteers"],
     }),
     // Volunteers
     deleteVolunteer: build.mutation({
@@ -742,6 +750,8 @@ export const {
   useGetDonorVolunteersQuery,
   useGetDonorVolunteerQuery,
   useUpdateDonorVolunteerMutation,
+  useGetLastDonorVolunteerQuery,
+
 
   useDeleteVolunteerMutation,
   useAddVolunteerMutation,
