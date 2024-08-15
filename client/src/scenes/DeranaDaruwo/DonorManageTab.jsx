@@ -141,7 +141,7 @@ const DonorManageTab = () => {
                 variant="outlined"
                 onClick={() => handleOpenAssignStudentsModal(program)}
               >
-                View Student
+                ASSIGN DONOR
               </Button>
             </CardActions>
           </Card>
