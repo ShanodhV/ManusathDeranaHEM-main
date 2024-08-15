@@ -1,25 +1,23 @@
 import Donors from '../models/Donor.js';
 
 // Function to generate the next Donor ID
-const generateNextId = async () => {
-  const lastDonor = await Donors.findOne().sort({ donorId: -1 });
-  const lastId = lastDonor ? lastDonor.donorId : "MD-HC-000000";
-  const idNumber = parseInt(lastId.split('-')[2], 10) + 1;
-  return `MD-HC-${idNumber.toString().padStart(6, '0')}`;
-};
+// const generateNextId = async () => {
+//   const lastDonor = await Donors.findOne().sort({ donorId: -1 });
+//   const lastId = lastDonor ? lastDonor.donorId : "MD-HC-000000";
+//   const idNumber = parseInt(lastId.split('-')[2], 10) + 1;
+//   return `MD-HC-${idNumber.toString().padStart(6, '0')}`;
+// };
 
 // Add a new donor
 export const addDonor = async (req, res) => {
   try {
     // Generate the next Donor ID
-    const donorId = await generateNextId();
+   // const donorId = await generateNextId();
 
-    const { donorNIC, donorName, donorAddress, dateOfBirth, mobileNumber, occupation } = req.body;
+    const {donorId, donorNIC, donorName, donorAddress, dateOfBirth, mobileNumber, occupation } = req.body;
 
     // Check if donor with the same NIC already exists
-    if (await Donors.findOne({ donorNIC })) {
-      return res.status(400).json({ error: "Donor with this NIC already exists" });
-    }
+
 
     const newDonor = new Donors({
       donorId,
@@ -41,7 +39,7 @@ export const addDonor = async (req, res) => {
 // Get the last donor
 export const getLastDonor = async (req, res) => {
   try {
-    const lastDonor = await Donors.findOne().sort({ donorId: -1 });
+    const lastDonor = await Donors.findOne().sort({ createdAt: -1 });
     if (!lastDonor) {
       return res.status(404).json({ message: "No donors found" });
     }
@@ -86,7 +84,7 @@ export const getDonor = async (req, res) => {
 export const deleteDonor = async (req, res) => {
   const { id } = req.params;
   try {
-    const deletedDonor = await Donors.findOneAndDelete({ donorId: id });
+    const deletedDonor = await Donors.findOneAndDelete(id);
     if (!deletedDonor) {
       return res.status(404).json({ error: "Donor not found" });
     }
@@ -103,7 +101,7 @@ export const updateDonor = async (req, res) => {
     const donorId = req.params.id;
     const updatedDonorData = req.body;
 
-    const updatedDonor = await Donors.findOneAndUpdate({ donorId: donorId }, updatedDonorData, { new: true });
+    const updatedDonor = await Donors.findOneAndUpdate(donorId , updatedDonorData, { new: true });
 
     if (!updatedDonor) {
       return res.status(404).json({ message: "Donor not found" });
