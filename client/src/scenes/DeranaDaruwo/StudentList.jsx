@@ -38,8 +38,8 @@ const StudentList = ({ open, onClose, program}) => {
 
     useEffect(() => {
         if (error) {
-          console.error("Error fetching patients:", error);
-          setSnackbar({ open: true, message: "Error fetching patients", severity: "error" });
+          console.error("Error fetching student:", error);
+          setSnackbar({ open: true, message: "Error fetching student", severity: "error" });
         }
       }, [error]);
     
@@ -242,7 +242,7 @@ const StudentList = ({ open, onClose, program}) => {
         onClose={() => setOpenConfirm(false)}
         onConfirm={confirmDelete}
         title="Confirm Delete"
-        description="Are you sure you want to delete this patient? This action cannot be undone."
+        description="Are you sure you want to delete this student? This action cannot be undone."
       />
 
       <Snackbar

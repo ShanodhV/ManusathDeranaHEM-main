@@ -1,14 +1,14 @@
 import { Delete, Edit } from "@mui/icons-material";
-import { Alert, Box, Button, Snackbar } from "@mui/material"; // Import Snackbar and Alert
+import { Alert, Box, Button, Snackbar } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { DataGrid } from "@mui/x-data-grid";
 import CustomButton from "components/Buttons";
-import ConfirmationDialog from "components/ConfirmationDialog"; // Import ConfirmationDialog component
+import ConfirmationDialog from "components/ConfirmationDialog";
 import DataGridCustomToolbar from "components/DataGridCustomToolbar";
 import { useEffect, useState } from "react";
 import { useDeleteVolunteerMutation, useGetVolunteersQuery } from "state/api";
 import EditVolunteerModal from "./EditVolunteerModal";
-import VolunteerRegistrationModal from "./VolunteerRegistrationModal"; // Import the VolunteerRegistrationModal component
+import VolunteerRegistrationModal from "./VolunteerRegistrationModal";
 
 const VolunteerRegistrationTab = () => {
   const theme = useTheme();
@@ -16,7 +16,7 @@ const VolunteerRegistrationTab = () => {
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(20);
   const [sort, setSort] = useState({});
-  const [sortModel, setSortModel] = useState([]); // Update sort state to an array
+  const [sortModel, setSortModel] = useState([]);
   const [search, setSearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
   const { data, isLoading, refetch, error } = useGetVolunteersQuery();
@@ -25,9 +25,8 @@ const VolunteerRegistrationTab = () => {
   const [openEditModal, setOpenEditModal] = useState(false);
 
   const [deleteVolunteer] = useDeleteVolunteerMutation();
-
-  const [openConfirm, setOpenConfirm] = useState(false); // State for confirmation dialog
-  const [selectedVolunteer, setSelectedVolunteer] = useState(null); // State for selected volunteer
+  const [openConfirm, setOpenConfirm] = useState(false);
+  const [selectedVolunteer, setSelectedVolunteer] = useState(null);
 
   useEffect(() => {
     if (error) {
@@ -47,8 +46,8 @@ const VolunteerRegistrationTab = () => {
   };
 
   const handleDeleteClick = (volunteerID) => {
-    setSelectedVolunteer(volunteerID); // Set selected volunteer
-    setOpenConfirm(true); // Open confirmation dialog
+    setSelectedVolunteer(volunteerID);
+    setOpenConfirm(true);
   };
 
   const handleConfirmDelete = () => {
@@ -61,7 +60,7 @@ const VolunteerRegistrationTab = () => {
           message: "Volunteer deleted successfully",
           severity: "success",
         });
-        refetch(); // Refetch data after successful deletion
+        refetch();
       })
       .catch((error) => {
         console.error("Error deleting volunteer:", error);
@@ -72,15 +71,16 @@ const VolunteerRegistrationTab = () => {
         });
       })
       .finally(() => {
-        setOpenConfirm(false); // Close confirmation dialog
+        setOpenConfirm(false);
       });
   };
 
   const handleCloseSnackbar = () => {
-    setSnackbar({ open: false, message: "", severity: "success" }); // Close snackbar
+    setSnackbar({ open: false, message: "", severity: "success" });
   };
 
   const handleEditClick = (volunteer) => {
+    console.log("Selected volunteer data:", volunteer); // Debugging: Log the volunteer data
     setCurrentVolunteer(volunteer);
     setOpenEditModal(true);
   };
@@ -119,7 +119,7 @@ const VolunteerRegistrationTab = () => {
             variant="contained"
             color="error"
             endIcon={<Delete />}
-            onClick={() => handleDeleteClick(params.row._id)} // Trigger confirmation
+            onClick={() => handleDeleteClick(params.row._id)}
           >
             Delete
           </Button>
@@ -127,8 +127,8 @@ const VolunteerRegistrationTab = () => {
           <Button
             variant="contained"
             color="info"
-            endIcon={<Edit/>}
-            onClick={() => handleEditClick(params.row)} // Open update modal
+            endIcon={<Edit />}
+            onClick={() => handleEditClick(params.row)}
           >
             Update
           </Button>
@@ -175,7 +175,7 @@ const VolunteerRegistrationTab = () => {
         <DataGrid
           loading={isLoading || !data}
           getRowId={(row) => row._id}
-          rows={data || []} // Use the correct path to access volunteer data
+          rows={data || []}
           columns={volunteerColumns}
           rowCount={(data && data.total) || 0}
           rowsPerPageOptions={[20, 50, 100]}
@@ -194,7 +194,6 @@ const VolunteerRegistrationTab = () => {
         />
       </Box>
 
-      {/* Confirmation Dialog for Delete Action */}
       <ConfirmationDialog
         open={openConfirm}
         onClose={() => setOpenConfirm(false)}
@@ -203,7 +202,6 @@ const VolunteerRegistrationTab = () => {
         description="Are you sure you want to delete this volunteer? This action cannot be undone."
       />
 
-      {/* Snackbar for Success/Error Messages */}
       <Snackbar
         open={snackbar.open}
         autoHideDuration={6000}
@@ -219,7 +217,6 @@ const VolunteerRegistrationTab = () => {
         </Alert>
       </Snackbar>
 
-      {/* Edit Volunteer Modal */}
       {currentVolunteer && (
         <EditVolunteerModal
           openModal={openEditModal}
@@ -228,7 +225,6 @@ const VolunteerRegistrationTab = () => {
           onVolunteerUpdated={refetch}
         />
       )}
-
     </Box>
   );
 };
