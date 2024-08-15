@@ -52,10 +52,10 @@ const DonorList = ({ open, onClose }) => {
 
   useEffect(() => {
     if (error) {
-      console.error("Error fetching patients:", error);
+      console.error("Error fetching donor:", error);
       setSnackbar({
         open: true,
-        message: "Error fetching patients",
+        message: "Error fetching donor",
         severity: "error",
       });
     }
@@ -72,16 +72,16 @@ const DonorList = ({ open, onClose }) => {
       .then(() => {
         setSnackbar({
           open: true,
-          message: "Student deleted successfully",
+          message: "Donor deleted successfully",
           severity: "success",
         });
         refetch();
       })
       .catch((error) => {
-        console.error("Error deleting Student:", error);
+        console.error("Error deleting Donor:", error);
         setSnackbar({
           open: true,
-          message: "Error deleting Student",
+          message: "Error deleting Donor",
           severity: "error",
         });
       });
@@ -196,7 +196,7 @@ const DonorList = ({ open, onClose }) => {
               alignItems: "center", // Align items vertically
             }}
           >
-            <div>Student of </div>
+            <div>Donor of</div>
             <div style={{ display: "flex", alignItems: "center" }}>
               <Button
                 onClick={handleOpenDonorRegistrationModal} // Open Donor Registration Modal on click
@@ -276,7 +276,7 @@ const DonorList = ({ open, onClose }) => {
         onClose={() => setOpenConfirm(false)}
         onConfirm={confirmDelete}
         title="Confirm Delete"
-        description="Are you sure you want to delete this patient? This action cannot be undone."
+        description="Are you sure you want to delete this donor? This action cannot be undone."
       />
 
       <Snackbar
