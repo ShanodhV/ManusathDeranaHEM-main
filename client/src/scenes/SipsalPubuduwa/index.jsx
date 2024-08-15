@@ -17,10 +17,11 @@ const SipsalPubuduwa = () => {
     setActiveTab(newValue);
   };
 
-  const[openModal, setOpenModal] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
   const [currentSchool, setCurrentSchool] = useState(null);
   const [currentDonor, setCurrentDonor] = useState(null);
+  
 
   const handleOpenModal = () => {
     setOpenModal(true);

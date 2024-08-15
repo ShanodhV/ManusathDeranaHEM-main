@@ -12,9 +12,7 @@ const VolunteerSchema = new mongoose.Schema(
       //required: true,
     },
     dateOfBirth: {
-      date: { type: Number, },
-      month: { type: Number,},
-      year: { type: Number, },
+      type: String,
     },
     contactNumber: {
       type: String,

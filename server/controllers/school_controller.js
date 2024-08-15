@@ -35,11 +35,21 @@ export const getSchools = async (req, res) => {
 // Get School by ID
 export const getSchool = async (req, res) => {
   try {
-    const { id } = req.params;
-    const school = await School.findById(id);
-    res.status(200).json(school);
+    const { province, district, town } = req.query;
+
+     // Build the filter object
+     const filter = {};
+     if (province) filter['location.province'] = province;
+     if (district) filter['location.district'] = district;
+     if (town) filter['location.town'] = town;
+
+
+    // Fetch the filtered schools
+    const schools = await School.find(filter);
+    res.status(200).json(schools);
   } catch (error) {
-    res.status(404).json({ message: error.message });
+    console.error(error);
+    res.status(500).json({ message: 'Error fetching schools' });
   }
 };
 
@@ -87,6 +97,24 @@ export const getLastSchool = async (req, res) => {
     res.status(200).json(lastSchool);
   } catch (error) {
     console.error("Error fetching last school:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// Get Filtered Schools
+export const getFilteredSchools = async (req, res) => {
+  try {
+    const { province, district, town } = req.query;
+
+    const filterCriteria = {};
+    if (province) filterCriteria["location.province"] = province;
+    if (district) filterCriteria["location.district"] = district;
+    if (town) filterCriteria["location.town"] = town;
+
+    const filteredSchools = await School.find(filterCriteria);
+    res.status(200).json(filteredSchools);
+  } catch (error) {
+    console.error("Error fetching filtered schools:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };

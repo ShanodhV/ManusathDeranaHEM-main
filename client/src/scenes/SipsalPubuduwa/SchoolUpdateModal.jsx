@@ -114,13 +114,20 @@ const SchoolUpdateModal = ({ openModal, handleCloseModal, schoolData }) => {
     setTown("");
   }, [district]);
 
+
   const handlePrincipalContactChange = (index, field, value) => {
-    setPrincipalContact((prevContacts) => {
-      const updatedContacts = [...prevContacts];
-      updatedContacts[index][field] = value;
-      return updatedContacts;
-    });
-  };
+    const updateprincipalContacts = [...principalContact];
+    updateprincipalContacts[index][field] = value;
+    setPrincipalContact(updateprincipalContacts);
+  }
+
+  // const handlePrincipalContactChange = (index, field, value) => {
+  //   setPrincipalContact((prevContacts) => {
+  //     const updatedContacts = [...prevContacts];
+  //     updatedContacts[index][field] = value;
+  //     return updatedContacts;
+  //   });
+  // };
 
   const validatePhoneNumber = (number) => /^\d+$/.test(number);
 

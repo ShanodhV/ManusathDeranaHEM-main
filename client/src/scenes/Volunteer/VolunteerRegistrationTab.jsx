@@ -7,9 +7,10 @@ import ConfirmationDialog from "components/ConfirmationDialog"; // Import Confir
 import DataGridCustomToolbar from "components/DataGridCustomToolbar";
 import { useEffect, useState } from "react";
 import { useDeleteVolunteerMutation, useGetVolunteersQuery } from "state/api";
+import EditVolunteerModal from "./EditVolunteerModal";
 import VolunteerRegistrationModal from "./VolunteerRegistrationModal"; // Import the VolunteerRegistrationModal component
 
-const VolunteerRegistrationTab = ({ handleOpenCreateModal, handleOpenUpdateModal }) => {
+const VolunteerRegistrationTab = () => {
   const theme = useTheme();
   const [openModal, setOpenModal] = useState(false);
   const [page, setPage] = useState(0);
@@ -20,6 +21,8 @@ const VolunteerRegistrationTab = ({ handleOpenCreateModal, handleOpenUpdateModal
   const [searchInput, setSearchInput] = useState("");
   const { data, isLoading, refetch, error } = useGetVolunteersQuery();
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
+  const [currentVolunteer, setCurrentVolunteer] = useState(null);
+  const [openEditModal, setOpenEditModal] = useState(false);
 
   const [deleteVolunteer] = useDeleteVolunteerMutation();
 
@@ -39,6 +42,8 @@ const VolunteerRegistrationTab = ({ handleOpenCreateModal, handleOpenUpdateModal
 
   const handleCloseModal = () => {
     setOpenModal(false);
+    setOpenEditModal(false);
+    setCurrentVolunteer(null);
   };
 
   const handleDeleteClick = (volunteerID) => {
@@ -73,6 +78,11 @@ const VolunteerRegistrationTab = ({ handleOpenCreateModal, handleOpenUpdateModal
 
   const handleCloseSnackbar = () => {
     setSnackbar({ open: false, message: "", severity: "success" }); // Close snackbar
+  };
+
+  const handleEditClick = (volunteer) => {
+    setCurrentVolunteer(volunteer);
+    setOpenEditModal(true);
   };
 
   // Define columns for the data grid
@@ -118,7 +128,7 @@ const VolunteerRegistrationTab = ({ handleOpenCreateModal, handleOpenUpdateModal
             variant="contained"
             color="info"
             endIcon={<Edit/>}
-            onClick={() => handleOpenUpdateModal(params.row)} // Open update modal
+            onClick={() => handleEditClick(params.row)} // Open update modal
           >
             Update
           </Button>
@@ -208,6 +218,17 @@ const VolunteerRegistrationTab = ({ handleOpenCreateModal, handleOpenUpdateModal
           {snackbar.message}
         </Alert>
       </Snackbar>
+
+      {/* Edit Volunteer Modal */}
+      {currentVolunteer && (
+        <EditVolunteerModal
+          openModal={openEditModal}
+          handleCloseModal={handleCloseModal}
+          volunteerData={currentVolunteer}
+          onVolunteerUpdated={refetch}
+        />
+      )}
+
     </Box>
   );
 };

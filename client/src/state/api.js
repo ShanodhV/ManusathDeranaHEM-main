@@ -292,53 +292,69 @@ getNextCampLocationsByCamps: build.query({
       }),
       invalidatesTags: ["Schools"],
     }),
-    // Donors
-    deleteDonor: build.mutation({
-      query: (donorNIC) => ({
-        url: `donor/delete/${donorNIC}`,
-        method: 'DELETE',
+    getFilteredSchools: build.query({
+      query: ({ province, district, town }) => ({
+        url: `schools/filter`,
+        method: "GET",
+        params: { province, district, town },
       }),
-      invalidatesTags: ['Donors'],
+      providesTags: ["Schools"],
     }),
-    addDonor: build.mutation({
-      query: ({
-        donorNIC,
-        donorName,
-        donorAddress,
-        dateOfBirth,
-        mobileNumber,
-        occupation,
-      }) => ({
-        url: '/add',
-        method: 'POST',
-        body: {
-          donorNIC,
-          donorName,
-          donorAddress,
-          dateOfBirth,
-          mobileNumber,
-          occupation,
-        },
+    getStudentsBySchool: build.query({
+      query: ({ schoolIds }) => ({
+        url: `schools/students`,
+        method: "GET",
+        params: { schoolIds },
       }),
-      providesTags: ['Donors'],
-    }),
-    getDonors: build.query({
-      query: () => 'donor/gets',
-      providesTags: ['Donors'],
-    }),
-    getDonor: build.query({
-      query: (id) => `donor/get/${id}`,
-      providesTags: ['Donors'],
-    }),
-    updateDonor: build.mutation({
-      query: ({ donorNIC, donorData }) => ({
-        url: `donor/update/${donorNIC}`,
-        method: 'PUT',
-        body: donorData,
-      }),
-      invalidatesTags: ['Donors'],
+      providesTags: ["Schools"],
     }),
     
+   // Donor-related API calls
+deleteDonor: build.mutation({
+  query: (donorId) => ({
+    url: `donor/delete/${donorId}`,
+    method: 'DELETE',
+  }),
+  invalidatesTags: ['Donors'],
+}),
+
+addDonor: build.mutation({
+  query: ({
+    donorId, donorNIC, donorName, donorAddress, dateOfBirth, mobileNumber, occupation,
+  }) => ({
+    url: 'donor/add',
+    method: 'POST',
+    body: {
+      donorId, donorNIC, donorName, donorAddress, dateOfBirth, mobileNumber, occupation,
+    },
+  }),
+  invalidatesTags: ['Donors'],
+}),
+
+getDonors: build.query({
+  query: () => 'donor/gets',
+  providesTags: ['Donors'],
+}),
+
+getDonor: build.query({
+  query: (donorId) => `donor/get/${donorId}`,
+  providesTags: ['Donors'],
+}),
+
+updateDonor: build.mutation({
+  query: ({ donorId, donorData }) => ({
+    url: `donor/update/${donorId}`,
+    method: 'PUT',
+    body: donorData,
+  }),
+  invalidatesTags: ['Donors'],
+}),
+
+getLastDonor: build.query({
+  query: () => 'donor/last',
+  providesTags: ['Donors'],
+}),
+
     // Derana Daruwo Programs
     deleteDeranaDaruwoProgram: build.mutation({
       query: (programId) => ({
@@ -470,8 +486,8 @@ getNextCampLocationsByCamps: build.query({
     
     // Donor Volunteers
     deleteDonorVolunteer: build.mutation({
-      query: (donorVolunteerId) => ({
-        url: `donor-volunteer/delete/${donorVolunteerId}`,
+      query: (donorID) => ({
+        url: `donor-volunteer/delete/${donorID}`,
         method: "DELETE",
       }),
       invalidatesTags: ["DonorVolunteers"],
@@ -481,19 +497,19 @@ getNextCampLocationsByCamps: build.query({
         donorID,
         donorName,
         donorAddress,
+        countryCode,
         contactNumber,
-        studentID,
-      programID,
+        emailAddress,
       }) => ({
         url: `donor-volunteer/add`,
         method: "POST",
         body: { 
           donorID,
-          donorName,
-          donorAddress,
-          contactNumber,
-          studentID,
-          programID,
+        donorName,
+        donorAddress,
+        countryCode,
+        contactNumber,
+        emailAddress,
         },
       }),
       providesTags: ["DonorVolunteers"],
@@ -503,6 +519,7 @@ getNextCampLocationsByCamps: build.query({
       providesTags: ["DonorVolunteers"],
     }),
     getDonorVolunteer: build.query({
+    
       query: (id) => `donor-volunteer/get/${id}`,
       providesTags: ["DonorVolunteers"],
     }),
@@ -510,24 +527,31 @@ getNextCampLocationsByCamps: build.query({
     UpdateDonorVolunteer: build.mutation({
       query: ({
         donorID,
-          donorName,
-          donorAddress,
-          contactNumber,
-          studentID,
-          programID,
+        donorName,
+        donorAddress,
+        countryCode,
+        contactNumber,
+        emailAddress,
+        
       }) => ({
         url: `donor-volunteer/update/${donorID}`,
         method: "PUT",
         body: {
    
-          donorName,
-          donorAddress,
-          contactNumber,
-          studentID,
-          programID,
+          donorID,
+        donorName,
+        donorAddress,
+        countryCode,
+        contactNumber,
+        emailAddress,
+        
         },
       }),
       invalidatesTags: ["DonorVolunteers"],
+    }),
+    getLastDonorVolunteer: build.query({
+      query: () => `donor-volunteer/last`,
+      providesTags: ["DonorVolunteers"],
     }),
     // Volunteers
     deleteVolunteer: build.mutation({
@@ -571,6 +595,35 @@ getNextCampLocationsByCamps: build.query({
       query: (id) => `volunteer/get/${id}`,
       providesTags: ["Volunteers"],
     }),
+
+    updateVolunteer: build.mutation({
+      query: ({
+        id,
+        volunteerNIC,
+        volunteerName,
+        dateOfBirth,
+        contactNumber,
+        volunteerAddress,
+        location,
+        occupation,
+        status,
+      }) => ({
+        url: `volunteer/update/${id}`,
+        method: "PUT",
+        body: {
+          volunteerNIC,
+          volunteerName,
+          dateOfBirth,
+          contactNumber,
+          volunteerAddress,
+          location,
+          occupation,
+          status,
+        },
+      }),
+      invalidatesTags: ["Volunteers"],
+    }),
+
     // Volunteer Events
     
     deleteVolunteerEvent: build.mutation({
@@ -612,7 +665,7 @@ getNextCampLocationsByCamps: build.query({
       query: (id) => `volunteer-event/get/${id}`,
       providesTags: ["VolunteerEvents"],
     }),
-
+      
 
   }),
 });
@@ -666,11 +719,15 @@ export const {
   useDeleteSchoolMutation,
   useUpdateSchoolMutation,
 
+  useLazyGetFilteredSchoolsQuery,
+  useLazyGetStudentsBySchoolQuery,
+
   useDeleteDonorMutation,
   useAddDonorMutation,
   useGetDonorsQuery,
   useGetDonorQuery,
   useUpdateDonorMutation,
+  useGetLastDonorQuery,
 
   useDeleteDeranaDaruwoProgramMutation,
   useAddDeranaDaruwoProgramMutation,
@@ -693,11 +750,14 @@ export const {
   useGetDonorVolunteersQuery,
   useGetDonorVolunteerQuery,
   useUpdateDonorVolunteerMutation,
+  useGetLastDonorVolunteerQuery,
+
 
   useDeleteVolunteerMutation,
   useAddVolunteerMutation,
   useGetVolunteersQuery,
   useGetVolunteerQuery,
+  useUpdateVolunteerMutation,
 
   useDeleteVolunteerEventMutation,
   useAddVolunteerEventMutation,

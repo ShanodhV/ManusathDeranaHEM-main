@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Box, Button, Snackbar, Alert } from "@mui/material";
 import DonorRegistrationModal from "./DonorRegistrationModal";
 import { DataGrid } from "@mui/x-data-grid";
-import { useGetDonorQuery, useDeleteDonorMutation } from "state/api";
+import { useGetDonorsQuery, useDeleteDonorMutation } from "state/api";
 import { useTheme } from "@mui/material/styles";
 import DataGridCustomToolbar from "components/DataGridCustomToolbar";
 import ConfirmationDialog from "components/ConfirmationDialog";
@@ -12,7 +12,7 @@ import Buttons from "components/Buttons";
 const DonorRegistrationTab = () => {
   const theme = useTheme();
   const [openModal, setOpenModal] = useState(false);
-  const { data, isLoading, refetch, error } = useGetDonorQuery();
+  const { data, isLoading, refetch, error } = useGetDonorsQuery();
   const [deleteDonor] = useDeleteDonorMutation();
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(20);
@@ -152,26 +152,26 @@ const DonorRegistrationTab = () => {
           "& .MuiDataGrid-toolbarContainer .MuiButton-text": { color: `${theme.palette.secondary[200]} !important` },
         }}
       >
-        <DataGrid
-          loading={isLoading || !data}
-          getRowId={(row) => row._id}
-          rows={data?.items || []}
-          columns={donorColumns}
-          rowCount={data?.total || 0}
-          rowsPerPageOptions={[20, 50, 100]}
-          pagination
-          page={page}
-          pageSize={pageSize}
-          paginationMode="server"
-          sortingMode="server"
-          onPageChange={(newPage) => setPage(newPage)}
-          onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
-          onSortModelChange={(newSortModel) => setSort(newSortModel)}
-          components={{ Toolbar: DataGridCustomToolbar }}
-          componentsProps={{
-            toolbar: { searchInput, setSearchInput, setSearch },
-          }}
-        />
+<DataGrid
+  loading={isLoading || !data}
+  getRowId={(row) => row._id}  // Ensure each row has a unique identifier
+  rows={data?.items || []}     // Adjust according to the API response
+  columns={donorColumns}
+  rowCount={data?.total || 0}  // Optional: useful for server-side pagination
+  pagination
+  page={page}
+  pageSize={pageSize}
+  paginationMode="server"
+  sortingMode="server"
+  onPageChange={(newPage) => setPage(newPage)}
+  onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+  onSortModelChange={(newSortModel) => setSort(newSortModel)}
+  components={{ Toolbar: DataGridCustomToolbar }}
+  componentsProps={{
+    toolbar: { searchInput, setSearchInput, setSearch },
+  }}
+/>
+
       </Box>
       <ConfirmationDialog
         open={openConfirm}

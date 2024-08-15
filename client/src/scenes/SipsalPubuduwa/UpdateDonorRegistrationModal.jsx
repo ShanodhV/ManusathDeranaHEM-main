@@ -5,8 +5,6 @@ import {
   DialogContent,
   DialogActions,
   Box,
-  Grid,
-  MenuItem,
   Button,
   IconButton,
   CircularProgress,
@@ -15,24 +13,38 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useTheme } from "@mui/material/styles";
-
-import CustomTextField from "components/CustomTextField"; // Import your custom TextField component
+import CustomTextField from "components/CustomTextField";
 import { useUpdateDonorMutation } from "state/api"; // Adjust the import according to your file structure
 
 const UpdateDonorRegistrationModal = ({ openModal, handleCloseModal, donorData }) => {
   const theme = useTheme();
+  const [donorId, setDonorId] = useState("");
   const [donorNIC, setDonorNIC] = useState("");
   const [donorName, setDonorName] = useState("");
   const [donorAddress, setDonorAddress] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
   const [occupation, setOccupation] = useState("");
+  const [date, setDate] = useState('');
   const [errors, setErrors] = useState({});
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
   const [loading, setLoading] = useState(false);
 
   const [updateDonor] = useUpdateDonorMutation();
 
+  // Initialize state with donorData
+  useEffect(() => {
+    if (donorData) {
+      setDonorId(donorData.donorId || "");
+      setDonorNIC(donorData.donorNIC || "");
+      setDonorName(donorData.donorName || "");
+      setDonorAddress(donorData.donorAddress || "");
+      setMobileNumber(donorData.mobileNumber || "");
+      setOccupation(donorData.occupation || "");
+      setDate(donorData.dateOfBirth ? convertToISO(donorData.dateOfBirth) : "");
+    }
+  }, [donorData]);
 
+  // Date handling functions
   const formatDate = (value) => {
     const digits = value.replace(/\D/g, '');
     const day = digits.slice(0, 2);
@@ -50,9 +62,6 @@ const UpdateDonorRegistrationModal = ({ openModal, handleCloseModal, donorData }
     const [day, month, year] = value.split('/');
     return `${year}-${month}-${day}`;
   };
-
-  const [date, setDate] = useState('');
-
 
   const handleDateChange = (e) => {
     const { value } = e.target;
@@ -72,23 +81,13 @@ const UpdateDonorRegistrationModal = ({ openModal, handleCloseModal, donorData }
     }
   };
 
-  
+  // Function to validate phone number
+  const validatePhoneNumber = (number) => /^\d{10}$/.test(number);
 
-  useEffect(() => {
-    if (donorData) {
-      setDonorNIC(donorData.donorNIC);
-      setDonorName(donorData.donorName);
-      setDonorAddress(donorData.donorAddress);
-      setMobileNumber(donorData.mobileNumber);
-      setOccupation(donorData.occupation);
-    }
-  }, [donorData]);
-
-  const validatePhoneNumber = (number) => /^\d+$/.test(number);
-
+  // Function to handle form submission
   const handleUpdateDonor = () => {
     const newErrors = {};
-
+    if (!donorId) newErrors.donorId = "Donor ID is required";
     if (!donorNIC) newErrors.donorNIC = "NIC is required";
     if (!donorName) newErrors.donorName = "Name is required";
     if (!donorAddress) newErrors.donorAddress = "Address is required";
@@ -96,28 +95,33 @@ const UpdateDonorRegistrationModal = ({ openModal, handleCloseModal, donorData }
     if (!mobileNumber) newErrors.mobileNumber = "Mobile number is required";
     else if (!validatePhoneNumber(mobileNumber)) newErrors.mobileNumber = "Mobile number must contain only numbers";
     if (!occupation) newErrors.occupation = "Occupation is required";
-
+  
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
     } else {
       setLoading(true);
       const startTime = Date.now();
       const donorData = {
+        donorId: donorId,
         donorNIC: donorNIC,
         donorName: donorName,
         donorAddress: donorAddress,
-        date: convertToISO(date),
+        dateOfBirth: convertToISO(date),
         mobileNumber: mobileNumber,
         occupation: occupation,
       };
-
+  
       updateDonor(donorData)
         .then((response) => {
           console.log("Donor updated successfully:", response);
-          setErrors({});
-          setSnackbar({ open: true, message: "Donor updated successfully!", severity: "success" });
-          setLoading(false);
-          handleCloseModal();
+          setSnackbar({ open: true, message: `Donor updated successfully`, severity: "success" });
+
+          const elapsedTime = Date.now() - startTime;
+          const remainingTime = 500 - elapsedTime;
+          setTimeout(() => {
+            setLoading(false);
+            handleCloseModal();
+          }, remainingTime > 0 ? remainingTime : 0);
         })
         .catch((error) => {
           console.error("Error updating donor:", error);
@@ -127,26 +131,17 @@ const UpdateDonorRegistrationModal = ({ openModal, handleCloseModal, donorData }
     }
   };
 
-  const labelStyle = {
-    fontWeight: "bold",
-    color: "black",
-    fontSize: "16px",
-    marginTop: "16px",
-  };
-
-  
   return (
     <>
       <Dialog
         fullScreen
         open={openModal}
         onClose={handleCloseModal}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
+        aria-labelledby="form-dialog-title"
       >
-        <DialogTitle sx={{ bgcolor: "#f0f0f0" }} id="modal-modal-title">
+        <DialogTitle sx={{ bgcolor: "#f0f0f0", position: 'relative' }} id="modal-modal-title">
           <div style={{ color: "#d63333", fontWeight: '700', fontSize: '16px' }}>
-            Update Donor
+          {"Update Donor"}
             <hr style={{ borderColor: "#d63333" }} />
           </div>
           <IconButton
@@ -156,13 +151,25 @@ const UpdateDonorRegistrationModal = ({ openModal, handleCloseModal, donorData }
               position: 'absolute',
               right: 8,
               top: 8,
-              color: 'grey',
+              color: theme.palette.grey[500],
             }}
           >
             <CloseIcon />
           </IconButton>
         </DialogTitle>
         <DialogContent>
+          <Box sx={{ mt: 2 }}>
+            <CustomTextField
+              label="Donor ID"
+              variant="outlined"
+              fullWidth
+              value={donorId}
+              onChange={(e) => setDonorId(e.target.value)}
+              error={!!errors.donorId}
+              helperText={errors.donorId}
+              disabled
+            />
+          </Box>
           <Box sx={{ mt: 2 }}>
             <CustomTextField
               label="Donor NIC"
@@ -207,7 +214,6 @@ const UpdateDonorRegistrationModal = ({ openModal, handleCloseModal, donorData }
               helperText={errors.mobileNumber}
             />
           </Box>
-
           <Box sx={{ mt: 2 }}>
             <CustomTextField
               label="Date of Birth"
@@ -232,35 +238,31 @@ const UpdateDonorRegistrationModal = ({ openModal, handleCloseModal, donorData }
             />
           </Box>
         </DialogContent>
-        <DialogActions sx={{ bgcolor: "#f0f0f0" }}>
-          <Button
-            onClick={handleUpdateDonor}
-            color="secondary"
-            variant="contained"
-            disabled={loading}
-            endIcon={loading && <CircularProgress size={20} />}
-            >
-              Update Donor
-            </Button>
-            <Button onClick={handleCloseModal} variant="outlined" color="secondary">
-              Cancel
-            </Button>
-          </DialogActions>
-        </Dialog>
-  
-        <Snackbar
-          open={snackbar.open}
-          autoHideDuration={6000}
+        <DialogActions>
+          <Button onClick={handleCloseModal} color="secondary">
+            Cancel
+          </Button>
+          <Button onClick={handleUpdateDonor} color="primary" disabled={loading}>
+            {loading ? <CircularProgress size={24} /> : "Update Donor"}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+      >
+        <Alert
           onClose={() => setSnackbar({ ...snackbar, open: false })}
-          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          severity={snackbar.severity}
+          sx={{ width: '100%' }}
         >
-          <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} sx={{ width: '100%' }}>
-            {snackbar.message}
-          </Alert>
-        </Snackbar>
-      </>
-    );
-  };
-  
-  export default UpdateDonorRegistrationModal;
-  
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
+    </>
+  );
+};
+
+export default UpdateDonorRegistrationModal;
