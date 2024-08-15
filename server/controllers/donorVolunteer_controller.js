@@ -3,21 +3,22 @@ import DonorVolunteers from "../models/DonorVolunteer.js";
 // Add Donor Volunteer
 export const addDonorVolunteer = async (req, res) => {
   try {
-    const { donorID,
+    const { 
+      donorID,
       donorName,
       donorAddress,
+      countryCode,
       contactNumber,
-      studentID,
-      programID } = req.body;
+      emailAddress,} = req.body;
 
     // Create a new donor volunteer instance
     const newDonorVolunteer = new DonorVolunteers({
       donorID,
       donorName,
       donorAddress,
+      countryCode,
       contactNumber,
-      studentID,
-      programID
+      emailAddress,
     });
 
     console.log(newDonorVolunteer);
@@ -44,6 +45,8 @@ export const getDonorVolunteers = async (req, res) => {
 export const getDonorVolunteer = async (req, res) => {
   try {
     const { id } = req.params;
+
+    console.log(id);
     const donorVolunteer = await DonorVolunteers.findById(id);
     res.status(200).json(donorVolunteer);
   } catch (error) {
@@ -81,6 +84,20 @@ export const updateDonorVolunteer = async (req, res) => {
     res.json(updatedDonorVolunteer);
   } catch (error) {
     console.error("Error updating donor volunteer:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// Get Last ID
+export const getLastDonorVolunteer = async (req, res) => {
+  try {
+    const lastDonor = await DonorVolunteers.findOne().sort({ createdAt: -1 });
+    if (!lastDonor) {
+      return res.status(404).json({ message: "No program found" });
+    }
+    res.status(200).json(lastDonor);
+  } catch (error) {
+    console.error("Error fetching last program:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
