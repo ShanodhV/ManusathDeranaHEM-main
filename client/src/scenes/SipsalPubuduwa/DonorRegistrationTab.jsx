@@ -112,12 +112,22 @@ const DonorRegistrationTab = () => {
       headerName: "Mobile Number",
       flex: 1,
     },
-    // {
-    //   field: "dateOfBirth",
-    //   headerName: "Date of Birth",
-    //   flex: 1,
-    //   valueFormatter: ({ value }) => (value ? `${value.month}/${value.day}/${value.year}` : "")
-    // },
+    {
+      field: "dateOfBirth",
+      headerName: "Date of Birth",
+      flex: 1,
+      valueFormatter: ({ value }) => {
+        if (!value) return "";
+        // Convert ISO date string to a Date object
+        const date = new Date(value);
+        // Format the date as MM/DD/YYYY
+        const day = date.getUTCDate().toString().padStart(2, "0");
+        const month = (date.getUTCMonth() + 1).toString().padStart(2, "0"); // Months are zero-based
+        const year = date.getUTCFullYear();
+        return `${month}/${day}/${year}`;
+      },
+    }
+    ,
     {
       field: "occupation",
       headerName: "Occupation",

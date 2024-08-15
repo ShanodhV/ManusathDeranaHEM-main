@@ -342,10 +342,10 @@ getDonor: build.query({
 }),
 
 updateDonor: build.mutation({
-  query: ({ donorId, donorData }) => ({
+  query: ({ donorId, donorNIC, donorName, donorAddress, dateOfBirth, mobileNumber, occupation, }) => ({
     url: `donor/update/${donorId}`,
     method: 'PUT',
-    body: donorData,
+    body: {donorId, donorNIC, donorName, donorAddress, dateOfBirth, mobileNumber, occupation},
   }),
   invalidatesTags: ['Donors'],
 }),
