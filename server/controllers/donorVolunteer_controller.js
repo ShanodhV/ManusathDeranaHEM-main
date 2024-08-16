@@ -47,6 +47,7 @@ export const getDonorVolunteer = async (req, res) => {
     const { id } = req.params;
 
     console.log(id);
+    console.log("success");
     const donorVolunteer = await DonorVolunteers.findById(id);
     res.status(200).json(donorVolunteer);
   } catch (error) {
