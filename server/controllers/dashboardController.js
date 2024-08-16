@@ -72,3 +72,20 @@ export const getTotalVolunteers = async (req, res) => {
     res.status(500).json({ error: "Failed to get total camps" });
   }
 };
+
+export const getGenderDistribution = async (req, res) => {
+  try {
+    const genderDistribution = await LabReport.aggregate([
+      {
+        $group: {
+          _id: "$gender",
+          count: { $sum: 1 },
+        },
+      },
+    ]);
+
+    res.status(200).json(genderDistribution);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to get gender distribution" });
+  }
+};
