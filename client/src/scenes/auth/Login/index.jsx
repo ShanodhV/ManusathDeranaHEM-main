@@ -1,6 +1,5 @@
 import { useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
 import styles from "./styles.module.css";
 
 const Login = () => {
@@ -33,6 +32,13 @@ const Login = () => {
     <div className={styles.login_container}>
       <div className={styles.login_form_container}>
         <div className={styles.left}>
+          {/* Container for side-by-side logos */}
+          <div className={styles.logo_container}>
+          <img src={require('../../../assets/imageLogo.png')} alt="Logo 1" className={styles.logo} />
+          {/* <img src={require('../../../assets/image2.png')} alt="Logo 1" className={styles.logo} /> */}
+
+          {/* <img src="path/to/logo2.png" alt="Logo 2" className={styles.logo} /> */}
+          </div>
           <form className={styles.form_container} onSubmit={handleSubmit}>
             <h1>Login to Your Account</h1>
             <input
@@ -55,18 +61,10 @@ const Login = () => {
             />
             {error && <div className={styles.error_msg}>{error}</div>}
             <button type="submit" className={styles.green_btn}>
-              Sing In
+              Sign In
             </button>
           </form>
         </div>
-        {/* <div className={styles.right}>
-          <h1>New Here ?</h1>
-          <Link to="/signup">
-            <button type="button" className={styles.white_btn}>
-              Sing Up
-            </button>
-          </Link>
-        </div> */}
       </div>
     </div>
   );

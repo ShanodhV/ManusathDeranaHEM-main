@@ -699,6 +699,10 @@ getLastDonor: build.query({
       query: () => 'dashboard/vol',
       providesTags: ['Volunteers'],
     }),
+    getGenderDistribution: build.query({
+      query: () => 'dashboard/gender',
+      providesTags: ['LabReports'],
+    }),
 
   }),
 });
@@ -804,5 +808,6 @@ export const {
   useGetPatientInfectionStatusQuery,
   useGetTopCampLocationsQuery,
   useGetTotalVolunteersQuery,
+  useGetGenderDistributionQuery,
   
 } = api;

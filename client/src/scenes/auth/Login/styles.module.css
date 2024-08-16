@@ -1,43 +1,67 @@
+/* Container for the entire login page */
 .login_container {
   width: 100%;
   min-height: 100vh;
-  background-color: #f5f5f5;
+  background: url('../../../assets/LoginBg.png') no-repeat center center;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
+/* Container for the login form */
 .login_form_container {
   width: 900px;
   height: 500px;
   display: flex;
   border-radius: 10px;
-  box-shadow: 0px 3px 3px -2px rgb(0 0 0 / 20%),
-    0px 3px 4px 0px rgb(0 0 0 / 14%), 0px 1px 8px 0px rgb(0 0 0 / 12%);
+  box-shadow: 0px 3px 3px -2px rgb(0 0 0 / 20%), 0px 3px 4px 0px rgb(0 0 0 / 14%), 0px 1px 8px 0px rgb(0 0 0 / 12%);
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.8); /* Optional: Add a semi-transparent background */
 }
 
+/* Left side container (form and logos) */
 .left {
-  flex: 2;
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   background-color: white;
-  border-top-left-radius: 10px;
-  border-bottom-left-radius: 10px;
+  border-radius: 10px;
+  padding: 20px;
 }
 
+/* Container for the logos */
+.logo_container {
+  display: flex;
+  justify-content: center; /* Center logos horizontally */
+  align-items: center; /* Align logos vertically */
+  gap: 20px; /* Space between the logos */
+  margin-bottom: 20px; /* Space below logos */
+}
+
+/* Individual logo styles */
+.logo {
+  width: 160px; /* Adjust width as needed */
+  height: 160px; /* Maintain aspect ratio */
+}
+
+/* Form container */
 .form_container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
 }
 
+/* Form heading */
 .form_container h1 {
   font-size: 40px;
   margin-top: 0;
+  text-align: center;
 }
 
+/* Input fields */
 .input {
   outline: none;
   border: none;
@@ -49,6 +73,7 @@
   font-size: 14px;
 }
 
+/* Error message styling */
 .error_msg {
   width: 370px;
   padding: 15px;
@@ -60,39 +85,21 @@
   text-align: center;
 }
 
-.right {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background-color: #cc5e52;
-  border-top-right-radius: 10px;
-  border-bottom-right-radius: 10px;
-}
-
-.right h1 {
-  margin-top: 0;
-  color: white;
-  font-size: 40px;
-  align-self: center;
-}
-
-.white_btn,
+/* Button styles */
 .green_btn {
   border: none;
   outline: none;
   padding: 12px 0;
-  background-color: white;
+  background-color: #cc5e52;
+  color: white;
   border-radius: 20px;
   width: 180px;
   font-weight: bold;
   font-size: 14px;
   cursor: pointer;
+  margin-top: 20px;
 }
 
-.green_btn {
-  background-color: #cc5e52;
-  color: white;
-  margin: 10px;
+.green_btn:hover {
+  background-color: #b34e45; /* Darker shade on hover */
 }
