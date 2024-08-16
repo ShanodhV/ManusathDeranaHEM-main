@@ -81,7 +81,7 @@ const UpdateDonorRegistrationModal = ({ openModal, handleCloseModal, donorData }
       setDonorAddress(donorData.donorAddress);
       setMobileNumber(donorData.mobileNumber);
       setOccupation(donorData.occupation);
-      setDate(donorData.Date ? donorData.Date.split('T')[0].split('-').reverse().join('/') : '');
+      setDate(donorData.date);
     }
   }, [donorData]);
 

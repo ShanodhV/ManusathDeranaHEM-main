@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Box, Tabs, Tab } from "@mui/material";
 import Buttons from "components/Buttons";
-import SchoolPredictorTab from "./SchoolPredictorTab";
+//import SchoolPredictorTab from "./SchoolPredictorTab";
 import ViewSchoolDetailsTab from "./ViewSchoolDetailsTab";
 import DonorRegistrationTab from "./DonorRegistrationTab";
 import SchoolRegistrationModal from "./SchoolRegistrationModal";
@@ -62,14 +62,14 @@ const SipsalPubuduwa = () => {
         <Tab label="School Registration" />
         <Tab label="View School Details" />
         <Tab label="Donor Registeration" />
-        <Tab label="Next School Predictor" />
+        {/* <Tab label="Next School Predictor" /> */}
       </Tabs>
 
       {/* Render tab content based on active tab */}
       {activeTab === 0 && <SchoolManagementTab handleOpenModal={handleOpenModal}  handleOpenUpdateModal={handleOpenUpdateModal}/>}
       {activeTab === 1 && <ViewSchoolDetailsTab />}
       {activeTab === 2 && <DonorRegistrationTab handleOpenModal={handleOpenModal} handleOpenUpdateModal={handleOpenUpdateModal}/>}
-      {activeTab === 3 && <SchoolPredictorTab />}
+      {/* {activeTab === 3 && <SchoolPredictorTab />} */}
       
 
       {/* Modal */}
