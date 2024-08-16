@@ -1,11 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Dialog, Box, DialogContent, DialogTitle, DialogActions, IconButton, CircularProgress, Button, Snackbar, Alert, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 import { useTheme } from "@mui/material/styles";
 import CustomTextField from 'components/CustomTextField';
-import { useAddStudentMutation, useGetDeranaDaruwoProgramsQuery,useGetStudentsByDeranaDaruwoProgramQuery } from 'state/api'; // Adjust the import according to your file structure
+import { useAddStudentMutation,useGetLastStudentQuery, useGetDeranaDaruwoProgramsQuery, useGetStudentsByDeranaDaruwoProgramQuery } from 'state/api'; // Adjust the import according to your file structure
 import CloseIcon from "@mui/icons-material/Close";
 
-const RegistrationModal = ({ openModal, closeModal,programId }) => {
+const generateNextId = (lastId) => {
+  const idNumber = parseInt(lastId.split('-')[2], 10);
+  const nextIdNumber = (idNumber + 1).toString().padStart(6, '0');
+  return `MD-SR-${nextIdNumber}`;
+};
+
+const RegistrationModal = ({ openModal, closeModal, programId }) => {
   const theme = useTheme();
   const [studentID, setStudentID] = useState("");
   const [studentName, setStudentName] = useState("");
@@ -28,7 +34,16 @@ const RegistrationModal = ({ openModal, closeModal,programId }) => {
   const [bankAccountDetailsError, setBankAccountDetailsError] = useState("");
   const [accountNumberError, setAccountNumberError] = useState("");
   const { data: programStudents } = useGetStudentsByDeranaDaruwoProgramQuery(programId, { skip: !programId });
+  const { data: lastStudent, isSuccess } = useGetLastStudentQuery();
 
+
+  useEffect(() => {
+    if (isSuccess && lastStudent) {
+      setStudentID(generateNextId(lastStudent.studentID));
+    } else {
+      setStudentID("MD-SR-000001");
+    }
+  }, [lastStudent, isSuccess]);
 
   const validateStudentID = (id) => {
     if (!id) {
@@ -38,14 +53,18 @@ const RegistrationModal = ({ openModal, closeModal,programId }) => {
   }
 
   const validateStudentName = (name) => {
+    const nameRegex = /^[a-zA-Z\s.]+$/; // Allows letters, spaces, and dots
     if (!name) {
       return "Student Name is required";
+    }
+    if (!nameRegex.test(name)) {
+      return "Student Name can only contain letters, spaces, and dots";
     }
     return "";
   }
 
-  const validateStudentAddress = (Address) => {
-    if (!Address) {
+  const validateStudentAddress = (address) => {
+    if (!address) {
       return "Student Address is required";
     }
     return "";
@@ -59,36 +78,46 @@ const RegistrationModal = ({ openModal, closeModal,programId }) => {
   // };
 
   const validateParentName = (name) => {
+    const nameRegex = /^[a-zA-Z\s.]+$/; // Same validation as studentName
     if (!name) {
       return "Parent Name is required";
     }
-    return "";
-  };
-  
-  const validateParentContactDetails = (Number) => {
-    if (!Number) {
-      return "Parent Contact Details are required";
+    if (!nameRegex.test(name)) {
+      return "Parent Name can only contain letters, spaces, and dots";
     }
     return "";
   };
 
-  const validateBankAccountDetails = (name) => {
-    if (!name) {
+  const validateParentContactDetails = (number) => {
+    const numberRegex = /^\d{10}$/; // Must be exactly 10 digits
+    if (!number) {
+      return "Parent Contact Details are required";
+    }
+    if (!numberRegex.test(number)) {
+      return "Parent Contact Details must be exactly 10 digits";
+    }
+    return "";
+  };
+
+  const validateBankAccountDetails = (details) => {
+    if (!details) {
       return "Bank Account Details are required";
     }
     return "";
   };
 
-  const validateAccountNUmber = (Number) => {
-    if (!Number) {
-      return "Account Number Detail is required";
+  const validateAccountNumber = (number) => {
+    const numberRegex = /^\d+$/; // Matches one or more digits
+    if (!number) {
+      return "Account Number is required";
+    }
+    if (!numberRegex.test(number)) {
+      return "Account Number can only contain digits";
     }
     return "";
   };
-  
 
   const handleAddStudent = () => {
-
     const studentIdValidationError = validateStudentID(studentID);
     const studentNameValidationError = validateStudentName(studentName);
     const studentAddressValidationError = validateStudentAddress(studentAddress);
@@ -96,9 +125,9 @@ const RegistrationModal = ({ openModal, closeModal,programId }) => {
     const parentNameValidationError = validateParentName(parentName);
     const parentContactDetailsValidationError = validateParentContactDetails(parentContactDetails);
     const bankAccountDetailsValidationError = validateBankAccountDetails(bankAccountDetails);
-    const accountNumberValidationError = validateAccountNUmber(accountNumber);
+    const accountNumberValidationError = validateAccountNumber(accountNumber);
 
-    if(studentIdValidationError||studentNameValidationError||studentAddressValidationError||parentContactDetailsValidationError||bankAccountDetailsValidationError||accountNumberValidationError){
+    if(studentIdValidationError || studentNameValidationError || studentAddressValidationError || parentNameValidationError || parentContactDetailsValidationError || bankAccountDetailsValidationError || accountNumberValidationError){
       setStudentIDError(studentIdValidationError);
       setStudentNameError(studentNameValidationError);
       setStudentAddressError(studentAddressValidationError);
@@ -128,7 +157,7 @@ const RegistrationModal = ({ openModal, closeModal,programId }) => {
       parentContactDetails,
       bankAccountDetails,
       accountNumber,
-      deranaDaruwProgram:programId,
+      deranaDaruwProgram: programId,
     };
 
     addStudent(studentData)
@@ -172,8 +201,7 @@ const RegistrationModal = ({ openModal, closeModal,programId }) => {
               color: theme.palette.grey[500],
             }}
           >
-            {/* Add your icon component here */}
-            <CloseIcon/>
+            <CloseIcon />
           </IconButton>
         </DialogTitle>
         <DialogContent>
@@ -188,7 +216,7 @@ const RegistrationModal = ({ openModal, closeModal,programId }) => {
                 setStudentIDError(validateStudentID(e.target.value));
               }}
               error={!!studentIDError}
-            helperText={studentIDError}
+              helperText={studentIDError}
             />
           </Box>
           <Box sx={{ mt: 2 }}>
@@ -202,7 +230,7 @@ const RegistrationModal = ({ openModal, closeModal,programId }) => {
                 setStudentNameError(validateStudentName(e.target.value));
               }}
               error={!!studentNameError}
-            helperText={studentNameError}
+              helperText={studentNameError}
             />
           </Box>
           <Box sx={{ mt: 2 }}>
@@ -216,7 +244,7 @@ const RegistrationModal = ({ openModal, closeModal,programId }) => {
                 setStudentAddressError(validateStudentAddress(e.target.value));
               }}
               error={!!studentAddressError}
-            helperText={studentAddressError}
+              helperText={studentAddressError}
             />
           </Box>
           {/* <Box sx={{ mt: 6 }}>
@@ -229,8 +257,7 @@ const RegistrationModal = ({ openModal, closeModal,programId }) => {
                   setProgramIDError(validateProgramID(e.target.value));
                 }}
                 error={!!studentAddressError}
-            helperText={studentAddressError}
-
+                helperText={studentAddressError}
                 label="Select Program ID"
                 disabled={isLoading || isError}
               >
@@ -238,7 +265,7 @@ const RegistrationModal = ({ openModal, closeModal,programId }) => {
                 {isError && <MenuItem disabled>Error loading programs</MenuItem>}
                 {programs && programs.map((program) => (
                   <MenuItem key={program.programId} value={program.programId}>
-                     {program.programId}
+                    {program.programId}
                   </MenuItem>
                 ))}
               </Select>
@@ -297,7 +324,7 @@ const RegistrationModal = ({ openModal, closeModal,programId }) => {
               value={accountNumber}
               onChange={(e) => { 
                 setAccountNumber(e.target.value);
-                setAccountNumberError(validateAccountNUmber(e.target.value));
+                setAccountNumberError(validateAccountNumber(e.target.value));
               }}
               error={!!accountNumberError}
               helperText={accountNumberError}

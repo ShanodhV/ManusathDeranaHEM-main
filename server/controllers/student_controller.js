@@ -130,3 +130,16 @@ export const updateStudents = async (req, res) => {
   }
 };
 
+// Get Last ID
+export const getLastStudent = async (req, res) => {
+  try {
+    const lastStudent = await Student.findOne().sort({ createdAt: -1 });
+    if (!lastStudent) {
+      return res.status(404).json({ message: "No program found" });
+    }
+    res.status(200).json(lastStudent);
+  } catch (error) {
+    console.error("Error fetching last program:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

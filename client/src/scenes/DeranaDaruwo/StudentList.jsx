@@ -86,7 +86,7 @@ const StudentList = ({ open, onClose, program}) => {
         {
             field: "studentID",
             headerName: "Student ID",
-            flex: 0.4,
+            flex: 0.8,
             renderHeader: () => <CustomHeader title1="Student" title2="ID" />,
           },
           {

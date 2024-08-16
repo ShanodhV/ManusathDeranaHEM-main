@@ -483,6 +483,12 @@ getLastDonor: build.query({
       query: (programId) => `student/program/${programId}`,
       providesTags: ["Students"],
     }),
+
+    getLastStudent: build.query({
+      query: () => `student/last`,
+      providesTags: ["Students"],
+    }),
+    
     
     // Donor Volunteers
     deleteDonorVolunteer: build.mutation({
@@ -769,6 +775,7 @@ export const {
   useGetStudentsQuery,
   useGetStudentQuery,
   useUpdateStudentsMutation,
+  useGetLastStudentQuery,
   useGetStudentsByDeranaDaruwoProgramQuery,
 
 
