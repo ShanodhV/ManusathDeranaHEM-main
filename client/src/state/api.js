@@ -311,8 +311,8 @@ getNextCampLocationsByCamps: build.query({
     
    // Donor-related API calls
 deleteDonor: build.mutation({
-  query: (donorId) => ({
-    url: `donor/delete/${donorId}`,
+  query: (id) => ({
+    url: `donor/delete/${id}`,
     method: 'DELETE',
   }),
   invalidatesTags: ['Donors'],
