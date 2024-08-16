@@ -68,9 +68,8 @@ const SchoolDataViewerTab = () => {
       <Alert severity="error">Error loading filtered schools: {filterError.message}</Alert>
     );
   }
-
-  // Debugging: Log filteredSchools to ensure it has the expected structure
-  console.log("Filtered Schools:", filteredSchools);
+   // Debugging: Log filteredSchools to ensure it has the expected structure
+   console.log("Filtered Schools:", filteredSchools);
 
   return (
     <Box m="1.5rem 2.5rem">
@@ -137,36 +136,57 @@ const SchoolDataViewerTab = () => {
         ) : (
           <Box sx={{ height: 400, width: "100%", mt: 2 }}>
             <DataGrid
-              rows={filteredSchools || []}
-              columns={[
-                { field: "schoolId", headerName: "School ID", width: 150 },
-                { field: "schoolName", headerName: "School Name", width: 200 },
-                {
-                  field: "location.province",
-                  headerName: "Province",
-                  width: 150,
-                  valueGetter: (params) => params.row.location?.province || "N/A",
-                },
-                {
-                  field: "location.district",
-                  headerName: "District",
-                  width: 150,
-                  valueGetter: (params) => params.row.location?.district || "N/A",
-                },
-                {
-                  field: "location.town",
-                  headerName: "Town",
-                  width: 150,
-                  valueGetter: (params) => params.row.location?.town || "N/A",
-                },
-                { field: "schoolAddress", headerName: "Address", width: 250 },
-              ]}
-              pageSize={5}
-              rowsPerPageOptions={[5, 10, 20]}
-              checkboxSelection
-              onSelectionModelChange={(newSelection) => setSelectedSchoolIds(newSelection)}
-              getRowId={(row) => row._id}
-            />
+  rows={filteredSchools || []}
+  columns={[
+    { field: "schoolId", headerName: "School ID", width: 150 },
+    { field: "schoolName", headerName: "School Name", width: 200 },
+    {
+      field: "location.province",
+      headerName: "Province",
+      width: 150,
+      valueGetter: (params) => params.row.location?.province || "N/A",
+    },
+    {
+      field: "location.district",
+      headerName: "District",
+      width: 150,
+      valueGetter: (params) => params.row.location?.district || "N/A",
+    },
+    {
+      field: "location.town",
+      headerName: "Town",
+      width: 150,
+      valueGetter: (params) => params.row.location?.town || "N/A",
+    },
+    { field: "schoolAddress", headerName: "Address", width: 250 },
+    {
+      field: 'principalContact',
+      headerName: 'Principal Contact',
+      flex: 1,
+      renderCell: (params) => {
+        const { value } = params;
+        if (!value || !Array.isArray(value)) return null;
+        
+        return (
+          <div>
+            {value.map((contact, index) => (
+              <div key={index}>
+                <strong>{contact.pname}</strong> - {contact.pnumber}
+              </div>
+            ))}
+          </div>
+        );
+      },
+    },
+  ]}
+  pageSize={5}
+  rowsPerPageOptions={[5, 10, 20]}
+  checkboxSelection
+  onSelectionModelChange={(newSelection) => setSelectedSchoolIds(newSelection)}
+  getRowId={(row) => row._id}
+/>
+
+
           </Box>
         )}
       </Box>

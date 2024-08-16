@@ -345,13 +345,13 @@ const UpdateSchoolModal = ({ openModal, closeModal, school }) => {
                 />
               </Box>
             ))}
-            <Button
+            {/* <Button
               onClick={handleClickAddPerson}
               variant="outlined"
               sx={{ mt: 2 }}
             >
               Add Another Principal Contact
-            </Button>
+            </Button> */}
           </Box>
         </DialogContent>
         <DialogActions>

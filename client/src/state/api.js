@@ -664,7 +664,31 @@ getLastDonor: build.query({
       query: (id) => `volunteer-event/get/${id}`,
       providesTags: ["VolunteerEvents"],
     }),
-      
+    updateVolunteerEvent: build.mutation({
+      query: ({ id, ...updateData }) => ({
+        url: `volunteer-event/update/${id}`,
+        method: 'PUT',
+        body: updateData,
+      }),
+      invalidatesTags: ['VolunteerEvents'],
+    }),
+
+    getTotalCamps: build.query({
+      query: () => 'dashboard/totalCamp',
+      providesTags: ['Camps'],
+    }),
+    getTotalPatients: build.query({
+      query: () => 'dashboard/total',
+      providesTags: ['Patients'],
+    }),
+    getPatientInfectionStatus: build.query({
+      query: () => 'dashboard/infection-status',
+      providesTags: ['Patients'],
+    }),
+    getTopCampLocations: build.query({
+      query: () => 'dashboard/top-locations',
+      providesTags: ['Camps'],
+    }),
 
   }),
 });
@@ -762,4 +786,11 @@ export const {
   useAddVolunteerEventMutation,
   useGetVolunteerEventsQuery,
   useGetVolunteerEventQuery,
+  useUpdateVolunteerEventMutation,
+
+  useGetTotalCampsQuery,
+  useGetTotalPatientsQuery,
+  useGetPatientInfectionStatusQuery,
+  useGetTopCampLocationsQuery
+  
 } = api;

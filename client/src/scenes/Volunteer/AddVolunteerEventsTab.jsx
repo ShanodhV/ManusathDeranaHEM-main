@@ -8,11 +8,13 @@ import DataGridCustomToolbar from "components/DataGridCustomToolbar";
 import { useEffect, useState } from "react";
 import { useDeleteVolunteerEventMutation, useGetVolunteerEventsQuery } from "state/api";
 import AddVolunteerEventsModal from "./AddVolunteerEventsModal";
+import UpdateVolunteerEventsModal from "./UpdateVolunteerEventsModal"; // Import the update modal
 
-const AddVolunteerEventsTab = ({ handleOpenCreateModal, handleOpenUpdateModal }) => {
+const AddVolunteerEventsTab = () => {
   const theme = useTheme();
   const [openModal, setOpenModal] = useState(false);
-  const [currentEvent, setCurrentEvent] = useState(null);
+  const [openUpdateModal, setOpenUpdateModal] = useState(false); // State for update modal
+  const [currentEvent, setCurrentEvent] = useState(null); // State to hold the current event data
   const { data, isLoading, refetch, error } = useGetVolunteerEventsQuery();
   const [deleteVolunteerEvent] = useDeleteVolunteerEventMutation();
   const [page, setPage] = useState(0);
@@ -31,11 +33,17 @@ const AddVolunteerEventsTab = ({ handleOpenCreateModal, handleOpenUpdateModal })
     }
   }, [error]);
 
-  const handleOpenModal = () => {
-    setOpenModal(true);
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
+
+  const handleOpenUpdateModal = (eventData) => {
+    setCurrentEvent(eventData);  // Set current event data to be updated
+    setOpenUpdateModal(true);    // Open the update modal
   };
-  const handleCloseModal = () => {
-    setOpenModal(false);
+
+  const handleCloseUpdateModal = () => {
+    setCurrentEvent(null);       // Clear current event data
+    setOpenUpdateModal(false);   // Close the update modal
   };
 
   const handleDelete = (eventId) => {
@@ -85,7 +93,7 @@ const AddVolunteerEventsTab = ({ handleOpenCreateModal, handleOpenUpdateModal })
             variant="contained"
             color="info"
             endIcon={<Edit />}
-            onClick={() => handleOpenUpdateModal(params.row)}
+            onClick={() => handleOpenUpdateModal(params.row)} // Open the update modal with the current event data
           >
             Update
           </Button>
@@ -97,12 +105,18 @@ const AddVolunteerEventsTab = ({ handleOpenCreateModal, handleOpenUpdateModal })
   return (
     <Box m="1.5rem 2.5rem">
       <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
-          <Buttons label="Add Volunteer Event" onClick={handleOpenModal} />
+        <Buttons label="Add Volunteer Event" onClick={handleOpenModal} />
       </Box>
 
       <AddVolunteerEventsModal
         openModal={openModal}
         handleCloseModal={handleCloseModal}
+      />
+
+      <UpdateVolunteerEventsModal
+        openModal={openUpdateModal}  // Pass state to open/close modal
+        handleCloseModal={handleCloseUpdateModal}  // Pass close handler
+        eventData={currentEvent}  // Pass the current event data for editing
       />
 
       <Box

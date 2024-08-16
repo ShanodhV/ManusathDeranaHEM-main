@@ -22,6 +22,9 @@ import volunteerEventRoutes from "./routes/volunteerEvent_routes.js";
 
 import userRoutes from "./routes/users.js";
 import authRoutes from "./routes/auth.js";
+
+import dashboardRoutes from "./routes/dashboardRoutes.js";
+
 // data imports
 import Camps from './models/Camps.js';
 import Patients from "./models/Patient.js";
@@ -63,6 +66,7 @@ app.use("/student", studentRoutes);
 app.use("/donor-volunteer", donerVolunteerRoutes);
 app.use("/volunteer", volunteerRoutes);
 app.use("/volunteer-event", volunteerEventRoutes);
+app.use("/dashboard", dashboardRoutes); 
 
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);

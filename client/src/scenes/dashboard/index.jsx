@@ -4,7 +4,6 @@ import Header from "components/Header";
 import {
   DownloadOutlined,
   Email,
-  PointOfSale,
   PersonAdd,
   Traffic,
 } from "@mui/icons-material";
@@ -18,50 +17,27 @@ import {
 import { DataGrid } from "@mui/x-data-grid";
 import BreakdownChart from "components/BreakdownChart";
 import OverviewChart from "components/OverviewChart";
-import { useGetCampQuery } from "state/api";
 import StatBox from "components/StatBox";
+import {
+  useGetPatientInfectionStatusQuery,
+  useGetTopCampLocationsQuery,
+  useGetTotalCampsQuery,
+  useGetTotalPatientsQuery,
+} from "state/api";
 
-const Dashboard = () => {
+export const Dashboard = () => {
   const theme = useTheme();
   const isNonMediumScreens = useMediaQuery("(min-width: 1200px)");
-  const { data, isLoading } = useGetCampQuery();
 
-  const columns = [
-    {
-      field: "_id",
-      headerName: "ID",
-      flex: 1,
-    },
-    {
-      field: "userId",
-      headerName: "User ID",
-      flex: 1,
-    },
-    {
-      field: "createdAt",
-      headerName: "CreatedAt",
-      flex: 1,
-    },
-    {
-      field: "products",
-      headerName: "# of Products",
-      flex: 0.5,
-      sortable: false,
-      renderCell: (params) => params.value.length,
-    },
-    {
-      field: "cost",
-      headerName: "Cost",
-      flex: 1,
-      renderCell: (params) => `$${Number(params.value).toFixed(2)}`,
-    },
-  ];
+  const { data: totalCampsData, isFetching: isFetchingCamps } = useGetTotalCampsQuery();
+  const { data: totalPatientsData, isFetching: isFetchingPatients } = useGetTotalPatientsQuery();
+  const { data: infectionStatusData, isFetching: isFetchingStatus } = useGetPatientInfectionStatusQuery();
+  const { data: topCampLocationsData, isFetching: isFetchingLocations } = useGetTopCampLocationsQuery();
 
   return (
     <Box m="1.5rem 2.5rem">
       <FlexBetween>
         <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
-
         <Box>
           <Button
             sx={{
@@ -75,9 +51,8 @@ const Dashboard = () => {
             <DownloadOutlined sx={{ mr: "10px" }} />
             Download Reports
           </Button>
-          </Box>
+        </Box>
       </FlexBetween>
-      
 
       <Box
         mt="20px"
@@ -86,32 +61,35 @@ const Dashboard = () => {
         gridAutoRows="160px"
         gap="20px"
         sx={{
-          "& > div": { gridColumn: isNonMediumScreens ? undefined : "span 12" },
+          "& > div": {
+            gridColumn: isNonMediumScreens ? undefined : "span 12",
+          },
         }}
       >
-  
         <StatBox
           title="Total Health Camps"
-          value={data && data.totalCustomers}
-          // increase="+14%"
-          // description="Since last month"
-          icon={
-            <Email
-              sx={{ color: theme.palette.secondary[300], fontSize: "26px" }}
-            />
-          }
+          value={isFetchingCamps ? 'Loading...' : totalCampsData?.totalCamps || 0}
+          icon={<Email sx={{ color: theme.palette.secondary[300], fontSize: "26px" }} />}
         />
+
         <StatBox
-          title="Total Scolarships"
-          value={data && data.todayStats.totalSales}
-          // increase="+21%"
-          // description="Since last month"
-          icon={
-            <PointOfSale
-              sx={{ color: theme.palette.secondary[300], fontSize: "26px" }}
-            />
-          }
+          title="Total Patients"
+          value={isFetchingPatients ? 'Loading...' : totalPatientsData?.totalPatients || 0}
+          icon={<PersonAdd sx={{ color: theme.palette.secondary[300], fontSize: "26px" }} />}
         />
+
+        <StatBox
+          title="Infected Patients"
+          value={isFetchingStatus ? 'Loading...' : infectionStatusData?.infectedPatients || 0}
+          icon={<Traffic sx={{ color: theme.palette.secondary[300], fontSize: "26px" }} />}
+        />
+
+        <StatBox
+          title="Non-Infected Patients"
+          value={isFetchingStatus ? 'Loading...' : infectionStatusData?.nonInfectedPatients || 0}
+          icon={<Traffic sx={{ color: theme.palette.secondary[300], fontSize: "26px" }} />}
+        />
+
         <Box
           gridColumn="span 8"
           gridRow="span 2"
@@ -121,66 +99,7 @@ const Dashboard = () => {
         >
           <OverviewChart view="sales" isDashboard={true} />
         </Box>
-        <StatBox
-          title="Monthly Donations"
-          value={data && data.thisMonthStats.totalSales}
-          increase="+5%"
-          description="Since last month"
-          icon={
-            <PersonAdd
-              sx={{ color: theme.palette.secondary[300], fontSize: "26px" }}
-            />
-          }
-        />
-        <StatBox
-          title="Total Volunteers"
-          value={data && data.yearlySalesTotal}
-          // increase="+43%"
-          // description="Since last month"
-          icon={
-            <Traffic
-              sx={{ color: theme.palette.secondary[300], fontSize: "26px" }}
-            />
-          }
-        />
 
-
-        <Box
-          gridColumn="span 8"
-          gridRow="span 3"
-          sx={{
-            "& .MuiDataGrid-root": {
-              border: "none",
-              borderRadius: "5rem",
-            },
-            "& .MuiDataGrid-cell": {
-              borderBottom: "none",
-            },
-            "& .MuiDataGrid-columnHeaders": {
-              backgroundColor: theme.palette.background.alt,
-              color: theme.palette.secondary[100],
-              borderBottom: "none",
-            },
-            "& .MuiDataGrid-virtualScroller": {
-              backgroundColor: theme.palette.background.alt,
-            },
-            "& .MuiDataGrid-footerContainer": {
-              backgroundColor: theme.palette.background.alt,
-              color: theme.palette.secondary[100],
-              borderTop: "none",
-            },
-            "& .MuiDataGrid-toolbarContainer .MuiButton-text": {
-              color: `${theme.palette.secondary[200]} !important`,
-            },
-          }}
-        >
-          <DataGrid
-            loading={isLoading || !data}
-            getRowId={(row) => row._id}
-            rows={(data && data.transactions) || []}
-            columns={columns}
-          />
-        </Box>
         <Box
           gridColumn="span 4"
           gridRow="span 3"
@@ -189,19 +108,11 @@ const Dashboard = () => {
           borderRadius="0.55rem"
         >
           <Typography variant="h6" sx={{ color: theme.palette.secondary[100] }}>
-            Projects By catogory
+            Top Camp Locations
           </Typography>
-          <BreakdownChart isDashboard={true} />
-          <Typography
-            p="0 0.6rem"
-            fontSize="0.8rem"
-            sx={{ color: theme.palette.secondary[200] }}
-          >
-          </Typography>
+          <BreakdownChart data={topCampLocationsData} isDashboard={true} />
         </Box>
       </Box>
     </Box>
   );
 };
-
-export default Dashboard;
