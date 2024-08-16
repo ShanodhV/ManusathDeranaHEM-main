@@ -57,6 +57,10 @@ const DonorRegistrationModal = ({ openModal, handleCloseModal }) => {
     const year = digits.slice(4, 8);
     return `${day}${day && month ? '/' : ''}${month}${month && year ? '/' : ''}${year}`;
   };
+  const validateNICFormat = (nic) => {
+    const nicRegex = /^\d{9}[vVxX]$|^\d{12}$/; // Old and new NIC formats
+    return nicRegex.test(nic);
+  };
   
   const isValidDate = (value) => {
     const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;

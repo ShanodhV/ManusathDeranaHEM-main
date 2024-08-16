@@ -34,12 +34,17 @@ const UpdateDonorRegistrationModal = ({ openModal, handleCloseModal, donorData }
 
 
   const formatDate = (value) => {
+    if (value.includes('-')) {
+      const [year, month, day] = value.split('-');
+      return `${day}/${month}/${year}`;
+    }
     const digits = value.replace(/\D/g, '');
     const day = digits.slice(0, 2);
     const month = digits.slice(2, 4);
     const year = digits.slice(4, 8);
     return `${day}${day && month ? '/' : ''}${month}${month && year ? '/' : ''}${year}`;
   };
+  
   
   const isValidDate = (value) => {
     const dateRegex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
@@ -81,9 +86,10 @@ const UpdateDonorRegistrationModal = ({ openModal, handleCloseModal, donorData }
       setDonorAddress(donorData.donorAddress);
       setMobileNumber(donorData.mobileNumber);
       setOccupation(donorData.occupation);
-      setDate(donorData.Date ? donorData.Date.split('T')[0].split('-').reverse().join('/') : '');
+      setDate(donorData.date ? formatDate(donorData.date) : '');
     }
   }, [donorData]);
+  
 
   const validatePhoneNumber = (number) => /^\d+$/.test(number);
 
@@ -94,7 +100,7 @@ const UpdateDonorRegistrationModal = ({ openModal, handleCloseModal, donorData }
     else if (donorNIC.length < 10) newErrors.donorNIC = "NIC must be at least 10 characters long";    if (!donorName) newErrors.donorName = "Name is required";
     if (!donorName) newErrors.donorName = "Name is required";
     if (!donorAddress) newErrors.donorAddress = "Address is required";
-    if (!date) newErrors.date = "Date of Birth is required";
+    // if (!date) newErrors.date = "Date of Birth is required";
     if (!mobileNumber) newErrors.mobileNumber = "Mobile number is required";
     else if (!validatePhoneNumber(mobileNumber)) newErrors.mobileNumber = "Mobile number must contain only numbers";
     if (!occupation) newErrors.occupation = "Occupation is required";
@@ -212,7 +218,7 @@ const UpdateDonorRegistrationModal = ({ openModal, handleCloseModal, donorData }
             />
           </Box>
 
-          <Box sx={{ mt: 2 }}>
+          {/* <Box sx={{ mt: 2 }}>
             <CustomTextField
               label="Date of Birth"
               value={date}
@@ -223,7 +229,7 @@ const UpdateDonorRegistrationModal = ({ openModal, handleCloseModal, donorData }
               placeholder="DD/MM/YYYY"
               inputProps={{ pattern: "[0-9]*" }}
             />
-          </Box>
+          </Box> */}
           <Box sx={{ mt: 2 }}>
             <CustomTextField
               label="Occupation"
