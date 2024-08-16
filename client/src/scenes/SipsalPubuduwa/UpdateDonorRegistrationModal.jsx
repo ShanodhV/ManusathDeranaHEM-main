@@ -50,7 +50,7 @@ const UpdateDonorRegistrationModal = ({ openModal, handleCloseModal, donorData }
     const [day, month, year] = value.split('/');
     return `${year}-${month}-${day}`;
   };
-
+  
   const [date, setDate] = useState('');
 
 
@@ -81,7 +81,7 @@ const UpdateDonorRegistrationModal = ({ openModal, handleCloseModal, donorData }
       setDonorAddress(donorData.donorAddress);
       setMobileNumber(donorData.mobileNumber);
       setOccupation(donorData.occupation);
-      setDate(donorData.date);
+      setDate(donorData.Date ? donorData.Date.split('T')[0].split('-').reverse().join('/') : '');
     }
   }, [donorData]);
 
@@ -116,6 +116,8 @@ const UpdateDonorRegistrationModal = ({ openModal, handleCloseModal, donorData }
       updateDonor(donorData)
   .then((response) => {
     console.log("Donor updated successfully:", response);
+    const elapsedTime = Date.now() - startTime;
+          const remainingTime = 500 - elapsedTime;
     setErrors({}); // Clear errors after successful update
     setSnackbar({ open: true, message: "Donor updated successfully!", severity: "success" });
     setLoading(false);
