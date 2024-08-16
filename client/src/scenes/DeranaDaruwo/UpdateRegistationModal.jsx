@@ -1,32 +1,27 @@
-import { Dialog, Box, DialogContent, DialogTitle, DialogActions, IconButton, CircularProgress, Button, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Dialog, Box, DialogContent, DialogTitle, DialogActions, IconButton, CircularProgress, Button, Snackbar, Alert } from '@mui/material';
+import { useTheme } from "@mui/material/styles";
+import CustomTextField from 'components/CustomTextField';
+import { useUpdateStudentsMutation, useGetDeranaDaruwoProgramsQuery, useGetStudentsByDeranaDaruwoProgramQuery } from "state/api";
+import CloseIcon from "@mui/icons-material/Close";
 
-  import React, { useState, useEffect } from 'react';
-  import CustomTextField from 'components/CustomTextField';
-  import { useTheme } from "@mui/material/styles";
-  import { useUpdateStudentsMutation, useGetDeranaDaruwoProgramsQuery,useGetStudentsByDeranaDaruwoProgramQuery  } from "state/api";
-  import { Alert, Snackbar } from "@mui/material";
-  import CloseIcon from "@mui/icons-material/Close";
-
-const UpdateRegistationModal = ({ openModal, closeModal, refetch,currentStudent, programId }) => {
-    const theme = useTheme();
-  const [studentId, setStudentId] = useState("");
+const UpdateRegistrationModal = ({ openModal, closeModal, refetch, currentStudent, programId }) => {
+  const theme = useTheme();
   const [studentName, setStudentName] = useState("");
   const [studentAddress, setStudentAddress] = useState("");
-  // const [programId, setProgramId] = useState("");
   const [parentName, setParentName] = useState("");
   const [parentContactDetails, setParentContactDetails] = useState("");
   const [bankAccountDetails, setBankAccountDetails] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
   const [updateStudents] = useUpdateStudentsMutation();
-  const { data: programs, isLoading, isError } = useGetDeranaDaruwoProgramsQuery();
   const [loading, setLoading] = useState(false);
   const [snackbar, setSnackbar] = useState({ open: false, message: "", severity: "success" });
-  const { data: programStudent } = useGetStudentsByDeranaDaruwoProgramQuery(programId, { skip: !programId });
 
+  const { data: programs, isLoading, isError } = useGetDeranaDaruwoProgramsQuery();
+  const { data: programStudents } = useGetStudentsByDeranaDaruwoProgramQuery(programId, { skip: !programId });
 
   useEffect(() => {
     if (currentStudent) {
-      setStudentId(currentStudent.studentId)
       setStudentName(currentStudent.studentName);
       setStudentAddress(currentStudent.studentAddress);
       setParentName(currentStudent.parentName);
@@ -34,56 +29,50 @@ const UpdateRegistationModal = ({ openModal, closeModal, refetch,currentStudent,
       setBankAccountDetails(currentStudent.bankAccountDetails);
       setAccountNumber(currentStudent.accountNumber);
     }
-  }, [currentStudent]); 
-  // const studentId = currentStudent ? currentStudent._id : "";
+  }, [currentStudent]);
+
   const handleUpdateStudent = () => {
-    updateStudents({
-      studentId,
+    const studentData = {
+      studentID: currentStudent?.studentID,  // studentId is used only for identifying the student to update
       studentName,
       studentAddress,
       parentName,
       parentContactDetails,
       bankAccountDetails,
       accountNumber,
-      deranaDaruwProgram:programId,
-    })
+      deranaDaruwProgram: programId,
+    };
+
+    setLoading(true);
+    updateStudents(studentData)
       .then((response) => {
         console.log("Student updated successfully:", response);
-        // Clear form fields
-        // setStudentID("");
         setStudentName("");
         setStudentAddress("");
-        // setProgramID("");
         setParentName("");
         setParentContactDetails("");
         setBankAccountDetails("");
         setAccountNumber("");
-        // Close the dialog
         closeModal();
-        // Refetch updated data
         refetch();
-        
       })
       .catch((error) => {
         console.error("Error updating student:", error);
-      });
+        setSnackbar({ open: true, message: "Error updating student", severity: "error" });
+      })
+      .finally(() => setLoading(false));
   };
-  
 
   const handleCancel = () => {
-    // Clear form fields
-    // setStudentID("");
     setStudentName("");
     setStudentAddress("");
-    // setProgramID("");
     setParentName("");
     setParentContactDetails("");
     setBankAccountDetails("");
     setAccountNumber("");
-    // Close the dialog
     closeModal();
-    
   };
+
   return (
     <>
       <Dialog
@@ -94,8 +83,8 @@ const UpdateRegistationModal = ({ openModal, closeModal, refetch,currentStudent,
       >
         <DialogTitle sx={{ bgcolor: "#f0f0f0", position: 'relative' }} id="form-dialog-title">
           <div style={{ color: "#d63333", fontWeight: '700', fontSize: '16px' }}>
-            {"Register Student"}
-            <hr style={{ borderColor: "#d63333", }} />
+            {"Update Student"}
+            <hr style={{ borderColor: "#d63333" }} />
           </div>
           <IconButton
             aria-label="close"
@@ -107,14 +96,10 @@ const UpdateRegistationModal = ({ openModal, closeModal, refetch,currentStudent,
               color: theme.palette.grey[500],
             }}
           >
-            {/* Add your icon component here */}
-            <CloseIcon/>
+            <CloseIcon />
           </IconButton>
         </DialogTitle>
         <DialogContent>
-        <Box sx={{ mt: 2 }}>
-            <CustomTextField label="Student ID" variant="outlined" value={studentId} fullWidth disabled />
-          </Box>
           <Box sx={{ mt: 6 }}>
             <CustomTextField
               label="Student Name"
@@ -133,25 +118,6 @@ const UpdateRegistationModal = ({ openModal, closeModal, refetch,currentStudent,
               onChange={(e) => setStudentAddress(e.target.value)}
             />
           </Box>
-          {/* <Box sx={{ mt: 6 }}>
-            <FormControl fullWidth variant="outlined">
-              <InputLabel>Select Program ID</InputLabel>
-              <Select
-                value={programID}
-                onChange={(e) => setProgramID(e.target.value)}
-                label="Select Program ID"
-                disabled={isLoading || isError}
-              >
-                {isLoading && <MenuItem disabled>Loading...</MenuItem>}
-                {isError && <MenuItem disabled>Error loading programs</MenuItem>}
-                {programs && programs.map((program) => (
-                  <MenuItem key={program.programId} value={program.programId}>
-                     {program.programId}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Box> */}
           <br /><br />
           <h4>Parent Details</h4>
           <Box sx={{ mt: 4 }}>
@@ -203,7 +169,7 @@ const UpdateRegistationModal = ({ openModal, closeModal, refetch,currentStudent,
             disabled={loading}
             endIcon={loading && <CircularProgress size={20} />}
           >
-            {"Register Student"}
+            {"Update Student"}
           </Button>
           <Button onClick={handleCancel} variant="outlined" color="secondary">
             Cancel
@@ -222,7 +188,7 @@ const UpdateRegistationModal = ({ openModal, closeModal, refetch,currentStudent,
         </Alert>
       </Snackbar>
     </>
-  )
+  );
 }
 
-export default UpdateRegistationModal
+export default UpdateRegistrationModal;
