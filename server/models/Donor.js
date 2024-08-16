@@ -25,7 +25,7 @@ const DonorSchema = new mongoose.Schema(
     },
     dateOfBirth: {
       type: Date,
-      required: true,
+      //required: true,
     },
     mobileNumber: {
       type: String,
