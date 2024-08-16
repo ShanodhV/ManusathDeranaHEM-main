@@ -1,28 +1,28 @@
 import React from "react";
 import { ResponsivePie } from "@nivo/pie";
 import { Box, Typography, useTheme } from "@mui/material";
-import { useGetSalesQuery } from "state/api";
+import { useGetTopCampLocationsQuery } from "state/api";
 
 const BreakdownChart = ({ isDashboard = false }) => {
-  const { data, isLoading } = useGetSalesQuery();
+  const { data, isLoading } = useGetTopCampLocationsQuery();
   const theme = useTheme();
 
   if (!data || isLoading) return "Loading...";
 
+  // Format the data for the pie chart
   const colors = [
     theme.palette.secondary[500],
     theme.palette.secondary[300],
     theme.palette.secondary[300],
     theme.palette.secondary[500],
   ];
-  const formattedData = Object.entries(data.salesByCategory).map(
-    ([category, sales], i) => ({
-      id: category,
-      label: category,
-      value: sales,
-      color: colors[i],
-    })
-  );
+
+  const formattedData = data.map((location, i) => ({
+    id: `${location._id.district}, ${location._id.town}`,
+    label: `${location._id.district}, ${location._id.town}`,
+    value: location.totalCamps,
+    color: colors[i % colors.length],
+  }));
 
   return (
     <Box
@@ -130,7 +130,7 @@ const BreakdownChart = ({ isDashboard = false }) => {
         }}
       >
         <Typography variant="h6">
-          {!isDashboard && "Total:"} ${data.yearlySalesTotal}
+          {!isDashboard && "Total Camps:"} {data.reduce((acc, loc) => acc + loc.totalCamps, 0)}
         </Typography>
       </Box>
     </Box>

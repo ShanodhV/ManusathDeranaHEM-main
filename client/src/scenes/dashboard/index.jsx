@@ -4,6 +4,10 @@ import Header from "components/Header";
 import {
   DownloadOutlined,
   Email,
+  HealthAndSafety,
+  People,
+  Person2,
+  Person2Outlined,
   PersonAdd,
   Traffic,
 } from "@mui/icons-material";
@@ -23,6 +27,7 @@ import {
   useGetTopCampLocationsQuery,
   useGetTotalCampsQuery,
   useGetTotalPatientsQuery,
+  useGetTotalVolunteersQuery
 } from "state/api";
 
 export const Dashboard = () => {
@@ -33,13 +38,14 @@ export const Dashboard = () => {
   const { data: totalPatientsData, isFetching: isFetchingPatients } = useGetTotalPatientsQuery();
   const { data: infectionStatusData, isFetching: isFetchingStatus } = useGetPatientInfectionStatusQuery();
   const { data: topCampLocationsData, isFetching: isFetchingLocations } = useGetTopCampLocationsQuery();
+  const { data: volunteers, isFetching: isFetchingvol } = useGetTotalVolunteersQuery();
 
   return (
     <Box m="1.5rem 2.5rem">
       <FlexBetween>
         <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
         <Box>
-          <Button
+          {/* <Button
             sx={{
               backgroundColor: theme.palette.secondary.light,
               color: theme.palette.background.alt,
@@ -50,7 +56,7 @@ export const Dashboard = () => {
           >
             <DownloadOutlined sx={{ mr: "10px" }} />
             Download Reports
-          </Button>
+          </Button> */}
         </Box>
       </FlexBetween>
 
@@ -69,25 +75,30 @@ export const Dashboard = () => {
         <StatBox
           title="Total Health Camps"
           value={isFetchingCamps ? 'Loading...' : totalCampsData?.totalCamps || 0}
-          icon={<Email sx={{ color: theme.palette.secondary[300], fontSize: "26px" }} />}
+          icon={<HealthAndSafety sx={{ color: theme.palette.secondary[300], fontSize: "26px" }} />}
         />
 
         <StatBox
           title="Total Patients"
           value={isFetchingPatients ? 'Loading...' : totalPatientsData?.totalPatients || 0}
-          icon={<PersonAdd sx={{ color: theme.palette.secondary[300], fontSize: "26px" }} />}
+          icon={<Person2 sx={{ color: theme.palette.secondary[300], fontSize: "26px" }} />}
         />
 
         <StatBox
           title="Infected Patients"
           value={isFetchingStatus ? 'Loading...' : infectionStatusData?.infectedPatients || 0}
-          icon={<Traffic sx={{ color: theme.palette.secondary[300], fontSize: "26px" }} />}
+          icon={<Person2Outlined sx={{ color: theme.palette.secondary[300], fontSize: "26px" }} />}
         />
 
         <StatBox
           title="Non-Infected Patients"
           value={isFetchingStatus ? 'Loading...' : infectionStatusData?.nonInfectedPatients || 0}
-          icon={<Traffic sx={{ color: theme.palette.secondary[300], fontSize: "26px" }} />}
+          icon={<People sx={{ color: theme.palette.secondary[300], fontSize: "26px" }} />}
+        />
+        <StatBox
+          title="Total Volunteers"
+          value={isFetchingvol ? 'Loading...' : volunteers?.totalvol || 0}
+          icon={<People sx={{ color: theme.palette.secondary[300], fontSize: "26px" }} />}
         />
 
         <Box
