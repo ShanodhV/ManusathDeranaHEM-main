@@ -48,7 +48,7 @@ const DeranaDaruwo = () => {
         <Tab label="Create Programs" />
         <Tab label="Student Registration" />
         <Tab label="Donor Registration" />
-        <Tab label="Next Area Predictor" />
+        {/* <Tab label="Next Area Predictor" /> */}
       </Tabs>
 
       {activeTab === 0 && <CreateProgramTab handleOpenModal={handleOpenProgramModal} />}
