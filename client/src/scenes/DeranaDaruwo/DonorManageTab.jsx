@@ -92,7 +92,7 @@ const DonorManageTab = () => {
           Manage Donors
         </Typography>
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Tooltip title="Search by Camp ID, Town, or District" arrow>
+          {/* <Tooltip title="Search by Camp ID, Town, or District" arrow>
             <TextField
               label="Search Camps"
               variant="outlined"
@@ -108,7 +108,7 @@ const DonorManageTab = () => {
                 ),
               }}
             />
-          </Tooltip>
+          </Tooltip> */}
           <Box>
             <Buttons label={"Add Donor"} onClick={handleOpenDonorModal} />
             {/* <DonorRegistrationModal
