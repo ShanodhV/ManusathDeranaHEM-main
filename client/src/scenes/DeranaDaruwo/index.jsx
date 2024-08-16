@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { Box, Tabs, Tab } from '@mui/material';
 import CreateProgramTab from './CreateProgramTab';
-// import CreateProgramModal from './CreateProgramModal';
 import StudentRegistrationTab from './StudentRegistrationTab';
 import VolunteerDonorRegistrationTab from './VolunteerDonorRegistrationTab';
-// import VolunteerDonorRegistrationModal from './VolunteerDonorRegistrationModal';
 import NextAreaPredictorTab from './NextAreaPredictorTab';
 import ProgramModal from './ProgramModal';
 import DonorManageTab from './DonorManageTab';
