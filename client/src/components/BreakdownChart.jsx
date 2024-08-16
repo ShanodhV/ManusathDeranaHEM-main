@@ -1,28 +1,31 @@
 import React from "react";
 import { ResponsivePie } from "@nivo/pie";
 import { Box, Typography, useTheme } from "@mui/material";
-import { useGetTopCampLocationsQuery } from "state/api";
+import { useGetPatientInfectionStatusQuery } from "state/api";
 
 const BreakdownChart = ({ isDashboard = false }) => {
-  const { data, isLoading } = useGetTopCampLocationsQuery();
   const theme = useTheme();
+  const { data: infectionData, isLoading } = useGetPatientInfectionStatusQuery();
 
-  if (!data || isLoading) return "Loading...";
+  if (isLoading || !infectionData) return "Loading...";
 
-  // Format the data for the pie chart
-  const colors = [
-    theme.palette.secondary[500],
-    theme.palette.secondary[300],
-    theme.palette.secondary[300],
-    theme.palette.secondary[500],
+  const { infectedPatients, nonInfectedPatients } = infectionData;
+  const totalPatients = infectedPatients + nonInfectedPatients;
+
+  const formattedData = [
+    {
+      id: "Infected Patients",
+      label: "Infected Patients",
+      value: infectedPatients,
+      color: theme.palette.secondary[500],
+    },
+    {
+      id: "Non-Infected Patients",
+      label: "Non-Infected Patients",
+      value: nonInfectedPatients,
+      color: theme.palette.secondary[300],
+    },
   ];
-
-  const formattedData = data.map((location, i) => ({
-    id: `${location._id.district}, ${location._id.town}`,
-    label: `${location._id.district}, ${location._id.town}`,
-    value: location.totalCamps,
-    color: colors[i % colors.length],
-  }));
 
   return (
     <Box
@@ -130,7 +133,7 @@ const BreakdownChart = ({ isDashboard = false }) => {
         }}
       >
         <Typography variant="h6">
-          {!isDashboard && "Total Camps:"} {data.reduce((acc, loc) => acc + loc.totalCamps, 0)}
+          Total Patients: {totalPatients}
         </Typography>
       </Box>
     </Box>

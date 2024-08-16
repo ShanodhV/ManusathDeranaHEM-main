@@ -19,8 +19,6 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
-import BreakdownChart from "components/BreakdownChart";
-import OverviewChart from "components/OverviewChart";
 import StatBox from "components/StatBox";
 import {
   useGetPatientInfectionStatusQuery,
@@ -64,65 +62,50 @@ export const Dashboard = () => {
         mt="20px"
         display="grid"
         gridTemplateColumns="repeat(12, 1fr)"
-        gridAutoRows="160px"
-        gap="20px"
+        gridAutoRows="200px" // Increased the auto rows size
+        gap="30px" // Increased the gap between cards
         sx={{
           "& > div": {
-            gridColumn: isNonMediumScreens ? undefined : "span 12",
+            gridColumn: isNonMediumScreens ? "span 4" : "span 12", // Cards will span 4 columns on large screens
+            backgroundColor: theme.palette.background.paper, // Enhanced background color
+            borderRadius: "10px", // Added border radius
+            boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)", // Added shadow for a modern look
+            transition: "transform 0.2s ease-in-out", // Smooth hover effect
+            "&:hover": {
+              transform: "scale(1.05)", // Slightly scale up the card on hover
+            },
           },
         }}
       >
         <StatBox
           title="Total Health Camps"
           value={isFetchingCamps ? 'Loading...' : totalCampsData?.totalCamps || 0}
-          icon={<HealthAndSafety sx={{ color: theme.palette.secondary[300], fontSize: "26px" }} />}
+          icon={<HealthAndSafety sx={{ color: theme.palette.secondary[300], fontSize: "30px" }} />} // Increased icon size
         />
 
         <StatBox
           title="Total Patients"
           value={isFetchingPatients ? 'Loading...' : totalPatientsData?.totalPatients || 0}
-          icon={<Person2 sx={{ color: theme.palette.secondary[300], fontSize: "26px" }} />}
+          icon={<Person2 sx={{ color: theme.palette.secondary[300], fontSize: "30px" }} />} // Increased icon size
         />
 
         <StatBox
           title="Infected Patients"
           value={isFetchingStatus ? 'Loading...' : infectionStatusData?.infectedPatients || 0}
-          icon={<Person2Outlined sx={{ color: theme.palette.secondary[300], fontSize: "26px" }} />}
+          icon={<Person2Outlined sx={{ color: theme.palette.secondary[300], fontSize: "30px" }} />} // Increased icon size
         />
 
         <StatBox
           title="Non-Infected Patients"
           value={isFetchingStatus ? 'Loading...' : infectionStatusData?.nonInfectedPatients || 0}
-          icon={<People sx={{ color: theme.palette.secondary[300], fontSize: "26px" }} />}
+          icon={<People sx={{ color: theme.palette.secondary[300], fontSize: "30px" }} />} // Increased icon size
         />
+
         <StatBox
           title="Total Volunteers"
           value={isFetchingvol ? 'Loading...' : volunteers?.totalvol || 0}
-          icon={<People sx={{ color: theme.palette.secondary[300], fontSize: "26px" }} />}
+          icon={<People sx={{ color: theme.palette.secondary[300], fontSize: "30px" }} />} // Increased icon size
         />
-
-        <Box
-          gridColumn="span 8"
-          gridRow="span 2"
-          backgroundColor={theme.palette.background.alt}
-          p="1rem"
-          borderRadius="0.55rem"
-        >
-          <OverviewChart view="sales" isDashboard={true} />
-        </Box>
-
-        <Box
-          gridColumn="span 4"
-          gridRow="span 3"
-          backgroundColor={theme.palette.background.alt}
-          p="1.5rem"
-          borderRadius="0.55rem"
-        >
-          <Typography variant="h6" sx={{ color: theme.palette.secondary[100] }}>
-            Top Camp Locations
-          </Typography>
-          <BreakdownChart data={topCampLocationsData} isDashboard={true} />
-        </Box>
       </Box>
     </Box>
   );
